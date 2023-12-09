@@ -1,0 +1,9 @@
+C:\Users\PC\Documents\Visual Studio 2015\Projects\Sigeco2.0\Libreria\bin\Release\Libreria.dll
+C:\Users\PC\Documents\Visual Studio 2015\Projects\Sigeco2.0\Libreria\bin\Release\Libreria.pdb
+C:\Users\PC\Documents\Visual Studio 2015\Projects\Sigeco2.0\Libreria\bin\Release\Libreria.xml
+C:\Users\PC\Documents\Visual Studio 2015\Projects\Sigeco2.0\Libreria\obj\Release\Libreria.vbprojResolveAssemblyReference.cache
+C:\Users\PC\Documents\Visual Studio 2015\Projects\Sigeco2.0\Libreria\obj\Release\Libreria.Resources.resources
+C:\Users\PC\Documents\Visual Studio 2015\Projects\Sigeco2.0\Libreria\obj\Release\Libreria.vbproj.GenerateResource.Cache
+C:\Users\PC\Documents\Visual Studio 2015\Projects\Sigeco2.0\Libreria\obj\Release\Libreria.dll
+C:\Users\PC\Documents\Visual Studio 2015\Projects\Sigeco2.0\Libreria\obj\Release\Libreria.xml
+C:\Users\PC\Documents\Visual Studio 2015\Projects\Sigeco2.0\Libreria\obj\Release\Libreria.pdb

@@ -1,0 +1,10 @@
+c:\users\pc\documents\visual studio 2015\Projects\Sigeco2.0\Presentacion\bin\Debug\Presentacion.exe.config
+c:\users\pc\documents\visual studio 2015\Projects\Sigeco2.0\Presentacion\bin\Debug\Presentacion.exe
+c:\users\pc\documents\visual studio 2015\Projects\Sigeco2.0\Presentacion\bin\Debug\Presentacion.pdb
+c:\users\pc\documents\visual studio 2015\Projects\Sigeco2.0\Presentacion\bin\Debug\Presentacion.xml
+c:\users\pc\documents\visual studio 2015\Projects\Sigeco2.0\Presentacion\obj\Debug\Presentacion.vbprojResolveAssemblyReference.cache
+c:\users\pc\documents\visual studio 2015\Projects\Sigeco2.0\Presentacion\obj\Debug\Presentacion.Resources.resources
+c:\users\pc\documents\visual studio 2015\Projects\Sigeco2.0\Presentacion\obj\Debug\Presentacion.vbproj.GenerateResource.Cache
+c:\users\pc\documents\visual studio 2015\Projects\Sigeco2.0\Presentacion\obj\Debug\Presentacion.exe
+c:\users\pc\documents\visual studio 2015\Projects\Sigeco2.0\Presentacion\obj\Debug\Presentacion.xml
+c:\users\pc\documents\visual studio 2015\Projects\Sigeco2.0\Presentacion\obj\Debug\Presentacion.pdb

@@ -24,10 +24,14 @@ Partial Class frmbackupBD
         Me.Label1 = New System.Windows.Forms.Label()
         Me.cbxBaseDatos = New System.Windows.Forms.ComboBox()
         Me.cbxServidor = New System.Windows.Forms.ComboBox()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.rbScript = New System.Windows.Forms.RadioButton()
+        Me.rbBak = New System.Windows.Forms.RadioButton()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.btnSalir = New System.Windows.Forms.Button()
         Me.btnBackup = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
+        Me.GroupBox3.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -66,9 +70,8 @@ Partial Class frmbackupBD
         '
         'cbxBaseDatos
         '
-        Me.cbxBaseDatos.Enabled = False
+        Me.cbxBaseDatos.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbxBaseDatos.FormattingEnabled = True
-        Me.cbxBaseDatos.Items.AddRange(New Object() {"SIGECO"})
         Me.cbxBaseDatos.Location = New System.Drawing.Point(364, 19)
         Me.cbxBaseDatos.Name = "cbxBaseDatos"
         Me.cbxBaseDatos.Size = New System.Drawing.Size(150, 21)
@@ -84,11 +87,44 @@ Partial Class frmbackupBD
         Me.cbxServidor.Size = New System.Drawing.Size(150, 21)
         Me.cbxServidor.TabIndex = 0
         '
+        'GroupBox3
+        '
+        Me.GroupBox3.Controls.Add(Me.rbScript)
+        Me.GroupBox3.Controls.Add(Me.rbBak)
+        Me.GroupBox3.Location = New System.Drawing.Point(12, 93)
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.Size = New System.Drawing.Size(524, 55)
+        Me.GroupBox3.TabIndex = 5
+        Me.GroupBox3.TabStop = False
+        Me.GroupBox3.Text = "Tipo de archivo"
+        '
+        'rbScript
+        '
+        Me.rbScript.AutoSize = True
+        Me.rbScript.Location = New System.Drawing.Point(279, 22)
+        Me.rbScript.Name = "rbScript"
+        Me.rbScript.Size = New System.Drawing.Size(188, 17)
+        Me.rbScript.TabIndex = 1
+        Me.rbScript.Text = "Script SQL completo con datos"
+        Me.rbScript.UseVisualStyleBackColor = True
+        '
+        'rbBak
+        '
+        Me.rbBak.AutoSize = True
+        Me.rbBak.Checked = True
+        Me.rbBak.Location = New System.Drawing.Point(109, 22)
+        Me.rbBak.Name = "rbBak"
+        Me.rbBak.Size = New System.Drawing.Size(86, 17)
+        Me.rbBak.TabIndex = 0
+        Me.rbBak.TabStop = True
+        Me.rbBak.Text = "Backup .bak"
+        Me.rbBak.UseVisualStyleBackColor = True
+        '
         'GroupBox2
         '
         Me.GroupBox2.Controls.Add(Me.btnSalir)
         Me.GroupBox2.Controls.Add(Me.btnBackup)
-        Me.GroupBox2.Location = New System.Drawing.Point(12, 93)
+        Me.GroupBox2.Location = New System.Drawing.Point(12, 154)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(524, 75)
         Me.GroupBox2.TabIndex = 4
@@ -121,9 +157,10 @@ Partial Class frmbackupBD
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnSalir
-        Me.ClientSize = New System.Drawing.Size(547, 185)
+        Me.ClientSize = New System.Drawing.Size(547, 246)
         Me.ControlBox = False
         Me.Controls.Add(Me.GroupBox2)
+        Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.GroupBox1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Name = "frmbackupBD"
@@ -131,6 +168,8 @@ Partial Class frmbackupBD
         Me.Text = "Módulo Creación Backup"
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
+        Me.GroupBox3.ResumeLayout(False)
+        Me.GroupBox3.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.ResumeLayout(False)
 
@@ -143,4 +182,7 @@ Partial Class frmbackupBD
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
     Friend WithEvents btnSalir As System.Windows.Forms.Button
     Friend WithEvents btnBackup As System.Windows.Forms.Button
+    Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
+    Friend WithEvents rbScript As System.Windows.Forms.RadioButton
+    Friend WithEvents rbBak As System.Windows.Forms.RadioButton
 End Class

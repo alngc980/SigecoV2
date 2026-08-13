@@ -34,6 +34,7 @@ Partial Class frmNuevoCliente
         Me.btnGrabar = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.txtRUC = New System.Windows.Forms.TextBox()
+        Me.btnConsultarDocumento = New System.Windows.Forms.Button()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.txtZona = New System.Windows.Forms.TextBox()
@@ -198,6 +199,7 @@ Partial Class frmNuevoCliente
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.btnConsultarDocumento)
         Me.GroupBox1.Controls.Add(Me.txtRUC)
         Me.GroupBox1.Controls.Add(Me.Label12)
         Me.GroupBox1.Controls.Add(Me.Label10)
@@ -231,6 +233,15 @@ Partial Class frmNuevoCliente
         Me.txtRUC.Size = New System.Drawing.Size(134, 20)
         Me.txtRUC.TabIndex = 3
         '
+        '
+        'btnConsultarDocumento
+        '
+        Me.btnConsultarDocumento.Location = New System.Drawing.Point(303, 122)
+        Me.btnConsultarDocumento.Name = "btnConsultarDocumento"
+        Me.btnConsultarDocumento.Size = New System.Drawing.Size(90, 44)
+        Me.btnConsultarDocumento.TabIndex = 8
+        Me.btnConsultarDocumento.Text = "Consultar"
+        Me.btnConsultarDocumento.UseVisualStyleBackColor = True
         'Label12
         '
         Me.Label12.AutoSize = True
@@ -500,5 +511,6 @@ Partial Class frmNuevoCliente
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents txtZona As System.Windows.Forms.TextBox
     Friend WithEvents txtRUC As System.Windows.Forms.TextBox
+    Friend WithEvents btnConsultarDocumento As System.Windows.Forms.Button
     Friend WithEvents Label12 As System.Windows.Forms.Label
 End Class

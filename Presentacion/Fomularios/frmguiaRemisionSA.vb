@@ -19,13 +19,15 @@ Public Class frmguiaRemisionSA
         Me.lblRUC.Text = txtRUCEmpresa
         Me.cbxTipoDocumento.SelectedIndex = 0
         Me.cbxTipoMovimiento.SelectedIndex = 0
-        Dim strUltimoNumero As String = ("SELECT * FROM ultimosNumeros where tipDocumento='GR' and tipMovimiento='SA'")
+        Dim strUltimoNumero As String = ("SELECT * FROM ultimosNumeros where tipDocumento='GX' and tipMovimiento='SA'")
         Me.txtSerie.Text = "01"
         Me.txtNumDocumento.Text = devuelveUltimoNumero(strUltimoNumero) + 1
         Me.fechaCierre = devuelveFecha("SELECT * FROM cierreDiario")
         Me.txtNombre.Text = txtNombreEmpresa
         Me.txtDireccion.Text = txtDireccionEmpresa
         Me.txtDNIRUC.Text = Mid(txtRUCEmpresa, 6, 12)
+        cbMotivo.SelectedIndex = 0
+        ActualizarGlosa()
         Me.Controls.Add(te)
         Me.te.Multiline = True
         Me.te.Visible = False
@@ -188,6 +190,17 @@ Public Class frmguiaRemisionSA
                 End If
             Next
 
+            Dim nMotivo As Integer
+            nMotivo = CInt(cbMotivo.Text.Substring(cbMotivo.Text.Length - 2, 2))
+            If nMotivo = 5 And Trim(Me.txtGlosa.Text) = "" Then
+                MsgBox("Ingrese la glosa para el motivo Otros Conceptos.", MsgBoxStyle.Critical)
+                Me.txtGlosa.Focus()
+                Exit Sub
+            End If
+
+            Dim glosaSalida As String = ""
+            If nMotivo = 5 Then glosaSalida = LimpiarTextoSql(Trim(Me.txtGlosa.Text))
+
             Dim oFrmAcceso As New frmaccesoAdministrador()
             oFrmAcceso.ShowDialog()
             If flag <> 1 Then
@@ -207,10 +220,10 @@ Public Class frmguiaRemisionSA
             Dim ListSqlStringsAlm3 As New ArrayList
 
             SqlStringAlm = "INSERT INTO almCabecera (nomDocumento,tipDocumento,numDocumento,idProveedor," & _
-            "fecOrigen,nomOrigen,dirOrigen,rucDNI_1,fecLlegada,idCliente,transLlegada,status) VALUES ('" & _
+            "fecOrigen,nomOrigen,dirOrigen,rucDNI_1,fecLlegada,idCliente,transLlegada,status,iMotivo,glosa) VALUES ('" & _
             Me.cbxTipoDocumento.Text & "' ,'" & Me.cbxTipoMovimiento.Text & "' ," & Me.txtNumDocumento.Text & ",1,'" & _
             Me.dtpFecOrigen.Text & "' ,'" & txtNombreEmpresa & "','" & txtDireccionEmpresa & "','" & _
-            Mid(txtRUCEmpresa, 6, 11) & "','" & Me.dtpFecLlegada.Text & "'," & Me.txtCodigoCliente & ",'','" & Me.txtStatus & "' )"
+            Mid(txtRUCEmpresa, 6, 11) & "','" & Me.dtpFecLlegada.Text & "'," & Me.txtCodigoCliente & ",'','" & Me.txtStatus & "', " & nMotivo & ",'" & glosaSalida & "' )"
 
             For i As Integer = 0 To dgvProductos.Rows.Count - 1
                 SqlStringAlm1 = "INSERT INTO almDetalle (nomDocumento,tipDocumento,numDocumento,idProducto,cantidad,status) VALUES ('" & _
@@ -237,10 +250,14 @@ Public Class frmguiaRemisionSA
                     SqlStringAlm4 = "UPDATE numerosSerie Set numDoc='" & Me.txtNumDocumento.Text & "' where numSerie='" & Me.dgvProductos.Rows(i).Cells(5).Value & "'and idProducto='" & Me.dgvProductos.Rows(i).Cells(1).Value & "' "
                 End If
 
+
                 ListSqlStringsAlm3.Add(SqlStringAlm4)
                 ListSqlStringsAlm1.Add(SqlStringAlm1)
                 ListSqlStringsAlm2.Add(SqlStringAlm2)
+
             Next
+            Dim sqlString As String = "insert into glosasFacturas (tipDocumento,numDocumento,glosa,nomDocumento) values ('" & Me.cbxTipoMovimiento.Text & "'," & Me.txtNumDocumento.Text & ",'" & Trim(cbMotivo.Text.Substring(0, 30)) & "','" & Me.cbxTipoDocumento.Text & "')"
+            ListSqlStringsAlm3.Add(sqlString)
 
             SqlStringAlm3 = "UPDATE ultimosNumeros Set numero=" & Me.txtNumDocumento.Text & " where tipDocumento='" & Me.cbxTipoDocumento.Text & "' and tipMovimiento='" & Me.cbxTipoMovimiento.Text & "'"
 
@@ -453,9 +470,24 @@ Public Class frmguiaRemisionSA
         Me.txtDocCliente.Text = ""
         Me.txtTransLlegada.Text = ""
         Me.cbxTipoDocumento.SelectedIndex = 0
+        Me.cbMotivo.SelectedIndex = 0
+        Me.txtGlosa.Text = ""
+        ActualizarGlosa()
         Me.dgvProductos.Rows.Clear()
         Me.btnBuscarCliente.Focus()
     End Sub
+    Private Sub cbMotivo_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cbMotivo.SelectedIndexChanged
+        ActualizarGlosa()
+    End Sub
+    Private Sub ActualizarGlosa()
+        Dim mostrarGlosa As Boolean = Me.cbMotivo.Text.ToUpper().Contains("OTROS CONCEPTOS")
+        Me.lblGlosa.Visible = mostrarGlosa
+        Me.txtGlosa.Visible = mostrarGlosa
+        If mostrarGlosa = False Then Me.txtGlosa.Text = ""
+    End Sub
+    Private Function LimpiarTextoSql(ByVal texto As String) As String
+        Return texto.Replace("'", "''")
+    End Function
     Private Sub btnSalir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSalir.Click
         Me.Close()
     End Sub

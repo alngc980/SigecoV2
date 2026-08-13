@@ -4,15 +4,14 @@ Public Class frmdocumentosEmitidos
     Private item, v, w, x, y, z As Integer
     Private concepto As String
     Private Sub frmdocumentosEmitidos_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Me.dtpNuevaFecha.Value = Me.dtpFechaDocumento.Value
         Me.btnMostrar_Click(sender, e)
     End Sub
-
-    Private Sub dtpFechaDocumento_ValueChanged(sender As Object, e As EventArgs) Handles dtpFechaDocumento.ValueChanged
-        Me.btnMostrar_Click(sender, e)
-    End Sub
-
     Private Sub btnMostrar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnMostrar.Click
-        Dim arrayConcepto() As String = {"V.Contado", "A.Letra", "C.Letra", "C.Inicial", "A.Cuota", "O.Pagos", "Préstamo"}
+        Dim arrayConceptos() As String = {"Venta Contado", "Amortización Letra", "Cancelación Letra", "Cuota Inicial", "Anticipo Cuota Inicial", "Venta Tarjeta", _
+                                          "Venta Tarjeta Oferta", "Venta Tarjeta Remate", "Venata Oferta", "Venta Remate", "Otros Pagos", "Cobro Interés", "Cargo Operación"}
+
+        Dim arrayConceptos_1() As String = {"Préstamo a Personal", "Préstamo a Clientes", " Pagos Diversos"}
         Dim arrayMoneda() As String = {"S/.", "$", "€"}
 
         item = 0
@@ -20,26 +19,29 @@ Public Class frmdocumentosEmitidos
         oDataSet = New DataSet()
 
         Try
-            Dim daVtaCabecera As New SqlDataAdapter("SELECT  tipDocumento,numDocumento,totVentaMN,totVentaME,fecOperacion,idMoneda,status,idCliente FROM vtaCabecera where fecOperacion='" & Me.dtpFechaDocumento.Text & "' ", Connection)
+            Dim daVtaCabecera As New SqlDataAdapter("select tipDocumento,numDocumento,totVentaMN,totVentaME,fecOperacion,idMoneda,status,idCliente FROM vtaCabecera where fecOperacion='" & Me.dtpFechaDocumento.Text & "'", Connection)
             daVtaCabecera.Fill(oDataSet, "vtaCabecera")
 
-            Dim daAlmCabecera As New SqlDataAdapter("SELECT  nomDocumento,tipDocumento,numDocumento,fecOrigen,status,idCliente FROM almCabecera where fecOrigen='" & Me.dtpFechaDocumento.Text & "' ", Connection)
+            Dim daAlmCabecera As New SqlDataAdapter("select nomDocumento,tipDocumento,numDocumento,fecOrigen,status, case when nomDocumento='PD' and tipDocumento='EN' then idProveedor else idCliente end   as idCliente FROM almCabecera where fecOrigen='" & Me.dtpFechaDocumento.Text & "'", Connection)
             daAlmCabecera.Fill(oDataSet, "almCabecera")
 
-            Dim daRecibos As New SqlDataAdapter("SELECT  concepto,idRecibo,impDocumento,impDocumentoME,fecEmision,idMoneda,status,idCliente FROM recibosClientes where fecEmision='" & Me.dtpFechaDocumento.Text & "' ", Connection)
+            Dim daRecibos As New SqlDataAdapter("select concepto,idRecibo,impDocumento,impDocumentoME,fecEmision,idMoneda,status,idCliente FROM recibosClientes where fecEmision='" & Me.dtpFechaDocumento.Text & "'", Connection)
             daRecibos.Fill(oDataSet, "recibos")
 
-            Dim daNotaCreditoCa As New SqlDataAdapter("SELECT  tipDocumento,numDocumento,totVentaMN,totVentaME,fecOperacion,idMoneda,status,idCliente FROM notaCreditoCa where fecOperacion='" & Me.dtpFechaDocumento.Text & "' ", Connection)
+            Dim daNotaCreditoCa As New SqlDataAdapter("select tipDocumento,numDocumento,totVentaMN,totVentaME,fecOperacion,idMoneda,status,idCliente FROM notaCreditoCa where fecOperacion='" & Me.dtpFechaDocumento.Text & "'", Connection)
             daNotaCreditoCa.Fill(oDataSet, "notaCreditoCa")
 
-            Dim daSalidas As New SqlDataAdapter("SELECT  concepto,idRecibo,impDocumento,impDocumentoME,fecEmision,idMoneda,status,idCliente FROM recibosSalidas where fecEmision='" & Me.dtpFechaDocumento.Text & "' ", Connection)
+            Dim daSalidas As New SqlDataAdapter("select concepto,idRecibo,impDocumento,impDocumentoME,fecEmision,idMoneda,status,idCliente FROM recibosSalidas where fecEmision='" & Me.dtpFechaDocumento.Text & "'", Connection)
             daSalidas.Fill(oDataSet, "salidas")
 
-            Dim daNotaDebitoCa As New SqlDataAdapter("SELECT  tipDocumento,numDocumento,totVentaMN,totVentaME,fecOperacion,idMoneda,status,idCliente FROM notaDebitoCa where fecOperacion='" & Me.dtpFechaDocumento.Text & "' ", Connection)
+            Dim daNotaDebitoCa As New SqlDataAdapter("select tipDocumento,numDocumento,totVentaMN,totVentaME,fecOperacion,idMoneda,status,idCliente FROM notaDebitoCa where fecOperacion='" & Me.dtpFechaDocumento.Text & "'", Connection)
             daNotaDebitoCa.Fill(oDataSet, "notaDebitoCa")
 
             Dim daClientes As New SqlDataAdapter("Select *from clientes", Connection)
             daClientes.Fill(oDataSet, "clientes")
+
+            Dim daProveedor As New SqlDataAdapter("select * from proveedores", Connection)
+            daProveedor.Fill(oDataSet, "proveedores")
 
             Dim colNombres As DataColumn = New DataColumn()
             colNombres.AllowDBNull = True
@@ -65,12 +67,22 @@ Public Class frmdocumentosEmitidos
 
             Dim oDataRowNombres1 As DataRow
             For i As Integer = 0 To oDataSet.Tables(1).Rows.Count() - 1
-                For x As Integer = 0 To oDataSet.Tables(6).Rows.Count() - 1
-                    oDataRowNombres1 = Me.oDataSet.Tables(1).Rows(i)
-                    If Me.oDataSet.Tables(6).Rows(x).Item(0) = Me.oDataSet.Tables(1).Rows(i).Item(5) Then
-                        oDataRowNombres1(6) = Me.oDataSet.Tables(6).Rows(x).Item(1)
-                    End If
-                Next x
+                If Me.oDataSet.Tables(1).Rows(i).Item(0) = "PD" And Me.oDataSet.Tables(1).Rows(i).Item(1) = "EN" Then
+                    For x As Integer = 0 To oDataSet.Tables(7).Rows.Count() - 1
+                        oDataRowNombres1 = Me.oDataSet.Tables(1).Rows(i)
+                        If Me.oDataSet.Tables(7).Rows(x).Item(0) = Me.oDataSet.Tables(1).Rows(i).Item(5) Then
+                            oDataRowNombres1(6) = Me.oDataSet.Tables(7).Rows(x).Item(1)
+                        End If
+                    Next x
+
+                Else
+                    For x As Integer = 0 To oDataSet.Tables(6).Rows.Count() - 1
+                        oDataRowNombres1 = Me.oDataSet.Tables(1).Rows(i)
+                        If Me.oDataSet.Tables(6).Rows(x).Item(0) = Me.oDataSet.Tables(1).Rows(i).Item(5) Then
+                            oDataRowNombres1(6) = Me.oDataSet.Tables(6).Rows(x).Item(1)
+                        End If
+                    Next x
+                End If
             Next i
 
             Dim colNombres2 As DataColumn = New DataColumn()
@@ -152,9 +164,9 @@ Public Class frmdocumentosEmitidos
                 Me.dgvDocumentos.Rows(i).Cells(4).Value = Me.oDataSet.Tables(0).Rows(i).Item(1)
                 Me.dgvDocumentos.Rows(i).Cells(5).Value = arrayMoneda(Me.oDataSet.Tables(0).Rows(i).Item(5) - 1)
                 If Me.oDataSet.Tables(0).Rows(i).Item(3) > 0 Then
-                    Me.dgvDocumentos.Rows(i).Cells(6).Value = Me.oDataSet.Tables(0).Rows(i).Item(3)
+                    Me.dgvDocumentos.Rows(i).Cells(6).Value = Format(Me.oDataSet.Tables(0).Rows(i).Item(3), "###,##0.00")
                 Else
-                    Me.dgvDocumentos.Rows(i).Cells(6).Value = Me.oDataSet.Tables(0).Rows(i).Item(2)
+                    Me.dgvDocumentos.Rows(i).Cells(6).Value = Format(Me.oDataSet.Tables(0).Rows(i).Item(2), "###,##0.00")
                 End If
                 Me.dgvDocumentos.Rows(i).Cells(7).Value = Me.oDataSet.Tables(0).Rows(i).Item(4)
                 Me.dgvDocumentos.Rows(i).Cells(8).Value = Me.oDataSet.Tables(0).Rows(i).Item(6)
@@ -194,13 +206,13 @@ Public Class frmdocumentosEmitidos
                 Me.dgvDocumentos.Rows(i + y).Cells(0).Value = Me.item
                 Me.dgvDocumentos.Rows(i + y).Cells(1).Value = Me.oDataSet.Tables(2).Rows(i).Item(8)
                 Me.dgvDocumentos.Rows(i + y).Cells(2).Value = "RC"
-                Me.dgvDocumentos.Rows(i + y).Cells(3).Value = arrayConcepto(Me.oDataSet.Tables(2).Rows(i).Item(0))
+                Me.dgvDocumentos.Rows(i + y).Cells(3).Value = arrayConceptos(Me.oDataSet.Tables(2).Rows(i).Item(0))
                 Me.dgvDocumentos.Rows(i + y).Cells(4).Value = Me.oDataSet.Tables(2).Rows(i).Item(1)
                 Me.dgvDocumentos.Rows(i + y).Cells(5).Value = arrayMoneda(Me.oDataSet.Tables(2).Rows(i).Item(5) - 1)
                 If Me.oDataSet.Tables(2).Rows(i).Item(3) > 0 Then
-                    Me.dgvDocumentos.Rows(i + y).Cells(6).Value = Me.oDataSet.Tables(2).Rows(i).Item(3)
+                    Me.dgvDocumentos.Rows(i + y).Cells(6).Value = Format(Me.oDataSet.Tables(2).Rows(i).Item(3), "###,##0.00")
                 Else
-                    Me.dgvDocumentos.Rows(i + y).Cells(6).Value = Me.oDataSet.Tables(2).Rows(i).Item(2)
+                    Me.dgvDocumentos.Rows(i + y).Cells(6).Value = Format(Me.oDataSet.Tables(2).Rows(i).Item(2), "###,##0.00")
                 End If
                 Me.dgvDocumentos.Rows(i + y).Cells(7).Value = Me.oDataSet.Tables(2).Rows(i).Item(4)
                 Me.dgvDocumentos.Rows(i + y).Cells(8).Value = Me.oDataSet.Tables(2).Rows(i).Item(6)
@@ -218,14 +230,14 @@ Public Class frmdocumentosEmitidos
                 Me.dgvDocumentos.Rows.Add()
                 Me.dgvDocumentos.Rows(i + z).Cells(0).Value = Me.item
                 Me.dgvDocumentos.Rows(i + z).Cells(1).Value = Me.oDataSet.Tables(3).Rows(i).Item(8)
-                Me.dgvDocumentos.Rows(i + z).Cells(2).Value = "NC"
+                Me.dgvDocumentos.Rows(i + z).Cells(2).Value = Me.oDataSet.Tables(3).Rows(i).Item(0) '"NC"
                 Me.dgvDocumentos.Rows(i + z).Cells(3).Value = Me.oDataSet.Tables(3).Rows(i).Item(0)
                 Me.dgvDocumentos.Rows(i + z).Cells(4).Value = Me.oDataSet.Tables(3).Rows(i).Item(1)
                 Me.dgvDocumentos.Rows(i + z).Cells(5).Value = arrayMoneda(Me.oDataSet.Tables(3).Rows(i).Item(5) - 1)
                 If Me.oDataSet.Tables(3).Rows(i).Item(3) > 0 Then
-                    Me.dgvDocumentos.Rows(i + z).Cells(6).Value = Me.oDataSet.Tables(3).Rows(i).Item(3)
+                    Me.dgvDocumentos.Rows(i + z).Cells(6).Value = Format(Me.oDataSet.Tables(3).Rows(i).Item(3), "###,##0.00")
                 Else
-                    Me.dgvDocumentos.Rows(i + z).Cells(6).Value = Me.oDataSet.Tables(3).Rows(i).Item(2)
+                    Me.dgvDocumentos.Rows(i + z).Cells(6).Value = Format(Me.oDataSet.Tables(3).Rows(i).Item(2), "###,##0.00")
                 End If
                 Me.dgvDocumentos.Rows(i + z).Cells(7).Value = Me.oDataSet.Tables(3).Rows(i).Item(4)
                 Me.dgvDocumentos.Rows(i + z).Cells(8).Value = Me.oDataSet.Tables(3).Rows(i).Item(6)
@@ -244,13 +256,13 @@ Public Class frmdocumentosEmitidos
                 Me.dgvDocumentos.Rows(i + w).Cells(0).Value = Me.item
                 Me.dgvDocumentos.Rows(i + w).Cells(1).Value = Me.oDataSet.Tables(4).Rows(i).Item(8)
                 Me.dgvDocumentos.Rows(i + w).Cells(2).Value = "RP"
-                Me.dgvDocumentos.Rows(i + w).Cells(3).Value = arrayConcepto(7)
+                Me.dgvDocumentos.Rows(i + w).Cells(3).Value = arrayConceptos_1(Me.oDataSet.Tables(4).Rows(i).Item(0))
                 Me.dgvDocumentos.Rows(i + w).Cells(4).Value = Me.oDataSet.Tables(4).Rows(i).Item(1)
                 Me.dgvDocumentos.Rows(i + w).Cells(5).Value = arrayMoneda(Me.oDataSet.Tables(4).Rows(i).Item(5) - 1)
                 If Me.oDataSet.Tables(4).Rows(i).Item(3) > 0 Then
-                    Me.dgvDocumentos.Rows(i + w).Cells(6).Value = Me.oDataSet.Tables(4).Rows(i).Item(3)
+                    Me.dgvDocumentos.Rows(i + w).Cells(6).Value = Format(Me.oDataSet.Tables(4).Rows(i).Item(3), "###,##0.00")
                 Else
-                    Me.dgvDocumentos.Rows(i + w).Cells(6).Value = Me.oDataSet.Tables(4).Rows(i).Item(2)
+                    Me.dgvDocumentos.Rows(i + w).Cells(6).Value = Format(Me.oDataSet.Tables(4).Rows(i).Item(2), "###,##0.00")
                 End If
                 Me.dgvDocumentos.Rows(i + w).Cells(7).Value = Me.oDataSet.Tables(4).Rows(i).Item(4)
                 Me.dgvDocumentos.Rows(i + w).Cells(8).Value = Me.oDataSet.Tables(4).Rows(i).Item(6)
@@ -273,9 +285,9 @@ Public Class frmdocumentosEmitidos
                 Me.dgvDocumentos.Rows(i + v).Cells(4).Value = Me.oDataSet.Tables(5).Rows(i).Item(1)
                 Me.dgvDocumentos.Rows(i + v).Cells(5).Value = arrayMoneda(Me.oDataSet.Tables(5).Rows(i).Item(5) - 1)
                 If Me.oDataSet.Tables(5).Rows(i).Item(3) > 0 Then
-                    Me.dgvDocumentos.Rows(i + v).Cells(6).Value = Me.oDataSet.Tables(5).Rows(i).Item(3)
+                    Me.dgvDocumentos.Rows(i + v).Cells(6).Value = Format(Me.oDataSet.Tables(5).Rows(i).Item(3), "###,##0.00")
                 Else
-                    Me.dgvDocumentos.Rows(i + v).Cells(6).Value = Me.oDataSet.Tables(5).Rows(i).Item(2)
+                    Me.dgvDocumentos.Rows(i + v).Cells(6).Value = Format(Me.oDataSet.Tables(5).Rows(i).Item(2), "###,##0.00")
                 End If
                 Me.dgvDocumentos.Rows(i + v).Cells(7).Value = Me.oDataSet.Tables(5).Rows(i).Item(4)
                 Me.dgvDocumentos.Rows(i + v).Cells(8).Value = Me.oDataSet.Tables(5).Rows(i).Item(6)
@@ -288,6 +300,7 @@ Public Class frmdocumentosEmitidos
     Private Sub dgvDocumentos_MouseDoubleClick(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles dgvDocumentos.MouseDoubleClick
         flag = 1
         Dim ofrmanularRecibo As New frmanularRecibo()
+        Dim ofrmanularReciboSalida As New frmanularReciboSalida()
         Dim ofrmanularGuia As New frmanularGuia()
         Dim ofrmanularDocumentoVta As New frmanularDocumentoVta()
         Dim ofrmanularNotaCredito As New frmanularNotaCredito()
@@ -303,6 +316,10 @@ Public Class frmdocumentosEmitidos
                 numDocumento = Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(4).Value
                 fecDocumento = CDate(Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(7).Value.ToString)
                 ofrmanularRecibo.ShowDialog()
+            Case "RP"
+                numDocumento = Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(4).Value
+                fecDocumento = CDate(Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(7).Value.ToString)
+                ofrmanularReciboSalida.ShowDialog()
             Case "GR"
                 tipDocumento = Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(2).Value
                 tipMovimiento = Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(3).Value
@@ -314,6 +331,7 @@ Public Class frmdocumentosEmitidos
                 tipMovimiento = Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(3).Value
                 numDocumento = Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(4).Value
                 fecDocumento = CDate(Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(7).Value.ToString)
+                ofrmanularGuia.btnModificarGarantia.Visible = True
                 ofrmanularGuia.ShowDialog()
             Case "PD"
                 tipDocumento = Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(2).Value
@@ -322,6 +340,11 @@ Public Class frmdocumentosEmitidos
                 fecDocumento = CDate(Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(7).Value.ToString)
                 ofrmanularGuia.ShowDialog()
             Case "NC"
+                tipMovimiento = Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(3).Value
+                numDocumento = Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(4).Value
+                fecDocumento = CDate(Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(7).Value.ToString)
+                ofrmanularNotaCredito.ShowDialog()
+            Case "NX"
                 tipMovimiento = Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(3).Value
                 numDocumento = Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(4).Value
                 fecDocumento = CDate(Me.dgvDocumentos.Rows(dgvDocumentos.CurrentCell.RowIndex).Cells(7).Value.ToString)
@@ -344,7 +367,73 @@ Public Class frmdocumentosEmitidos
     Private Sub dgvDocumentos_CellMouseLeave(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles dgvDocumentos.CellMouseLeave
         Me.lblMensaje.Text = ""
     End Sub
+    Private Sub dgvDocumentos_CellClick(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles dgvDocumentos.CellClick
+        If e.RowIndex >= 0 Then Me.dtpNuevaFecha.Value = CDate(Me.dgvDocumentos.Rows(e.RowIndex).Cells(7).Value)
+    End Sub
+    Private Sub btnModificarFecha_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnModificarFecha.Click
+        If Me.dgvDocumentos.CurrentCell Is Nothing Then
+            MsgBox("Seleccione un documento para modificar la fecha.", MsgBoxStyle.Information)
+            Exit Sub
+        End If
+
+        Dim fila As Integer = Me.dgvDocumentos.CurrentCell.RowIndex
+        Dim nomDocumento As String = Me.dgvDocumentos.Rows(fila).Cells(2).Value.ToString()
+        Dim tipoDocumento As String = Me.dgvDocumentos.Rows(fila).Cells(3).Value.ToString()
+        Dim numeroDocumento As String = Me.dgvDocumentos.Rows(fila).Cells(4).Value.ToString()
+        Dim fechaActual As Date = CDate(Me.dgvDocumentos.Rows(fila).Cells(7).Value)
+        Dim nuevaFecha As Date = Me.dtpNuevaFecha.Value.Date
+
+        If fechaActual = nuevaFecha Then
+            MsgBox("La nueva fecha es igual a la fecha actual.", MsgBoxStyle.Information)
+            Exit Sub
+        End If
+
+        If EsDocumentoModificable(nomDocumento) = False Then
+            MsgBox("Solo se puede modificar fecha de ventas, guías y recibos.", MsgBoxStyle.Information)
+            Exit Sub
+        End If
+
+        flag = 0
+        Dim oFrmAcceso As New frmaccesoAdministrador()
+        oFrmAcceso.ShowDialog()
+        If flag <> 1 Then
+            Exit Sub
+        End If
+
+        If ModificarFechaDocumento(nomDocumento, tipoDocumento, numeroDocumento, nuevaFecha) Then
+            MsgBox("Fecha modificada correctamente.", MsgBoxStyle.Information)
+            Me.btnMostrar_Click(sender, e)
+        Else
+            MsgBox("No se pudo modificar la fecha.", MsgBoxStyle.Critical)
+        End If
+    End Sub
+    Private Function EsDocumentoModificable(ByVal nomDocumento As String) As Boolean
+        Return nomDocumento = "DV" Or nomDocumento = "GR" Or nomDocumento = "GX" Or nomDocumento = "PD" Or nomDocumento = "RC" Or nomDocumento = "RP"
+    End Function
+    Private Function ModificarFechaDocumento(ByVal nomDocumento As String, ByVal tipoDocumento As String, ByVal numeroDocumento As String, ByVal nuevaFecha As Date) As Boolean
+        Dim fechaSql As String = nuevaFecha.ToString("yyyyMMdd")
+
+        Select Case nomDocumento
+            Case "DV"
+                Dim sentencias As New ArrayList()
+                sentencias.Add("UPDATE vtaCabecera SET fecOperacion='" & fechaSql & "' WHERE tipDocumento='" & tipoDocumento & "' AND numDocumento=" & CInt(numeroDocumento))
+                sentencias.Add("UPDATE vtaDetalle SET fecOperacion='" & fechaSql & "' WHERE tipDocumento='" & tipoDocumento & "' AND numDocumento=" & CInt(numeroDocumento))
+                Return ejecutarTransaccion(sentencias)
+            Case "GR", "GX", "PD"
+                Return grabarSqlString("UPDATE almCabecera SET fecOrigen='" & fechaSql & "', fecLlegada='" & fechaSql & "' WHERE nomDocumento='" & nomDocumento & "' AND tipDocumento='" & tipoDocumento & "' AND numDocumento=" & CInt(numeroDocumento))
+            Case "RC"
+                Return grabarSqlString("UPDATE recibosClientes SET fecEmision='" & fechaSql & "' WHERE idRecibo=" & CInt(numeroDocumento))
+            Case "RP"
+                Return grabarSqlString("UPDATE recibosSalidas SET fecEmision='" & fechaSql & "' WHERE idRecibo=" & CInt(numeroDocumento))
+        End Select
+
+        Return False
+    End Function
     Private Sub btnSalir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSalir.Click
         Me.Close()
+    End Sub
+
+    Private Sub btnImprimir_Click(sender As Object, e As EventArgs) Handles btnImprimir.Click
+
     End Sub
 End Class

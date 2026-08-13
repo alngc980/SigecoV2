@@ -117,7 +117,7 @@ Public Class frmanularGuia
 
             Me.txtGarantia.Text = Me.oDataSet.Tables(0).Rows(0).Item(10)
 
-            Dim daAlmDetalle = New SqlDataAdapter("SELECT *from almDetalle where nomDocumento='" & Me.cbxTipoDocumento.Text & "' and tipDocumento='" & Me.cbxTipoMovimiento.Text & "' and numDocumento='" & Me.txtNumDocumento.Text & "' order by idProducto asc", Connection)
+            Dim daAlmDetalle = New SqlDataAdapter("SELECT distinct  nomDocumento, tipDocumento, numDocumento, idProducto, cantidad, status, CAST(dFechaReg AS date) dFechaReg, nCost, nCostFlete, nCostSeguro, nCostOtros, nCostPreCF from almDetalle where nomDocumento='" & Me.cbxTipoDocumento.Text & "' and tipDocumento='" & Me.cbxTipoMovimiento.Text & "' and numDocumento='" & Me.txtNumDocumento.Text & "' order by idProducto asc", Connection)
             daAlmDetalle.Fill(oDataSet, "almDetalle")
 
             Dim colNombreProducto As DataColumn = New DataColumn()
@@ -183,17 +183,21 @@ Public Class frmanularGuia
                     If tipoVenta = 0 Or tipoVenta = 2 Then
                         Dim daRecibos As SqlDataAdapter = New SqlDataAdapter("SELECT *FROM recibosClientes where idCliente='" & Me.codigo & "' and numDocGenACI='" & Me.tipoComprobante & Me.numComprobante & "' ", Connection)
                         daRecibos.Fill(oDataSet, "recibos")
-                        numRecibo = Me.oDataSet.Tables("recibos").Rows(0).Item(0)
+                        If oDataSet.Tables("recibos").Rows.Count > 0 Then
+                            numRecibo = Me.oDataSet.Tables("recibos").Rows(0).Item(0)
+                        End If
                     Else
                         Dim daLetras As SqlDataAdapter = New SqlDataAdapter("SELECT *FROM letrasClientes where idCliente='" & Me.codigo & "' and numLetra='" & Me.numLetra & "' ", Connection)
                         daLetras.Fill(oDataSet, "letras")
                         numCuotas = Me.oDataSet.Tables("letras").Rows.Count
-                        If Me.oDataSet.Tables("vtaCabecera").Rows(0).Item(15) > 1 Then
-                            valorCuota = Me.oDataSet.Tables("letras").Rows(0).Item(5)
-                        Else
-                            valorCuota = Me.oDataSet.Tables("letras").Rows(0).Item(4)
+                        If numCuotas > 0 Then
+                            If Me.oDataSet.Tables("vtaCabecera").Rows(0).Item(15) > 1 Then
+                                valorCuota = Me.oDataSet.Tables("letras").Rows(0).Item(5)
+                            Else
+                                valorCuota = Me.oDataSet.Tables("letras").Rows(0).Item(4)
+                            End If
+                            fecVencimiento = Me.oDataSet.Tables("letras").Rows(0).Item(7)
                         End If
-                        fecVencimiento = Me.oDataSet.Tables("letras").Rows(0).Item(7)
                     End If
                 End If
             End If
@@ -202,7 +206,11 @@ Public Class frmanularGuia
             daGlosas.Fill(oDataSet, "glosas")
             Connection.Close()
 
-            If Me.oDataSet.Tables("glosas").Rows.Count >= 1 Then Me.txtGlosa.Text = Me.oDataSet.Tables("glosas").Rows(0).Item(2)
+            If Me.oDataSet.Tables("glosas").Rows.Count >= 1 Then
+                Me.txtGlosa.Text = Me.oDataSet.Tables("glosas").Rows(0).Item(2)
+                Dim glosaAlmacen As String = ObtenerGlosaAlmacen()
+                If glosaAlmacen <> "" Then Me.txtGlosa.Text = Me.txtGlosa.Text & " - " & glosaAlmacen
+            End If
 
             ' Create a new DataTable.
             Dim table As DataTable = New DataTable("almDetalle1")
@@ -312,100 +320,124 @@ Public Class frmanularGuia
         End Try
     End Sub
     Private Sub btnImprimir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnImprimir.Click
-        'Try
-        '    Dim en, t As Keys
-        '    Dim enter, tab As Char
-        '    en = Keys.Enter
-        '    t = Keys.Tab
-        '    enter = Convert.ToChar(en)
-        '    tab = Convert.ToChar(t)
-        '    te.Clear()
+        If cbxTipoMovimiento.Text = "EN" Then
+            Try
+                Dim en, t As Keys
+                Dim enter, tab As Char
+                en = Keys.Enter
+                t = Keys.Tab
+                enter = Convert.ToChar(en)
+                tab = Convert.ToChar(t)
+                te.Clear()
 
-        '    If cbxTipoMovimiento.Text = "EN" Then
-        '        te.Text = te.Text & (Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text).ToString.PadLeft(100) & enter
-        '        te.Text = te.Text & "                                         " & Me.dtpFecOrigen.Text & "                       " & Me.txtNombre.Text & enter & enter & enter & enter & enter
-        '        'te.Text = te.Text & "CANT. DESCRIPCION          MARCA         MODELO          NUMERO SERIE   NUMERO MOTOR      NUMERO CHASIS      COLOR      ".PadLeft(103) & enter
-        '        For i As Integer = 0 To Me.dgvProductos.RowCount - 1
-        '            te.Text = te.Text & dgvProductos.Rows(i).Cells(9).Value.ToString.PadRight(6)
-        '            te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(2).Value.ToString, 20).PadRight(21)
-        '            te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(3).Value.ToString, 21).PadRight(23)
-        '            te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(4).Value.ToString, 15).PadRight(16)
-        '            te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(5).Value.ToString, 25).PadRight(26)
-        '            'te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(6).Value.ToString, 25).PadRight(26)
-        '            'te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(7).Value.ToString, 18).PadRight(19)
-        '            te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(8).Value.ToString, 6).PadRight(7)
-        '            te.Text = te.Text & enter
-        '        Next
-        '    Else 'If cbxTipoMovimiento.Text = "SA" Then
-        '        te.Text = te.Text & enter & enter & enter & enter & enter & enter
-        '        te.Text = te.Text & "                                                      " & Me.dtpFecOrigen.Text & enter & enter & enter & enter
-        '        te.Text = te.Text & "                     " & Me.txtNombre.Text & enter
-        '        te.Text = te.Text & "                " & Me.txtDNIRUC.Text & enter
-        '        te.Text = te.Text & "Dirección:" & Me.txtDireccion.Text & enter & enter & enter & enter & enter & enter & enter & enter & enter & enter
-        '        'te.Text = te.Text & Me.txtGarantia.Text & enter & enter & enter & enter & enter
+                If cbxTipoMovimiento.Text = "EN" Then
+                    te.Text = te.Text & (Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text).ToString.PadLeft(100) & enter
+                    te.Text = te.Text & "                                         " & Me.dtpFecOrigen.Text & "                       " & Me.txtNombre.Text & enter & enter & enter & enter & enter
+                    'te.Text = te.Text & "CANT. DESCRIPCION          MARCA         MODELO          NUMERO SERIE   NUMERO MOTOR      NUMERO CHASIS      COLOR      ".PadLeft(103) & enter
+                    For i As Integer = 0 To Me.dgvProductos.RowCount - 1
+                        te.Text = te.Text & dgvProductos.Rows(i).Cells(1).Value.ToString.PadRight(6)
+                        te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(2).Value.ToString, 20).PadRight(21)
+                        te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(3).Value.ToString, 21).PadRight(23)
+                        te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(4).Value.ToString, 15).PadRight(16)
+                        te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(0).Value.ToString & " - " & Me.dgvProductos.Rows(i).Cells(5).Value.ToString, 25).PadRight(26)
+                        'te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(6).Value.ToString, 25).PadRight(26)
+                        'te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(7).Value.ToString, 18).PadRight(19)
+                        te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(8).Value.ToString, 6).PadRight(7)
+                        te.Text = te.Text & enter
+                    Next
+                End If
+                te.Text = te.Text & enter & enter
+                te.Text = te.Text & Me.txtGlosa.Text & enter
+                te.Text = te.Text & "Número Recibo:" & numRecibo
 
-        '        'te.Text = te.Text & CANT. DESCRIPCION          MARCA           MODELO          NUMERO SERIE  NUMERO MOTOR      NUMERO CHASIS      COLOR      ".PadLeft(103) & enter
-        '        For i As Integer = 0 To Me.dgvProductos.RowCount - 1
-        '            te.Text = te.Text & dgvProductos.Rows(i).Cells(9).Value.ToString.PadRight(6)
-        '            te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(2).Value.ToString, 20).PadRight(21)
-        '            te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(3).Value.ToString, 21).PadRight(23)
-        '            te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(4).Value.ToString, 15).PadRight(16)
-        '            te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(5).Value.ToString, 25).PadRight(26)
-        '            'te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(6).Value.ToString, 25).PadRight(26)
-        '            'te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(7).Value.ToString, 18).PadRight(19)
-        '            te.Text = te.Text & VisualBasic.Left(Me.dgvProductos.Rows(i).Cells(8).Value.ToString, 6).PadRight(7)
-        '            te.Text = te.Text & enter
-        '        Next
-        '    End If
-        '    te.Text = te.Text & enter & enter
-        '    te.Text = te.Text & Me.txtGlosa.Text & enter
-        '    te.Text = te.Text & "Número Recibo:" & numRecibo
+                If MsgBox("Desea hacer una vista previa del documento?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                    configurarImpresion()
+                    PrintPreviewDialog1.Document = PrintDocument1
+                    PrintPreviewDialog1.ShowDialog()
+                End If
 
-        '    If MsgBox("Desea hacer una vista previa del documento?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-        '        configurarImpresion()
-        '        PrintPreviewDialog1.Document = PrintDocument1
-        '        PrintPreviewDialog1.ShowDialog()
-        '    End If
+                PrintDialog1.Document = PrintDocument1
+                If PrintDialog1.ShowDialog = System.Windows.Forms.DialogResult.OK Then
+                    configurarImpresion()
+                    PrintDocument1.Print()
+                End If
+            Catch ex As Exception
+                MessageBox.Show(ex.Message)
+            End Try
+        Else
 
-        '    PrintDialog1.Document = PrintDocument1
-        '    If PrintDialog1.ShowDialog = System.Windows.Forms.DialogResult.OK Then
-        '        configurarImpresion()
-        '        PrintDocument1.Print()
-        '    End If
-        'Catch ex As Exception
-        '    MessageBox.Show(ex.Message)
-        'End Try
+            Dim nDatTipo As New DataTable
+            Dim nTip As Integer
+            nDatTipo = RetornaDataTable("select top 1 iMotivo from almCabecera where nomDocumento = 'GX' and tipDocumento = 'SA' and numDocumento = '" & txtNumDocumento.Text & "'")
+            If nDatTipo.Rows.Count > 0 Then
+                nTip = CInt(nDatTipo.Rows(0)(0).ToString())
+            End If
 
-        Dim dsGuia As New dsGuiaRemision
-        Dim dt As New DataTable
+            If nTip = 1 Then
+                Dim dsGuia As New dsGuiaRemision
+                Dim dt As New DataTable
+                dt = RetornaDataTable("EXEC rptGuia 'GX','" & txtSerieDocumento.Text & "','" & txtNumDocumento.Text & "'")
 
-        dt = RetornaDataTable("EXEC rptGuia 'GX','" & txtSerieDocumento.Text & "','" & txtNumDocumento.Text & "'")
+                If dt.Rows.Count > 0 Then
+                    For i = 0 To dt.Rows.Count - 1
+                        dsGuia.DataTable1.Rows.Add(
+                               dt.Rows(i)(0).ToString(), dt.Rows(i)(1).ToString(),
+                               dt.Rows(i)(2).ToString(), dt.Rows(i)(3).ToString(),
+                               dt.Rows(i)(4).ToString(), dt.Rows(i)(5).ToString(),
+                               dt.Rows(i)(6).ToString(), dt.Rows(i)(7).ToString(),
+                               dt.Rows(i)(8).ToString(), dt.Rows(i)(9).ToString(),
+                               dt.Rows(i)(10).ToString(), dt.Rows(i)(11).ToString(),
+                               dt.Rows(i)(12).ToString(), dt.Rows(i)(13).ToString(),
+                               dt.Rows(i)(14).ToString(), dt.Rows(i)(15).ToString(),
+                               dt.Rows(i)(16).ToString(), dt.Rows(i)(17).ToString(),
+                               dt.Rows(i)(18).ToString(), dt.Rows(i)(19).ToString(),
+                               dt.Rows(i)(20).ToString(), dt.Rows(i)(21).ToString(),
+                               dt.Rows(i)(22).ToString(), dt.Rows(i)(23).ToString(),
+                               dt.Rows(i)(24).ToString(), dt.Rows(0)(25).ToString(),
+                                           dt.Rows(0)(26).ToString())
+                    Next
+                End If
 
-        If dt.Rows.Count > 0 Then
-            For i = 0 To dt.Rows.Count - 1
-                dsGuia.DataTable1.Rows.Add(
-                       dt.Rows(0)(0).ToString(), dt.Rows(0)(1).ToString(),
-                       dt.Rows(0)(2).ToString(), dt.Rows(0)(3).ToString(),
-                       dt.Rows(0)(4).ToString(), dt.Rows(0)(5).ToString(),
-                       dt.Rows(0)(6).ToString(), dt.Rows(0)(7).ToString(),
-                       dt.Rows(0)(8).ToString(), dt.Rows(0)(9).ToString(),
-                       dt.Rows(0)(10).ToString(), dt.Rows(0)(11).ToString(),
-                       dt.Rows(0)(12).ToString(), dt.Rows(0)(13).ToString(),
-                       dt.Rows(0)(14).ToString(), dt.Rows(0)(15).ToString(),
-                       dt.Rows(0)(16).ToString(), dt.Rows(0)(17).ToString(),
-                       dt.Rows(0)(18).ToString(), dt.Rows(0)(19).ToString(),
-                       dt.Rows(0)(20).ToString(), dt.Rows(0)(21).ToString(),
-                       dt.Rows(0)(22).ToString(), dt.Rows(0)(23).ToString(),
-                       dt.Rows(0)(24).ToString())
-            Next
+                Dim rpt As New rptGuia
+                rpt.SetDataSource(dsGuia.Tables("DataTable1"))
+
+                Dim frm As New frmReporte
+                frm.CrystalReportViewer1.ReportSource = rpt
+                frm.ShowDialog()
+            ElseIf (nTip = 2) Or (nTip = 3) Or (nTip = 4) Or (nTip = 5) Then
+                Dim dsGuia As New dsGuiaRemision
+                Dim dt As New DataTable
+                dt = RetornaDataTable("EXEC rptGuia 'GX','" & txtSerieDocumento.Text & "','" & txtNumDocumento.Text & "'")
+
+                If dt.Rows.Count > 0 Then
+                    For i = 0 To dt.Rows.Count - 1
+                        dsGuia.DataTable1.Rows.Add(
+                               dt.Rows(i)(0).ToString(), dt.Rows(i)(1).ToString(),
+                               dt.Rows(i)(2).ToString(), dt.Rows(i)(3).ToString(),
+                               dt.Rows(i)(4).ToString(), dt.Rows(i)(5).ToString(),
+                               dt.Rows(i)(6).ToString(), dt.Rows(i)(7).ToString(),
+                               dt.Rows(i)(8).ToString(), dt.Rows(i)(9).ToString(),
+                               dt.Rows(i)(10).ToString(), dt.Rows(i)(11).ToString(),
+                               dt.Rows(i)(12).ToString(), dt.Rows(i)(13).ToString(),
+                               dt.Rows(i)(14).ToString(), dt.Rows(i)(15).ToString(),
+                               dt.Rows(i)(16).ToString(), dt.Rows(i)(17).ToString(),
+                               dt.Rows(i)(18).ToString(), dt.Rows(i)(19).ToString(),
+                               dt.Rows(i)(20).ToString(), dt.Rows(i)(21).ToString(),
+                               dt.Rows(i)(22).ToString(), dt.Rows(i)(23).ToString(),
+                               dt.Rows(i)(24).ToString(), dt.Rows(0)(25).ToString(),
+                                           dt.Rows(0)(26).ToString())
+                    Next
+                End If
+
+                Dim rpt As New rptGuiaDevolucion
+                rpt.SetDataSource(dsGuia.Tables("DataTable1"))
+
+                Dim frm As New frmReporte
+                frm.CrystalReportViewer1.ReportSource = rpt
+                frm.ShowDialog()
+            End If
+
         End If
-
-        Dim rpt As New rptGuia
-        rpt.SetDataSource(dsGuia.Tables("DataTable1"))
-
-        Dim frm As New frmReporte
-        frm.CrystalReportViewer1.ReportSource = rpt
-        frm.ShowDialog()
 
     End Sub
     Private Sub VistaPrevia(ByVal TipoFuente As String, ByVal TamañoFuente As Byte, ByVal TextoImpresion As String, ByVal e As System.Drawing.Printing.PrintPageEventArgs)
@@ -427,15 +459,15 @@ Public Class frmanularGuia
                 AreaImpresion_Ancho = NroTemp
             End If
             Dim Formato As New StringFormat(StringFormatFlags.LineLimit)
-            Dim Rectangulo As New RectangleF(MargenIzquierdo, MargenSuperior, _
+            Dim Rectangulo As New RectangleF(MargenIzquierdo, MargenSuperior,
             AreaImpresion_Ancho, AreaImpresion_Alto)
             Dim NroLineasImpresion As Integer = CInt(AreaImpresion_Alto / Fuente.Height)
             Dim NroLineasRelleno, NroLetrasLinea As Integer
             Static CaracterActual As Integer
-            e.Graphics.MeasureString(Mid(te.Text, +1), Fuente, _
-            New SizeF(AreaImpresion_Ancho, AreaImpresion_Alto), Formato, NroLetrasLinea, _
+            e.Graphics.MeasureString(Mid(te.Text, +1), Fuente,
+            New SizeF(AreaImpresion_Ancho, AreaImpresion_Alto), Formato, NroLetrasLinea,
             NroLineasRelleno)
-            e.Graphics.DrawString(Mid(TextoImpresion, CaracterActual + 1), Fuente, _
+            e.Graphics.DrawString(Mid(TextoImpresion, CaracterActual + 1), Fuente,
             Brushes.Black, Rectangulo, Formato)
             CaracterActual += NroLetrasLinea
             If CaracterActual < TextoImpresion.Length Then
@@ -482,6 +514,17 @@ Public Class frmanularGuia
         ' Asignamos los márgenes al documento
         Me.PrintDocument1.DefaultPageSettings.Margins = margenes
     End Sub
+    Private Function ObtenerGlosaAlmacen() As String
+        If Me.oDataSet Is Nothing Then Return ""
+        If Me.oDataSet.Tables("almCabecera") Is Nothing Then Return ""
+        If Me.oDataSet.Tables("almCabecera").Rows.Count = 0 Then Return ""
+        If Me.oDataSet.Tables("almCabecera").Columns.Contains("glosa") = False Then Return ""
+
+        Dim valor As Object = Me.oDataSet.Tables("almCabecera").Rows(0).Item("glosa")
+        If IsDBNull(valor) Then Return ""
+
+        Return Trim(valor.ToString())
+    End Function
     Private Sub btnAnular_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAnular.Click
         oDataSet = New DataSet()
         Try
@@ -515,27 +558,35 @@ Public Class frmanularGuia
                 'SqlString = "UPDATE almCabecera set nomOrigen='',dirOrigen='',rucDNI_1='',idCliente=" & CInt(Me.codigo) & _
                 '             ",transLlegada=''," & "status='A' where tipDocumento='" & Me.cbxTipoDocumento.Text & "' and numDocumento=" & CInt(Me.txtNumDocumento.Text) & ""
 
-                SqlString = "DELETE from almDetalle where nomDocumento='" & Me.cbxTipoDocumento.Text & "' and tipDocumento='" & _
+                SqlString = "DELETE from almDetalle where nomDocumento='" & Me.cbxTipoDocumento.Text & "' and tipDocumento='" &
                 Me.cbxTipoMovimiento.Text & "' and numDocumento=" & CInt(Me.txtNumDocumento.Text) & ""
                 ListSqlStrings.Add(SqlString)
 
-                SqlString = "DELETE from almCabecera where nomDocumento='" & Me.cbxTipoDocumento.Text & "' and tipDocumento='" & _
+                SqlString = "DELETE from almCabecera where nomDocumento='" & Me.cbxTipoDocumento.Text & "' and tipDocumento='" &
                 Me.cbxTipoMovimiento.Text & "' and numDocumento=" & CInt(Me.txtNumDocumento.Text) & ""
                 ListSqlStrings.Add(SqlString)
 
                 For i As Integer = 0 To dgvProductos.Rows.Count - 1
                     Dim sqlSaldo As String
+                    If IsNumeric(dgvProductos.Rows(i).Cells(1).Value.ToString()) Then
 
-                    sqlSaldo = "SELECT * FROM saldosAlmacenes where idProducto=" & CInt(dgvProductos.Rows(i).Cells(1).Value.ToString()) & " and fechaSaldo='" & CDate(fechaCierre) & "'"
-                    stockActual = devuelveStock(sqlSaldo)
+                        sqlSaldo = "SELECT * FROM saldosAlmacenes where idProducto=" & CInt(dgvProductos.Rows(i).Cells(1).Value.ToString()) & " and fechaSaldo='" & CDate(fechaCierre) & "'"
+                        stockActual = devuelveStock(sqlSaldo)
 
-                    stockActual = stockActual - dgvProductos.Rows(i).Cells(8).Value
+                        If Me.cbxTipoMovimiento.Text = "EN" And cbxTipoDocumento.Text = "PD" Then
+                            stockActual = stockActual - dgvProductos.Rows(i).Cells(9).Value
+                        Else
+                            stockActual = stockActual - dgvProductos.Rows(i).Cells(8).Value
+                        End If
 
-                    SqlString1 = "DELETE from numerosSerie where numDoc1='" & Trim(Me.txtNumDocumento.Text) & "'"
-                    SqlString2 = "UPDATE saldosAlmacenes Set stock=" & stockActual & " where idProducto=" & CInt(dgvProductos.Rows(i).Cells(1).Value.ToString()) & " and fechaSaldo='" & CDate(fechaCierre) & "'"
 
-                    ListSqlStrings1.Add(SqlString1)
-                    ListSqlStrings2.Add(SqlString2)
+                        SqlString1 = "DELETE from numerosSerie where numDoc1='" & Trim(Me.txtNumDocumento.Text) & "'"
+                        SqlString2 = "UPDATE saldosAlmacenes Set stock=" & stockActual & " where idProducto=" & CInt(dgvProductos.Rows(i).Cells(1).Value.ToString()) & " and fechaSaldo='" & CDate(fechaCierre) & "'"
+
+                        ListSqlStrings1.Add(SqlString1)
+                        ListSqlStrings2.Add(SqlString2)
+                    End If
+
                 Next
 
                 If transaccionAnulacionGuias(ListSqlStrings, ListSqlStrings1, ListSqlStrings2) Then
@@ -569,5 +620,23 @@ Public Class frmanularGuia
     End Sub
     Private Sub btnSalir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSalir.Click
         Me.Close()
+    End Sub
+
+    Private Sub btnGrabar_Click(sender As Object, e As EventArgs) Handles btnGrabar.Click
+
+    End Sub
+
+    Private Sub btnModificarGarantia_Click(sender As Object, e As EventArgs) Handles btnModificarGarantia.Click
+        Dim oFrmAcceso As New frmaccesoAdministrador()
+        oFrmAcceso.ShowDialog()
+        If flag <> 1 Then
+            Exit Sub
+        End If
+
+        Dim frmGarantia As New frmModificarGarantia
+        frmGarantia.cTipDoc = cbxTipoDocumento.Text
+        frmGarantia.cSerDoc = txtSerieDocumento.Text
+        frmGarantia.cNumDoc = txtNumDocumento.Text
+        frmGarantia.ShowDialog()
     End Sub
 End Class

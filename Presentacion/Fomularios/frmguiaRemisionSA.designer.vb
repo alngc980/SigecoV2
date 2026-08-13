@@ -19,77 +19,81 @@ Partial Class frmguiaRemisionSA
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmguiaRemisionSA))
-        Me.dgvProductos = New System.Windows.Forms.DataGridView
-        Me.numItem = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.codProducto = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.desProducto = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.marca = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.modelo = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.numSerie = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.numMotor = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.numChasis = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.cantidad = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.eliminar = New System.Windows.Forms.DataGridViewButtonColumn
-        Me.color = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.grupo = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.btnLimpiar = New System.Windows.Forms.Button
-        Me.Label4 = New System.Windows.Forms.Label
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox
-        Me.txtSerie = New System.Windows.Forms.TextBox
-        Me.txtNumDocumento = New System.Windows.Forms.TextBox
-        Me.Label7 = New System.Windows.Forms.Label
-        Me.Label6 = New System.Windows.Forms.Label
-        Me.lblRUC = New System.Windows.Forms.Label
-        Me.GroupBox5 = New System.Windows.Forms.GroupBox
-        Me.btnBuscaRecibo = New System.Windows.Forms.Button
-        Me.btnSalir = New System.Windows.Forms.Button
-        Me.btnAnular = New System.Windows.Forms.Button
-        Me.btnGrabar = New System.Windows.Forms.Button
-        Me.btnImprimir = New System.Windows.Forms.Button
-        Me.btnProducto = New System.Windows.Forms.Button
-        Me.txtDNIRUC = New System.Windows.Forms.TextBox
-        Me.Label23 = New System.Windows.Forms.Label
-        Me.txtDireccion = New System.Windows.Forms.TextBox
-        Me.txtNombre = New System.Windows.Forms.TextBox
-        Me.Label12 = New System.Windows.Forms.Label
-        Me.Label11 = New System.Windows.Forms.Label
-        Me.dtpFecOrigen = New System.Windows.Forms.DateTimePicker
-        Me.Label14 = New System.Windows.Forms.Label
-        Me.PrintDocument1 = New System.Drawing.Printing.PrintDocument
-        Me.PrintDialog1 = New System.Windows.Forms.PrintDialog
-        Me.PrintPreviewDialog1 = New System.Windows.Forms.PrintPreviewDialog
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox
-        Me.txtTransportista = New System.Windows.Forms.TextBox
-        Me.Label8 = New System.Windows.Forms.Label
-        Me.GroupBox7 = New System.Windows.Forms.GroupBox
-        Me.btnBuscarCliente = New System.Windows.Forms.Button
-        Me.btnNuevoCliente = New System.Windows.Forms.Button
-        Me.cbxTipoDocumento = New System.Windows.Forms.ComboBox
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.cbxTipoMovimiento = New System.Windows.Forms.ComboBox
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.txtTransLlegada = New System.Windows.Forms.TextBox
-        Me.Label13 = New System.Windows.Forms.Label
-        Me.txtDocCliente = New System.Windows.Forms.TextBox
-        Me.Label15 = New System.Windows.Forms.Label
-        Me.txtDirCliente = New System.Windows.Forms.TextBox
-        Me.txtNomCliente = New System.Windows.Forms.TextBox
-        Me.Label16 = New System.Windows.Forms.Label
-        Me.Label17 = New System.Windows.Forms.Label
-        Me.dtpFecLlegada = New System.Windows.Forms.DateTimePicker
-        Me.Label18 = New System.Windows.Forms.Label
-        Me.GroupBox4 = New System.Windows.Forms.GroupBox
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox
-        Me.lblTelefono = New System.Windows.Forms.Label
-        Me.lblDireccion = New System.Windows.Forms.Label
-        Me.lblNombre = New System.Windows.Forms.Label
+        Me.dgvProductos = New System.Windows.Forms.DataGridView()
+        Me.numItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.codProducto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.desProducto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.marca = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.modelo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.numSerie = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.numMotor = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.numChasis = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cantidad = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eliminar = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.color = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.grupo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.btnLimpiar = New System.Windows.Forms.Button()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.txtSerie = New System.Windows.Forms.TextBox()
+        Me.txtNumDocumento = New System.Windows.Forms.TextBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.lblRUC = New System.Windows.Forms.Label()
+        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.btnBuscaRecibo = New System.Windows.Forms.Button()
+        Me.btnSalir = New System.Windows.Forms.Button()
+        Me.btnAnular = New System.Windows.Forms.Button()
+        Me.btnGrabar = New System.Windows.Forms.Button()
+        Me.btnImprimir = New System.Windows.Forms.Button()
+        Me.btnProducto = New System.Windows.Forms.Button()
+        Me.txtDNIRUC = New System.Windows.Forms.TextBox()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.txtDireccion = New System.Windows.Forms.TextBox()
+        Me.txtNombre = New System.Windows.Forms.TextBox()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.dtpFecOrigen = New System.Windows.Forms.DateTimePicker()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.PrintDocument1 = New System.Drawing.Printing.PrintDocument()
+        Me.PrintDialog1 = New System.Windows.Forms.PrintDialog()
+        Me.PrintPreviewDialog1 = New System.Windows.Forms.PrintPreviewDialog()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.txtTransportista = New System.Windows.Forms.TextBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.GroupBox7 = New System.Windows.Forms.GroupBox()
+        Me.txtGlosa = New System.Windows.Forms.TextBox()
+        Me.lblGlosa = New System.Windows.Forms.Label()
+        Me.cbMotivo = New System.Windows.Forms.ComboBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.btnBuscarCliente = New System.Windows.Forms.Button()
+        Me.btnNuevoCliente = New System.Windows.Forms.Button()
+        Me.cbxTipoDocumento = New System.Windows.Forms.ComboBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.cbxTipoMovimiento = New System.Windows.Forms.ComboBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.txtTransLlegada = New System.Windows.Forms.TextBox()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.txtDocCliente = New System.Windows.Forms.TextBox()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.txtDirCliente = New System.Windows.Forms.TextBox()
+        Me.txtNomCliente = New System.Windows.Forms.TextBox()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.dtpFecLlegada = New System.Windows.Forms.DateTimePicker()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.lblTelefono = New System.Windows.Forms.Label()
+        Me.lblDireccion = New System.Windows.Forms.Label()
+        Me.lblNombre = New System.Windows.Forms.Label()
         CType(Me.dgvProductos, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
@@ -555,6 +559,10 @@ Partial Class frmguiaRemisionSA
         '
         'GroupBox7
         '
+        Me.GroupBox7.Controls.Add(Me.txtGlosa)
+        Me.GroupBox7.Controls.Add(Me.lblGlosa)
+        Me.GroupBox7.Controls.Add(Me.cbMotivo)
+        Me.GroupBox7.Controls.Add(Me.Label3)
         Me.GroupBox7.Controls.Add(Me.btnBuscarCliente)
         Me.GroupBox7.Controls.Add(Me.btnNuevoCliente)
         Me.GroupBox7.Controls.Add(Me.cbxTipoDocumento)
@@ -579,6 +587,45 @@ Partial Class frmguiaRemisionSA
         Me.GroupBox7.TabStop = False
         Me.GroupBox7.Text = "Punto Llegada: Datos Cliente"
         '
+        'txtGlosa
+        '
+        Me.txtGlosa.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
+        Me.txtGlosa.Location = New System.Drawing.Point(241, 123)
+        Me.txtGlosa.MaxLength = 250
+        Me.txtGlosa.Name = "txtGlosa"
+        Me.txtGlosa.Size = New System.Drawing.Size(270, 20)
+        Me.txtGlosa.TabIndex = 71
+        Me.txtGlosa.Visible = False
+        '
+        'lblGlosa
+        '
+        Me.lblGlosa.AutoSize = True
+        Me.lblGlosa.Location = New System.Drawing.Point(202, 126)
+        Me.lblGlosa.Name = "lblGlosa"
+        Me.lblGlosa.Size = New System.Drawing.Size(36, 13)
+        Me.lblGlosa.TabIndex = 70
+        Me.lblGlosa.Text = "Glosa:"
+        Me.lblGlosa.Visible = False
+        '
+        'cbMotivo
+        '
+        Me.cbMotivo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbMotivo.FormattingEnabled = True
+        Me.cbMotivo.Items.AddRange(New Object() {"Devolucion                                                  2", "Obsequio                                                  3", "Perdida de Mercaderia                            4", "Otros Conceptos                                      5"})
+        Me.cbMotivo.Location = New System.Drawing.Point(413, 75)
+        Me.cbMotivo.Name = "cbMotivo"
+        Me.cbMotivo.Size = New System.Drawing.Size(98, 21)
+        Me.cbMotivo.TabIndex = 69
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(372, 79)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(42, 13)
+        Me.Label3.TabIndex = 68
+        Me.Label3.Text = "Motivo:"
+        '
         'btnBuscarCliente
         '
         Me.btnBuscarCliente.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -602,7 +649,7 @@ Partial Class frmguiaRemisionSA
         'cbxTipoDocumento
         '
         Me.cbxTipoDocumento.FormattingEnabled = True
-        Me.cbxTipoDocumento.Items.AddRange(New Object() {"GR", "PD"})
+        Me.cbxTipoDocumento.Items.AddRange(New Object() {"GX"})
         Me.cbxTipoDocumento.Location = New System.Drawing.Point(455, 18)
         Me.cbxTipoDocumento.Name = "cbxTipoDocumento"
         Me.cbxTipoDocumento.Size = New System.Drawing.Size(56, 21)
@@ -869,4 +916,8 @@ Partial Class frmguiaRemisionSA
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents btnBuscarCliente As System.Windows.Forms.Button
     Friend WithEvents btnNuevoCliente As System.Windows.Forms.Button
+    Friend WithEvents cbMotivo As System.Windows.Forms.ComboBox
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents txtGlosa As System.Windows.Forms.TextBox
+    Friend WithEvents lblGlosa As System.Windows.Forms.Label
 End Class

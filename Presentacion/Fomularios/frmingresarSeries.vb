@@ -7,6 +7,9 @@ Public Class frmingresarSeries
     Dim columna As Integer
     Dim fila As Integer
     Dim flagInterno As Integer
+
+    Dim nCantRegistrados As Integer
+
     Private Sub frmnumerosSerie_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Try
             If flagString = "AS" Then 'Ajuste de stock cuando stockSistema>stockFisico
@@ -77,35 +80,131 @@ Public Class frmingresarSeries
         End Try
     End Sub
     Private Sub dgvSeries_CellValidating(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellValidatingEventArgs) Handles dgvSeries.CellValidating
-        ReDim iDatos(Me.dgvSeries.RowCount - 1, 3)
-        Dim sqlstring As String
+        If e.RowIndex < 0 Then Exit Sub
+        If Not EsColumnaDocumentoSerie(e.ColumnIndex) Then Exit Sub
 
-        If codigoGrupo <> 6 Then
-            sqlstring = "SELECT * FROM numerosSerie where idProducto=" & codigoProducto & " and numSerie='" & e.FormattedValue.ToString() & "'"
-        Else
-            sqlstring = "SELECT * FROM numerosSerie where idProducto=" & codigoProducto & " and (numMotor='" & e.FormattedValue.ToString() & "' or numChasis='" & e.FormattedValue.ToString() & "')"
-        End If
+        Dim mensaje As String = ""
+        Dim valor As String = NormalizarDato(e.FormattedValue)
 
-        For x As Integer = iDatos.GetLowerBound(0) To iDatos.GetUpperBound(0)
-            For y As Integer = iDatos.GetLowerBound(1) To iDatos.GetUpperBound(1)
-                iDatos(x, y) = Me.dgvSeries.Rows(x).Cells(y).Value
-            Next y
-        Next x
-
-        For x As Integer = iDatos.GetLowerBound(0) To iDatos.GetUpperBound(0)
-            For y As Integer = iDatos.GetLowerBound(1) To iDatos.GetUpperBound(1)
-                If iDatos(x, y) = e.FormattedValue.ToString() And e.FormattedValue.ToString() <> "" And e.ColumnIndex >= 1 And e.ColumnIndex <= 3 Then
-                    MsgBox("Ya existe entrada en la tabla.", MsgBoxStyle.Critical)
-                    e.Cancel = True
-                End If
-            Next y
-        Next x
-
-        If verificarDocumento(sqlstring) > 0 And e.FormattedValue.ToString() <> "" And e.ColumnIndex >= 1 And e.ColumnIndex <= 3 Then
-            MsgBox("Ya existe entrada en la BD.", MsgBoxStyle.Critical)
+        If Not ValidarValorSerie(e.RowIndex, e.ColumnIndex, valor, mensaje) Then
+            MsgBox(mensaje, MsgBoxStyle.Critical)
             e.Cancel = True
         End If
     End Sub
+
+    Private Function ValidarSeriesIngresadas() As Boolean
+        If Me.dgvSeries.IsCurrentCellInEditMode Then Me.dgvSeries.EndEdit()
+
+        For fila As Integer = 0 To Me.dgvSeries.Rows.Count - 1
+            For columna As Integer = 1 To 3
+                If EsColumnaDocumentoSerie(columna) Then
+                    Dim mensaje As String = ""
+                    Dim valor As String = ValorCelda(fila, columna)
+                    If Not ValidarValorSerie(fila, columna, valor, mensaje) Then
+                        Me.dgvSeries.CurrentCell = Me.dgvSeries.Rows(fila).Cells(columna)
+                        MsgBox(mensaje, MsgBoxStyle.Critical)
+                        Return False
+                    End If
+                End If
+            Next columna
+        Next fila
+
+        Return True
+    End Function
+
+    Private Function ValidarValorSerie(ByVal filaActual As Integer, ByVal columnaActual As Integer, ByVal valor As String, ByRef mensaje As String) As Boolean
+        If valor = "" Then Return True
+
+        If valor.IndexOf("'") >= 0 Then
+            mensaje = "El dato ingresado no puede contener comillas simples."
+            Return False
+        End If
+
+        If ExisteDuplicadoEnPantalla(filaActual, columnaActual, valor) Then
+            mensaje = "Ya existe el dato '" & valor & "' ingresado en pantalla."
+            Return False
+        End If
+
+        If ExisteDuplicadoEnMatriz(valor) Then
+            mensaje = "Ya existe el dato '" & valor & "' ingresado en otro producto de este documento."
+            Return False
+        End If
+
+        If ExisteDuplicadoEnBD(valor) Then
+            mensaje = "Ya existe el dato '" & valor & "' registrado en la base de datos."
+            Return False
+        End If
+
+        Return True
+    End Function
+
+    Private Function EsColumnaDocumentoSerie(ByVal columna As Integer) As Boolean
+        If codigoGrupo <> 6 Then
+            Return columna = 1
+        End If
+
+        Return columna = 2 Or columna = 3
+    End Function
+
+    Private Function ExisteDuplicadoEnPantalla(ByVal filaActual As Integer, ByVal columnaActual As Integer, ByVal valor As String) As Boolean
+        For fila As Integer = 0 To Me.dgvSeries.Rows.Count - 1
+            If codigoGrupo <> 6 Then
+                If fila <> filaActual AndAlso ValorCelda(fila, 1) = valor Then Return True
+            Else
+                For columna As Integer = 2 To 3
+                    If Not (fila = filaActual And columna = columnaActual) Then
+                        If ValorCelda(fila, columna) = valor Then Return True
+                    End If
+                Next columna
+            End If
+        Next fila
+
+        Return False
+    End Function
+
+    Private Function ExisteDuplicadoEnMatriz(ByVal valor As String) As Boolean
+        Try
+            If flagString <> "GR" Then Return False
+            If y <= 0 Then Return False
+
+            For fila As Integer = 0 To y - 1
+                If Val(matrizSeries(fila, 0)) = codigoProducto Then Continue For
+
+                If codigoGrupo <> 6 Then
+                    If NormalizarDato(matrizSeries(fila, 1)) = valor Then Return True
+                Else
+                    If NormalizarDato(matrizSeries(fila, 2)) = valor Or NormalizarDato(matrizSeries(fila, 3)) = valor Then Return True
+                End If
+            Next fila
+        Catch
+            Return False
+        End Try
+
+        Return False
+    End Function
+
+    Private Function ExisteDuplicadoEnBD(ByVal valor As String) As Boolean
+        Dim dato As String = valor.Replace("'", "''")
+        Dim sqlstring As String
+
+        If codigoGrupo <> 6 Then
+            sqlstring = "SELECT * FROM numerosSerie WHERE idProducto=" & codigoProducto & " AND LTRIM(RTRIM(ISNULL(numSerie,'')))='" & dato & "'"
+        Else
+            sqlstring = "SELECT * FROM numerosSerie WHERE idProducto=" & codigoProducto & " AND (LTRIM(RTRIM(ISNULL(numMotor,'')))='" & dato & "' OR LTRIM(RTRIM(ISNULL(numChasis,'')))='" & dato & "')"
+        End If
+
+        Return verificarDocumento(sqlstring) > 0
+    End Function
+
+    Private Function ValorCelda(ByVal fila As Integer, ByVal columna As Integer) As String
+        If Me.dgvSeries.Rows(fila).Cells(columna).Value Is Nothing Then Return ""
+        Return NormalizarDato(Me.dgvSeries.Rows(fila).Cells(columna).Value)
+    End Function
+
+    Private Function NormalizarDato(ByVal valor As Object) As String
+        If valor Is Nothing Then Return ""
+        Return valor.ToString().Trim().ToUpper()
+    End Function
     Private Sub btnAceptar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAceptar.Click
         Try
             Dim sqlString As String = ""
@@ -118,6 +217,8 @@ Public Class frmingresarSeries
                     ctaRegistros = 0
                     Exit Sub
                 End If
+
+                If Not ValidarSeriesIngresadas() Then Exit Sub
 
                 For i As Integer = 0 To dgvSeries.Rows.Count - 1
                     If codigoGrupo <> 6 Then
@@ -150,6 +251,8 @@ Public Class frmingresarSeries
                     Exit Sub
                 End If
 
+                If Not ValidarSeriesIngresadas() Then Exit Sub
+
                 For i As Integer = 0 To dgvSeries.Rows.Count - 1
                     matrizSeries(i + y, 0) = codigoProducto
                     matrizSeries(i + y, 1) = Me.dgvSeries.Rows(i).Cells(1).Value
@@ -157,6 +260,13 @@ Public Class frmingresarSeries
                     matrizSeries(i + y, 3) = Me.dgvSeries.Rows(i).Cells(3).Value
                     matrizSeries(i + y, 4) = Me.dgvSeries.Rows(i).Cells(4).Value
                     matrizSeries(i + y, 5) = Me.dgvSeries.Rows(i).Cells(5).Value
+
+                    matrizSeries(i + y, 6) = txtCostoUnitario.Text
+                    matrizSeries(i + y, 7) = txtPrecioContado.Text
+                    matrizSeries(i + y, 8) = txtPrecioCredito.Text
+                    matrizSeries(i + y, 9) = txtPrecioOferta.Text
+                    matrizSeries(i + y, 10) = txtPrecioRemate.Text
+                    matrizSeries(i + y, 11) = txtCosProm.Text
                     x = i
                 Next
                 y = y + x + 1
@@ -244,6 +354,8 @@ Public Class frmingresarSeries
                     ctaRegistros = 0
                     Exit Sub
                 End If
+
+                If Not ValidarSeriesIngresadas() Then Exit Sub
 
                 ReDim cMatrizSeries(matrizSeries.GetUpperBound(0) + Me.dgvSeries.Rows.Count(), 7)
                 For x As Integer = cMatrizSeries.GetLowerBound(0) To cMatrizSeries.GetUpperBound(0) - Me.dgvSeries.Rows.Count()
@@ -352,5 +464,133 @@ Public Class frmingresarSeries
     Private Sub btnSalir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSalir.Click
         flag = 0
         Me.Close()
+    End Sub
+
+
+    '''************************************************************************************************************************************************************************************
+
+    Public Sub ObtenerCostoPromedio(ByVal nIdProducto As Integer)
+        Dim data As DataTable = RetornaDataTable("select isnull(CONVERT(decimal(18,2), AVG(isnull(nCostUnitario,0))),0)Prom, COUNT(1)Cant, isnull(sum(isnull(nCostUnitario,0)),0) nTotal from numerosSerie where idProducto = " & nIdProducto & " and numDoc = ''")
+        If data.Rows.Count > 0 Then
+            txtCostoDisponibles.Text = data.Rows(0)(2).ToString()
+            nCantRegistrados = CInt(data.Rows(0)(1).ToString())
+        End If
+    End Sub
+
+    Public Function CalcularPrecio(ByVal nCostUnitProm As Decimal, ByVal nValor As Decimal, ByVal nValorMax As Decimal, ByVal nValorMin As Decimal) As Decimal
+        Dim nPrecio As Decimal
+
+        nValorMax = nValorMax / 100
+        nValorMin = nValorMin / 100
+
+        If nCostUnitProm <= nValor Then
+            nPrecio = nCostUnitProm / (1 - nValorMax) '+ nCostUnitProm
+        Else
+            nPrecio = nCostUnitProm / (1 - nValorMin) '+ nCostUnitProm
+        End If
+
+        Return nPrecio
+    End Function
+
+    Public Function CalcularPrecioDescuento(ByVal nPrecioCont As Decimal, ByVal nValor As Decimal, ByVal nValorMax As Decimal, ByVal nValorMin As Decimal) As Decimal
+        nValorMax = nValorMax / 100
+        nValorMin = nValorMin / 100
+
+        Dim nMontoDescontar As Decimal
+        If nPrecioCont <= nValor Then
+            nMontoDescontar = nPrecioCont * nValorMax
+        Else
+            nMontoDescontar = nPrecioCont * nValorMin
+        End If
+
+        Return nPrecioCont - nMontoDescontar
+    End Function
+
+
+    Public Sub ProcesarPrecios()
+        Dim nCostPromFinal As Decimal
+        nCostPromFinal = (CDec(txtCostoDisponibles.Text) + (CDec(txtPrecioCF.Text))) / (nCantRegistrados + txtCant.Text)
+
+        txtCosProm.Text = nCostPromFinal
+
+        txtPrecioContado.Text = Math.Round(CalcularPrecio(nCostPromFinal, txtValor.Text, txtMaximo1.Text, txtMinimo1.Text), 2)
+        txtPrecioCredito.Text = Math.Round(CalcularPrecio(nCostPromFinal, txtValor.Text, txtMaximo2.Text, txtMinimo2.Text), 2)
+
+        txtPrecioOferta.Text = Math.Round(CalcularPrecioDescuento(txtPrecioContado.Text, txtValor.Text, txtMaximo3.Text, txtMinimo3.Text), 2)
+        txtPrecioRemate.Text = Math.Round(CalcularPrecioDescuento(txtPrecioContado.Text, txtValor.Text, txtMaximo4.Text, txtMinimo4.Text), 2)
+
+    End Sub
+
+
+    Private Sub btnProcesarPrecios_Click(sender As Object, e As EventArgs) Handles btnProcesarPrecios.Click
+        ProcesarPrecios()
+    End Sub
+
+    Private Sub txtCostoDisponibles_Leave(sender As Object, e As EventArgs) Handles txtCostoDisponibles.Leave
+        Validar_EsDecimal(txtCostoDisponibles)
+    End Sub
+
+    Private Sub txtPrecioCF_Leave(sender As Object, e As EventArgs) Handles txtPrecioCF.Leave
+        Validar_EsDecimal(txtPrecioCF)
+    End Sub
+
+    Private Sub txtCant_Leave(sender As Object, e As EventArgs) Handles txtCant.Leave
+        Validar_EsDecimal(txtCant)
+    End Sub
+
+    Private Sub txtCostoUnitario_Leave(sender As Object, e As EventArgs) Handles txtCostoUnitario.Leave, txtCosProm.Leave
+        Validar_EsDecimal(txtCostoUnitario)
+    End Sub
+
+    Private Sub txtValor_Leave(sender As Object, e As EventArgs) Handles txtValor.Leave
+        Validar_EsDecimal(txtValor)
+    End Sub
+
+    Private Sub txtMaximo1_Leave(sender As Object, e As EventArgs) Handles txtMaximo1.Leave
+        Validar_EsDecimal(txtMaximo1)
+    End Sub
+
+    Private Sub txtMaximo2_Leave(sender As Object, e As EventArgs) Handles txtMaximo2.Leave
+        Validar_EsDecimal(txtMaximo2)
+    End Sub
+
+    Private Sub txtMaximo3_Leave(sender As Object, e As EventArgs) Handles txtMaximo3.Leave
+        Validar_EsDecimal(txtMaximo3)
+    End Sub
+
+    Private Sub txtMaximo4_Leave(sender As Object, e As EventArgs) Handles txtMaximo4.Leave
+        Validar_EsDecimal(txtMaximo4)
+    End Sub
+
+    Private Sub txtMinimo1_Leave(sender As Object, e As EventArgs) Handles txtMinimo1.Leave
+        Validar_EsDecimal(txtMinimo1)
+    End Sub
+
+    Private Sub txtMinimo2_Leave(sender As Object, e As EventArgs) Handles txtMinimo2.Leave
+        Validar_EsDecimal(txtMinimo2)
+    End Sub
+
+    Private Sub txtMinimo3_Leave(sender As Object, e As EventArgs) Handles txtMinimo3.Leave
+        Validar_EsDecimal(txtMinimo3)
+    End Sub
+
+    Private Sub txtMinimo4_Leave(sender As Object, e As EventArgs) Handles txtMinimo4.Leave
+        Validar_EsDecimal(txtMinimo4)
+    End Sub
+
+    Private Sub txtPrecioContado_Leave(sender As Object, e As EventArgs) Handles txtPrecioContado.Leave
+        Validar_EsDecimal(txtPrecioContado)
+    End Sub
+
+    Private Sub txtPrecioCredito_Leave(sender As Object, e As EventArgs) Handles txtPrecioCredito.Leave
+        Validar_EsDecimal(txtPrecioCredito)
+    End Sub
+
+    Private Sub txtPrecioOferta_Leave(sender As Object, e As EventArgs) Handles txtPrecioOferta.Leave
+        Validar_EsDecimal(txtPrecioOferta)
+    End Sub
+
+    Private Sub txtPrecioRemate_Leave(sender As Object, e As EventArgs) Handles txtPrecioRemate.Leave
+        Validar_EsDecimal(txtPrecioRemate)
     End Sub
 End Class

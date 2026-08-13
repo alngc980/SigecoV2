@@ -33,6 +33,9 @@ Partial Class frmdocumentosEmitidos
         Me.btnImprimir = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.dtpFechaDocumento = New System.Windows.Forms.DateTimePicker()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.dtpNuevaFecha = New System.Windows.Forms.DateTimePicker()
+        Me.btnModificarFecha = New System.Windows.Forms.Button()
         Me.dgvDocumentos = New System.Windows.Forms.DataGridView()
         Me.num = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.nomCliente = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -63,7 +66,7 @@ Partial Class frmdocumentosEmitidos
         '
         Me.btnMostrar.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnMostrar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnMostrar.Image = My.Resources.Resources.ZoomHS
+        Me.btnMostrar.Image = Global.Presentacion.My.Resources.Resources.ZoomHS
         Me.btnMostrar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnMostrar.Location = New System.Drawing.Point(90, 19)
         Me.btnMostrar.Name = "btnMostrar"
@@ -77,7 +80,7 @@ Partial Class frmdocumentosEmitidos
         '
         Me.btnSalir.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnSalir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSalir.Image = My.Resources.Resources.FillRightHS
+        Me.btnSalir.Image = Global.Presentacion.My.Resources.Resources.FillRightHS
         Me.btnSalir.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnSalir.Location = New System.Drawing.Point(383, 19)
         Me.btnSalir.Name = "btnSalir"
@@ -91,7 +94,7 @@ Partial Class frmdocumentosEmitidos
         '
         Me.btnImprimir.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnImprimir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnImprimir.Image = My.Resources.Resources.PrintHS
+        Me.btnImprimir.Image = Global.Presentacion.My.Resources.Resources.PrintHS
         Me.btnImprimir.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnImprimir.Location = New System.Drawing.Point(234, 19)
         Me.btnImprimir.Name = "btnImprimir"
@@ -120,6 +123,36 @@ Partial Class frmdocumentosEmitidos
         Me.dtpFechaDocumento.Name = "dtpFechaDocumento"
         Me.dtpFechaDocumento.Size = New System.Drawing.Size(103, 22)
         Me.dtpFechaDocumento.TabIndex = 30
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Location = New System.Drawing.Point(218, 10)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(91, 16)
+        Me.Label2.TabIndex = 32
+        Me.Label2.Text = "Nueva Fecha:"
+        '
+        'dtpNuevaFecha
+        '
+        Me.dtpNuevaFecha.CalendarFont = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpNuevaFecha.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpNuevaFecha.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpNuevaFecha.Location = New System.Drawing.Point(315, 7)
+        Me.dtpNuevaFecha.Name = "dtpNuevaFecha"
+        Me.dtpNuevaFecha.Size = New System.Drawing.Size(103, 22)
+        Me.dtpNuevaFecha.TabIndex = 33
+        '
+        'btnModificarFecha
+        '
+        Me.btnModificarFecha.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnModificarFecha.Location = New System.Drawing.Point(426, 3)
+        Me.btnModificarFecha.Name = "btnModificarFecha"
+        Me.btnModificarFecha.Size = New System.Drawing.Size(134, 29)
+        Me.btnModificarFecha.TabIndex = 34
+        Me.btnModificarFecha.Text = "Modificar Fecha"
+        Me.btnModificarFecha.UseVisualStyleBackColor = True
         '
         'dgvDocumentos
         '
@@ -230,6 +263,9 @@ Partial Class frmdocumentosEmitidos
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnSalir
         Me.ClientSize = New System.Drawing.Size(594, 531)
+        Me.Controls.Add(Me.btnModificarFecha)
+        Me.Controls.Add(Me.dtpNuevaFecha)
+        Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.lblMensaje)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.Label1)
@@ -254,6 +290,9 @@ Partial Class frmdocumentosEmitidos
     Friend WithEvents btnSalir As System.Windows.Forms.Button
     Friend WithEvents btnMostrar As System.Windows.Forms.Button
     Friend WithEvents lblMensaje As System.Windows.Forms.Label
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents dtpNuevaFecha As System.Windows.Forms.DateTimePicker
+    Friend WithEvents btnModificarFecha As System.Windows.Forms.Button
     Friend WithEvents num As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents nomCliente As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents nomDoc As System.Windows.Forms.DataGridViewTextBoxColumn

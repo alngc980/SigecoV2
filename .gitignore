@@ -1,1 +1,33 @@
-Presentacion/bin/Debug/*
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build output
+[Bb]in/
+[Oo]bj/
+Debug/
+Release/
+x64/
+x86/
+
+# Compiled artifacts
+*.exe
+*.dll
+*.pdb
+*.cache
+*.manifest
+*.vshost.exe*
+
+# Runtime/generated files
+Presentacion/bin/
+Presentacion/obj/
+Libreria/bin/
+Libreria/obj/
+Presentacion/bin/Debug/QR/
+
+# Local backups
+*.bak
+Presentacion/Fomularios/backup/

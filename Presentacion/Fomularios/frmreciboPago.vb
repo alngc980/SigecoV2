@@ -26,6 +26,8 @@ Public Class frmreciboPago
     Dim status As String
     Dim flagAdelantoVtaCash As Boolean
     Dim te As New RichTextBox
+
+    Dim nComisionVisa As Decimal
     Private Sub frmreciboPago_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.lblNombre.Text = txtNombreEmpresa
         Me.lblDireccion.Text = txtDireccionEmpresa
@@ -62,6 +64,11 @@ Public Class frmreciboPago
         Me.te.Multiline = True
         Me.te.Visible = False
         Me.KeyPreview = True
+
+        Dim datos As DataTable = RetornaDataTable("select * from FactorComisionVisa")
+        If datos.Rows.Count > 0 Then
+            nComisionVisa = datos.Rows(0)(0).ToString()
+        End If
     End Sub
     Private Sub frmreciboPago_KeyUp(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
         If e.KeyCode = Keys.F2 Then
@@ -101,7 +108,7 @@ Public Class frmreciboPago
     End Sub
     Private Sub btnNuevoCliente_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnNuevoCliente.Click
         arrayDatos(0) = ""
-        frmnuevoCliente.ShowDialog()
+        frmNuevoCliente.ShowDialog()
         If arrayDatos(0) <> "" Then
             Me.txtCodigoCliente.Text = arrayDatos(0)
             Me.txtNombres.Text = arrayDatos(1)
@@ -180,9 +187,9 @@ Public Class frmreciboPago
 
             If Me.cbxConcepto.SelectedIndex <> 5 And Me.cbxConcepto.SelectedIndex <> 6 And Me.cbxConcepto.SelectedIndex <> 7 Then
                 If Me.cbxTipoMoneda.SelectedIndex = 0 Then
-                    cOPeracionMN = Me.txtMonto.Text * 0.055
+                    cOPeracionMN = Me.txtMonto.Text / nComisionVisa '* (1 - nComisionVisa)
                 Else
-                    cOPeracionME = Me.txtMontoME.Text * 0.055
+                    cOPeracionME = Me.txtMontoME.Text / nComisionVisa
                 End If
             End If
 
@@ -196,7 +203,7 @@ Public Class frmreciboPago
 
                 sqlString = "insert into recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                             "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
-                             Me.txtNumRecibo.Text & ", " & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & Me.txtMonto.Text & _
+                             Me.txtNumRecibo.Text & ", " & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & _
                              "," & Me.txtMontoME.Text & " , " & vnumCorrelativo & ",' ',' '," & Me.txtCodigoCliente.Text & "," & Me.txtCodigoVendedor.Text & _
                              ",'" & Me.dtpFecha.Text & "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",'" & status & "')"
 
@@ -231,7 +238,7 @@ Public Class frmreciboPago
 
                         sqlString = "insert into recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                     "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
-                                     numRecibo & ",12,' '," & cOPeracionMN & "," & cOPeracionME & ",0,' ',' '," & Me.txtCodigoCliente.Text & "," & _
+                                     numRecibo & ",12,' '," & Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & "," & cOPeracionME & ",0,' ',' '," & Me.txtCodigoCliente.Text & "," & _
                                      Me.txtCodigoVendedor.Text & ",'" & Me.dtpFecha.Text & "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",' ')"
                         ListSqlStringsCO.Add(sqlString)
 
@@ -278,7 +285,7 @@ Public Class frmreciboPago
                     sqlString1 = "INSERT INTO recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                    "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
                                     Me.txtNumRecibo.Text & "," & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & _
-                                    Me.txtMonto.Text & "," & Me.txtMontoME.Text & "," & vnumCorrelativo & ",' ',' '," & Me.txtCodigoCliente.Text & _
+                                   Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & "," & Me.txtMontoME.Text & "," & vnumCorrelativo & ",' ',' '," & Me.txtCodigoCliente.Text & _
                                     "," & Me.txtCodigoVendedor.Text & ",'" & Me.dtpFecha.Text & "','" & Me.vfecVencimiento & "',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & _
                                     "," & Me.txtTipoCambio.Text & ",'" & txtStatusA & "')"
 
@@ -314,12 +321,12 @@ Public Class frmreciboPago
 
                             sqlString = "insert into recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                         "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
-                                         numRecibo & ",12,' '," & cOPeracionMN & "," & cOPeracionME & ",0,' ',' '," & Me.txtCodigoCliente.Text & "," & _
+                                         numRecibo & ",12,' '," & Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & "," & cOPeracionME & ",0,' ',' '," & Me.txtCodigoCliente.Text & "," & _
                                          Me.txtCodigoVendedor.Text & ",'" & Me.dtpFecha.Text & "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",' ')"
                             ListSqlStringsCO.Add(sqlString)
 
                             If cbxTipoMoneda.SelectedIndex = 0 Then
-                                monto = cOPeracionMN
+                                monto = Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text)
                             Else
                                 monto = cOPeracionME
                             End If
@@ -404,7 +411,7 @@ Public Class frmreciboPago
                         sqlString1 = "INSERT INTO recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                        "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
                                         Me.txtNumRecibo.Text & "," & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & _
-                                        Me.txtMonto.Text & "," & Me.txtMontoME.Text & "," & vnumCorrelativo & ",' ',' '," & Me.txtCodigoCliente.Text & _
+                                        Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & "," & Me.txtMontoME.Text & "," & vnumCorrelativo & ",' ',' '," & Me.txtCodigoCliente.Text & _
                                         "," & Me.txtCodigoVendedor.Text & ",'" & Me.dtpFecha.Text & "','" & Me.vfecVencimiento & "',' ',0," & _
                                         Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",'" & txtStatusC & "')"
 
@@ -440,12 +447,12 @@ Public Class frmreciboPago
 
                                 sqlString = "insert into recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                             "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
-                                             numRecibo & ",12,' '," & cOPeracionMN & "," & cOPeracionME & ",0,' ',' '," & Me.txtCodigoCliente.Text & "," & _
+                                             numRecibo & ",12,' '," & Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & "," & cOPeracionME & ",0,' ',' '," & Me.txtCodigoCliente.Text & "," & _
                                              Me.txtCodigoVendedor.Text & ",'" & Me.dtpFecha.Text & "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",' ')"
                                 ListSqlStringsCO.Add(sqlString)
 
                                 If cbxTipoMoneda.SelectedIndex = 0 Then
-                                    monto = cOPeracionMN
+                                    monto = Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text)
                                 Else
                                     monto = cOPeracionME
                                 End If
@@ -511,11 +518,11 @@ Public Class frmreciboPago
                                 Exit Sub
                             End If
 
-                            txtStringNumDoc = oProducto.stringLetra(Me.cbxTipoDocumento.Text, Me.txtNumDocumento, " ", " ")
+                            txtStringNumDoc = "" 'oProducto.stringLetra(Me.cbxTipoDocumento.Text, Me.txtNumDocumento, " ", " ")
                             sqlString = "INSERT INTO recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                         "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
                                          Me.txtNumRecibo.Text & "," & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & _
-                                         Me.txtMonto.Text & "," & Me.txtMontoME.Text & " , " & vnumCorrelativo & ",'" & Me.txtStringNumDoc.Trim & _
+                                         Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & "," & Me.txtMontoME.Text & " , " & vnumCorrelativo & ",'" & Me.txtStringNumDoc.Trim & _
                                          "',' '," & Me.txtCodigoCliente.Text & "," & Me.txtCodigoVendedor.Text & ",'" & Me.dtpFecha.Text & _
                                          "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",' ')"
 
@@ -529,27 +536,42 @@ Public Class frmreciboPago
                                 End If
                             Next
 
-                            sqlString1 = "insert into vtaCabecera (tipDocumento,serDocumento,numDocumento,numGuia,tipOperacion,numLetra,idCliente,idVendedor,totVentaMN," & _
-                                         "totVentaME,intFinanciero,IGV,fecOperacion,comVendedor,cuoInicial,idMoneda,tipCambio,tasInteres,statusNC,statusNA,staEnvio,status) VALUES ('" & _
-                                         Me.cbxTipoDocumento.Text & "','" & Me.txtSerie.Text & "'," & Me.txtNumDocumento & ",' ','" & Me.cbxConcepto.SelectedIndex & _
-                                         "',' '," & Me.txtCodigoCliente.Text & "," & Me.txtCodigoVendedor.Text & "," & Me.txtMonto.Text & "," & _
-                                         Me.txtMontoME.Text & ",0,0,'" & Me.dtpFecha.Text & "',0,0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",0,'','','','')"
+                            'Dim MsgRsp As MsgBoxResult
+                            'MsgRsp = MsgBox("Desea Generar Comprobante para esta operacion?", MsgBoxStyle.YesNo)
+                            'If MsgRsp = MsgBoxResult.Yes Then
+                            '    sqlString1 = "insert into vtaCabecera (tipDocumento,serDocumento,numDocumento,numGuia,tipOperacion,numLetra,idCliente,idVendedor,totVentaMN," & _
+                            '                 "totVentaME,intFinanciero,IGV,fecOperacion,comVendedor,cuoInicial,idMoneda,tipCambio,tasInteres,statusNC,statusNA,staEnvio,status) VALUES ('" & _
+                            '                 Me.cbxTipoDocumento.Text & "','" & Me.txtSerie.Text & "'," & Me.txtNumDocumento & ",' ','" & Me.cbxConcepto.SelectedIndex & _
+                            '                 "',' '," & Me.txtCodigoCliente.Text & "," & Me.txtCodigoVendedor.Text & "," & Me.txtMonto.Text & "," & _
+                            '                 Me.txtMontoME.Text & ",0,0,'" & Me.dtpFecha.Text & "',0,0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",0,'','','','')"
 
-                            sqlString2 = "insert into vtaDetalle (tipDocumento,serDocumento,numDocumento,idProducto,precio,cantidad,subTotal,afeIGV,fecOperacion,status) VALUES ('" & _
-                                         Me.cbxTipoDocumento.Text & "','" & Me.txtSerie.Text & "'," & Me.txtNumDocumento & ",4," & Me.txtMonto.Text & ",1," & Me.txtMonto.Text & ",0,'" & Me.dtpFecha.Text & "','')"
+                            '    sqlString2 = "insert into vtaDetalle (tipDocumento,serDocumento,numDocumento,idProducto,precio,cantidad,subTotal,afeIGV,fecOperacion,status) VALUES ('" & _
+                            '                 Me.cbxTipoDocumento.Text & "','" & Me.txtSerie.Text & "'," & Me.txtNumDocumento & ",4," & Me.txtMonto.Text & ",1," & Me.txtMonto.Text & ",0,'" & Me.dtpFecha.Text & "','')"
 
+                            '    sqlString4 = "UPDATE ultimosNumeros Set numero=" & CInt(Me.txtNumDocumento) & " where tipMovimiento= '" & Me.cbxTipoDocumento.Text & "'"
+
+                            'End If
                             sqlString3 = "UPDATE ultimosNumeros Set numero=" & CInt(Me.txtNumRecibo.Text) & " where tipDocumento= '" & txtTipoDocumento & "'"
-                            sqlString4 = "UPDATE ultimosNumeros Set numero=" & CInt(Me.txtNumDocumento) & " where tipMovimiento= '" & Me.cbxTipoDocumento.Text & "'"
 
                             ListSqlStrings.Add(sqlString)
-                            ListSqlStrings.Add(sqlString1)
-                            ListSqlStrings.Add(sqlString2)
-                            ListSqlStrings.Add(sqlString3)
-                            ListSqlStrings.Add(sqlString4)
+                            If sqlString1.Trim.Length > 0 Then
+                                ListSqlStrings.Add(sqlString1)
+                            End If
+                            If sqlString2.Trim.Length > 0 Then
+                                ListSqlStrings.Add(sqlString2)
+                            End If
+                            If sqlString3.Trim.Length > 0 Then
+                                ListSqlStrings.Add(sqlString3)
+                            End If
+                            If sqlString4.Trim.Length > 0 Then
+                                ListSqlStrings.Add(sqlString4)
+                            End If
 
                             If transaccionLetras(ListSqlStrings) Then
                                 MsgBox("Información procesada correctamente.", MsgBoxStyle.Information)
-                                generarDocumentoPlano()
+                                'If MsgRsp = MsgBoxResult.Yes Then
+                                '    generarDocumentoPlano()
+                                'End If
                                 flagGraba = True
 
                                 If transaccionLetras(ListSqlStringsArray) Then
@@ -564,12 +586,12 @@ Public Class frmreciboPago
 
                                     sqlString = "insert into recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                                 "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
-                                                 numRecibo & ",12,' '," & cOPeracionMN & "," & cOPeracionME & ",0,' ',' '," & Me.txtCodigoCliente.Text & "," & _
+                                                 numRecibo & ",12,' '," & Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & "," & cOPeracionME & ",0,' ',' '," & Me.txtCodigoCliente.Text & "," & _
                                                  Me.txtCodigoVendedor.Text & ",'" & Me.dtpFecha.Text & "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",' ')"
                                     ListSqlStringsCO.Add(sqlString)
 
                                     If cbxTipoMoneda.SelectedIndex = 0 Then
-                                        monto = cOPeracionMN
+                                        monto = Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text)
                                     Else
                                         monto = cOPeracionME
                                     End If
@@ -606,7 +628,7 @@ Public Class frmreciboPago
                                 sqlString = "INSERT INTO recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                             "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
                                              Me.txtNumRecibo.Text & "," & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & _
-                                             Me.txtMonto.Text & "," & Me.txtMontoME.Text & " , " & vnumCorrelativo & ",'" & Me.txtStringNumDoc.Trim & _
+                                             Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & "," & Me.txtMontoME.Text & " , " & vnumCorrelativo & ",'" & Me.txtStringNumDoc.Trim & _
                                              "',' '," & Me.txtCodigoCliente.Text & "," & Me.txtCodigoVendedor.Text & ",'" & Me.dtpFecha.Text & _
                                              "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",' ')"
 
@@ -620,27 +642,27 @@ Public Class frmreciboPago
                                     End If
                                 Next
 
-                                sqlString1 = "INSERT INTO vtaCabecera (tipDocumento,serDocumento,numDocumento,numGuia,tipOperacion,numLetra,idCliente,idVendedor,totVentaMN," & _
-                                             "totVentaME,intFinanciero,IGV,fecOperacion,comVendedor,cuoInicial,idMoneda,tipCambio,tasInteres,statusNC,statusNA,staEnvio,status) VALUES ('" & _
-                                             Me.cbxTipoDocumento.Text & "','" & Me.txtSerie.Text & "'," & Me.txtNumDocumento & ",' ','" & Me.cbxConcepto.SelectedIndex & _
-                                             "',' '," & Me.txtCodigoCliente.Text & "," & Me.txtCodigoVendedor.Text & "," & Me.txtMonto.Text & "," & _
-                                            Me.txtMontoME.Text & ",0,0,'" & Me.dtpFecha.Text & "',0,0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",0,'','','','')"
+                                'sqlString1 = "INSERT INTO vtaCabecera (tipDocumento,serDocumento,numDocumento,numGuia,tipOperacion,numLetra,idCliente,idVendedor,totVentaMN," & _
+                                '             "totVentaME,intFinanciero,IGV,fecOperacion,comVendedor,cuoInicial,idMoneda,tipCambio,tasInteres,statusNC,statusNA,staEnvio,status) VALUES ('" & _
+                                '             Me.cbxTipoDocumento.Text & "','" & Me.txtSerie.Text & "'," & Me.txtNumDocumento & ",' ','" & Me.cbxConcepto.SelectedIndex & _
+                                '             "',' '," & Me.txtCodigoCliente.Text & "," & Me.txtCodigoVendedor.Text & "," & Me.txtMonto.Text & "," & _
+                                '            Me.txtMontoME.Text & ",0,0,'" & Me.dtpFecha.Text & "',0,0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",0,'','','','')"
 
-                                sqlString2 = "INSERT INTO vtaDetalle (tipDocumento,serDocumento,numDocumento,idProducto,precio,cantidad,subTotal,afeIGV,fecOperacion,status) VALUES ('" & _
-                                             Me.cbxTipoDocumento.Text & "','" & Me.txtSerie.Text & "'," & Me.txtNumDocumento & ",5," & Me.txtMonto.Text & ",1," & Me.txtMonto.Text & ",0,'" & Me.dtpFecha.Text & "','')"
+                                'sqlString2 = "INSERT INTO vtaDetalle (tipDocumento,serDocumento,numDocumento,idProducto,precio,cantidad,subTotal,afeIGV,fecOperacion,status) VALUES ('" & _
+                                '             Me.cbxTipoDocumento.Text & "','" & Me.txtSerie.Text & "'," & Me.txtNumDocumento & ",5," & Me.txtMonto.Text & ",1," & Me.txtMonto.Text & ",0,'" & Me.dtpFecha.Text & "','')"
 
                                 sqlString3 = "UPDATE ultimosNumeros Set numero=" & CInt(Me.txtNumRecibo.Text) & " where tipDocumento= '" & txtTipoDocumento & "'"
-                                sqlString4 = "UPDATE ultimosNumeros Set numero=" & CInt(Me.txtNumDocumento) & " where tipMovimiento= '" & Me.cbxTipoDocumento.Text & "'"
+                                'sqlString4 = "UPDATE ultimosNumeros Set numero=" & CInt(Me.txtNumDocumento) & " where tipMovimiento= '" & Me.cbxTipoDocumento.Text & "'"
 
                                 ListSqlStrings.Add(sqlString)
-                                ListSqlStrings.Add(sqlString1)
-                                ListSqlStrings.Add(sqlString2)
+                                'ListSqlStrings.Add(sqlString1)
+                                'ListSqlStrings.Add(sqlString2)
                                 ListSqlStrings.Add(sqlString3)
-                                ListSqlStrings.Add(sqlString4)
+                                'ListSqlStrings.Add(sqlString4)
 
                                 If transaccionLetras(ListSqlStrings) Then
                                     MsgBox("Información procesada correctamente.", MsgBoxStyle.Information)
-                                    generarDocumentoPlano()
+                                    'generarDocumentoPlano()
                                     flagGraba = True
 
                                     If transaccionLetras(ListSqlStringsArray) Then
@@ -655,12 +677,12 @@ Public Class frmreciboPago
 
                                         sqlString = "insert into recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                                     "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
-                                                     numRecibo & ",12,' '," & cOPeracionMN & "," & cOPeracionME & ",0,' ',' '," & Me.txtCodigoCliente.Text & "," & _
+                                                     numRecibo & ",12,' '," & Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & "," & cOPeracionME & ",0,' ',' '," & Me.txtCodigoCliente.Text & "," & _
                                                      Me.txtCodigoVendedor.Text & ",'" & Me.dtpFecha.Text & "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",' ')"
                                         ListSqlStringsCO.Add(sqlString)
 
                                         If cbxTipoMoneda.SelectedIndex = 0 Then
-                                            monto = cOPeracionMN
+                                            monto = Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text)
                                         Else
                                             monto = cOPeracionME
                                         End If
@@ -691,7 +713,7 @@ Public Class frmreciboPago
 
                                     sqlString = "INSERT INTO recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                                 "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
-                                                 Me.txtNumRecibo.Text & ", " & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & Me.txtMonto.Text & _
+                                                 Me.txtNumRecibo.Text & ", " & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & _
                                                  "," & Me.txtMontoME.Text & " , " & vnumCorrelativo & ",' ',' '," & Me.txtCodigoCliente.Text & "," & Me.txtCodigoVendedor.Text & _
                                                  ",'" & Me.dtpFecha.Text & "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",'" & status & "')"
 
@@ -731,7 +753,7 @@ Public Class frmreciboPago
 
                                         sqlString = "INSERT INTO recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                                     "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
-                                                     Me.txtNumRecibo.Text & ", " & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & Me.txtMonto.Text & _
+                                                     Me.txtNumRecibo.Text & ", " & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & _
                                                      "," & Me.txtMontoME.Text & " , " & vnumCorrelativo & ",' ',' '," & Me.txtCodigoCliente.Text & "," & Me.txtCodigoVendedor.Text & _
                                                      ",'" & Me.dtpFecha.Text & "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",'" & status & "')"
 
@@ -771,7 +793,7 @@ Public Class frmreciboPago
 
                                             sqlString = "INSERT INTO recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                                         "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
-                                                         Me.txtNumRecibo.Text & ", " & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & Me.txtMonto.Text & _
+                                                         Me.txtNumRecibo.Text & ", " & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & _
                                                          "," & Me.txtMontoME.Text & " , " & vnumCorrelativo & ",' ',' '," & Me.txtCodigoCliente.Text & "," & Me.txtCodigoVendedor.Text & _
                                                          ",'" & Me.dtpFecha.Text & "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",'" & status & "')"
 
@@ -811,7 +833,7 @@ Public Class frmreciboPago
 
                                                 sqlString = "INSERT INTO recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                                             "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
-                                                             Me.txtNumRecibo.Text & ", " & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & Me.txtMonto.Text & _
+                                                             Me.txtNumRecibo.Text & ", " & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & _
                                                              "," & Me.txtMontoME.Text & " , " & vnumCorrelativo & ",' ',' '," & Me.txtCodigoCliente.Text & "," & Me.txtCodigoVendedor.Text & _
                                                              ",'" & Me.dtpFecha.Text & "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",'" & status & "')"
 
@@ -851,7 +873,7 @@ Public Class frmreciboPago
 
                                                     sqlString = "INSERT INTO recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                                                 "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
-                                                                 Me.txtNumRecibo.Text & ", " & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & Me.txtMonto.Text & _
+                                                                 Me.txtNumRecibo.Text & ", " & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & _
                                                                  "," & Me.txtMontoME.Text & " , " & vnumCorrelativo & ",' ',' '," & Me.txtCodigoCliente.Text & "," & Me.txtCodigoVendedor.Text & _
                                                                  ",'" & Me.dtpFecha.Text & "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",'" & status & "')"
 
@@ -901,7 +923,7 @@ Public Class frmreciboPago
 
                                                         sqlString = "insert into recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                                                     "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
-                                                                     Me.txtNumRecibo.Text & "," & Me.cbxConcepto.SelectedIndex & ",'" & Me.txtNumLetra.Text & "'," & _
+                                                                     Me.txtNumRecibo.Text & "," & Me.cbxConcepto.SelectedIndex & ",'" & Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & "'," & _
                                                                      Me.txtMonto.Text & "," & Me.txtMontoME.Text & " , " & vnumCorrelativo & ",' ',' '," & _
                                                                      Me.txtCodigoCliente.Text & "," & Me.txtCodigoVendedor.Text & ",'" & Me.dtpFecha.Text & _
                                                                      "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",' ')"
@@ -957,12 +979,12 @@ Public Class frmreciboPago
 
                                                                 sqlString = "insert into recibosClientes (idRecibo,concepto,numLetra,impDocumento,impDocumentoME,numCorrelativo,numDocGenCI," & _
                                                                             "numDocGenACI,idCliente,idVendedor,fecEmision,fecVencimiento,fecPago,descuento,idMoneda,tipCambio,status) VALUES (" & _
-                                                                             numRecibo & ",12,' '," & cOPeracionMN & "," & cOPeracionME & ",0,' ',' '," & Me.txtCodigoCliente.Text & "," & _
+                                                                             numRecibo & ",12,' '," & Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text) & "," & cOPeracionME & ",0,' ',' '," & Me.txtCodigoCliente.Text & "," & _
                                                                              Me.txtCodigoVendedor.Text & ",'" & Me.dtpFecha.Text & "',' ',' ',0," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & ",' ')"
                                                                 ListSqlStringsCO.Add(sqlString)
 
                                                                 If cbxTipoMoneda.SelectedIndex = 0 Then
-                                                                    monto = cOPeracionMN
+                                                                    monto = Val(Me.txtMonto.Text) + Val(txtInteresPagoCuota.Text)
                                                                 Else
                                                                     monto = cOPeracionME
                                                                 End If
@@ -1053,13 +1075,13 @@ Public Class frmreciboPago
                 If Me.cbxTipoMoneda.SelectedIndex >= 1 Then
                     Me.txtMontoME.Text = Val(arrayDatos(4))
                     If Me.cbxTipoPago.SelectedIndex = 4 Then
-                        Me.txtInteresPagoCuota.Text = Format(CDec(arrayDatos(4)) * 0.055, "####0.00")
+                        Me.txtInteresPagoCuota.Text = Format((CDec(arrayDatos(4)) / nComisionVisa) - CDec(arrayDatos(4)), "####0.00")
                         Me.txtTotalPagar.Text = Format(CDec(Me.txtMontoME.Text) + CDec(Me.txtInteresPagoCuota.Text), "######0.00")
                     End If
                 Else
                     Me.txtMonto.Text = Val(arrayDatos(4))
                     If Me.cbxTipoPago.SelectedIndex = 4 Then
-                        Me.txtInteresPagoCuota.Text = Format(CDec(arrayDatos(4)) * 0.055, "####0.00")
+                        Me.txtInteresPagoCuota.Text = Format((CDec(arrayDatos(4)) / nComisionVisa) - CDec(arrayDatos(4)), "####0.00")
                         Me.txtTotalPagar.Text = Format(CDec(Me.txtMonto.Text) + CDec(Me.txtInteresPagoCuota.Text), "######0.00")
                     End If
                 End If
@@ -1521,29 +1543,29 @@ Public Class frmreciboPago
             swEscritor.Write("0101|" & CDate(dtpFecha.Text).ToString("yyyy-MM-dd") & "|" & VisualBasic.Mid(Date.Now, 12, 8) & "|-|0000|" & numTipoDocumento & "|" & numDocumento & "|" & Me.txtNombres.Text & "|PEN|" & "0.0" & "|" & Format(CDec(txtMonto.Text), "#####0.00") & "|" & Format(CDec(Me.txtMonto.Text), "#####0.00") & "|0.00|0.00|0.00|" & Format(CDec(Me.txtMonto.Text), "#####0.00") & "|2.1|2.0|")
             swEscritor.Close()
 
-                swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".DET", True)
-                swEscritor.WriteLine("NIU|1|" & idConcepto & "|-|" & cbxConcepto.Text & "|" & Format(CDec(txtMonto.Text), "#####0.00") & "|0.00|9997|0.00|" & Format(CDec(txtMonto.Text), "#####0.00") & "|EXO|VAT|20|18.00|-|0.00|0.00||||0.00|-|0.00|0.00|||0.00|-|0.00|0|||0.00|" & Format(CDec(txtMonto.Text), "#####0.00") & "|" & Format(CDec(txtMonto.Text), "#####0.00") & "|0.00|")
+            swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".DET", True)
+            swEscritor.WriteLine("NIU|1|" & idConcepto & "|-|" & cbxConcepto.Text & "|" & Format(CDec(txtMonto.Text), "#####0.00") & "|0.00|9997|0.00|" & Format(CDec(txtMonto.Text), "#####0.00") & "|EXO|VAT|20|18.00|-|0.00|0.00||||0.00|-|0.00|0.00|||0.00|-|0.00|0|||0.00|" & Format(CDec(txtMonto.Text), "#####0.00") & "|" & Format(CDec(txtMonto.Text), "#####0.00") & "|0.00|")
+            swEscritor.Close()
+
+            swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".LEY", True)
+            swEscritor.Write("1000|" & numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMonto.Text), "#####0.00"), Len(Format(Decimal.Parse(Me.txtTotalPagar.Text), "#####0.00")) - 3)) & " Y " & obtieneDecimales(Format(Decimal.Parse(Me.txtTotalPagar.Text), "#####0.00")) & "/100 Soles|")
+            swEscritor.Close()
+
+            swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".TRI", True)
+            swEscritor.Write("9997" & "|EXO|VAT|" & Format(CDec(Me.txtMonto.Text), "#####0.00") & "|0.00|")
+            'If CDec(Me.txtICBPeru.Text) > 0 Then swEscritor.Write("7152" & "|ICBPER|OTH|" & Format(CDec(Me.txtICBPeru.Text), "#####0.00") & "|" & Format(CDec(Me.txtICBPeru.Text), "#####0.00") & "|")
+            swEscritor.Close()
+
+            swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".ACA", True)
+            swEscritor.Write("| | | | |PE|160101|" & Me.txtDireccion.Text & "|-| | |")
+            swEscritor.Close()
+
+            If cbxTipoDocumento.SelectedIndex = 1 Then
+                swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".PAG", True)
+
+                swEscritor.Write("Contado" & "|-|-|")
                 swEscritor.Close()
-
-                swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".LEY", True)
-                swEscritor.Write("1000|" & numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMonto.Text), "#####0.00"), Len(Format(Decimal.Parse(Me.txtTotalPagar.Text), "#####0.00")) - 3)) & " Y " & obtieneDecimales(Format(Decimal.Parse(Me.txtTotalPagar.Text), "#####0.00")) & "/100 Soles|")
-                swEscritor.Close()
-
-                swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".TRI", True)
-                swEscritor.Write("9997" & "|EXO|VAT|" & Format(CDec(Me.txtMonto.Text), "#####0.00") & "|0.00|")
-                'If CDec(Me.txtICBPeru.Text) > 0 Then swEscritor.Write("7152" & "|ICBPER|OTH|" & Format(CDec(Me.txtICBPeru.Text), "#####0.00") & "|" & Format(CDec(Me.txtICBPeru.Text), "#####0.00") & "|")
-                swEscritor.Close()
-
-                swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".ACA", True)
-                swEscritor.Write("| | | | |PE|160101|" & Me.txtDireccion.Text & "|-| | |")
-                swEscritor.Close()
-
-                If cbxTipoDocumento.SelectedIndex = 1 Then
-                    swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".PAG", True)
-
-                    swEscritor.Write("Contado" & "|-|-|")
-                    swEscritor.Close()
-                End If
+            End If
 
             sqlString = "update vtaCabecera set staEnvio='@' where tipDocumento='" & cbxTipoDocumento.Text & "' and numDocumento=" & Me.txtNumDocumento & ""
             listaSqlString.Add(sqlString)
@@ -1741,7 +1763,7 @@ Public Class frmreciboPago
         Me.txtMontoCancelarME = 0
         Me.vMontoOriginal = 0
         Me.vMontoOriginalME = 0
-     
+
         Me.txtOtrosPagos.Enabled = False
         Me.flagGraba = False
 

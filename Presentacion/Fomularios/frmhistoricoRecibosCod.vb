@@ -3,7 +3,7 @@ Imports Libreria
 Public Class frmhistoricoRecibosCod
     Private oDataSet As DataSet
     Dim te As New RichTextBox
-    Dim arrayConceptos() As String = {"V.Cash", "A.Letra", "C.Letra", "C.Inicial", "A.Cuota", "O.Pagos", "V.Tarjeta"}
+    Dim arrayConceptos() As String = {"V.Cash", "A.Letra", "C.Letra", "C.Inicial", "A.Cuota", "O.Pagos", "V.Tarjeta", "", "", "", "", "", "", "", "", "", "", "", "", ""}
     Dim arrayMoneda() As String = {"S/.", "$", "€"}
     Private Sub frmconsultaRecibosCod_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.Controls.Add(te)

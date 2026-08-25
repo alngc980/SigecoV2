@@ -6,15 +6,22 @@ Public Class frmbuscaProducto
     Private oDataColumn As DataColumn
     Private oDataRow As DataRow
     Private oDataRowArray() As DataRow
+    'Public iniciarSaldos As Boolean = False
+    Public VerTodosLosProductos As Boolean = False
     Private Sub frmbuscaProducto_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         oDataSet = New DataSet()
 
         Try
-            If iniciarSaldos = True Then
+            If iniciarSaldos Then
                 oDataAdapter = New SqlDataAdapter("SELECT * FROM productos where stoInicial=0", Connection)
             Else
-                oDataAdapter = New SqlDataAdapter("SELECT * FROM productos where stoInicial=1", Connection)
+                If VerTodosLosProductos Then
+                    oDataAdapter = New SqlDataAdapter("SELECT * FROM productos", Connection)
+                Else
+                    oDataAdapter = New SqlDataAdapter("SELECT * FROM productos where stoInicial=1", Connection)
+                End If
             End If
+
             oDataAdapter.Fill(oDataSet, "Productos")
 
             oDataAdapter = New SqlDataAdapter("SELECT  * from saldosAlmacenes", Connection)
@@ -83,7 +90,7 @@ Public Class frmbuscaProducto
         oDataTable = New DataTable()
 
         Try
-            If iniciarSaldos = True Then
+            If iniciarSaldos Then
                 oDataRowArray = oDataSet.Tables(0).Select("desProducto Like '" & "%" & txtBuscaProducto.Text & "%' and stoInicial=0")
             Else
                 If ckBarra.Checked Then

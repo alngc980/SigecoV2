@@ -44,53 +44,44 @@ Public Class frmbuscaRecibo
 
         Try
             oDataSet = New DataSet()
-            Dim CDENA As String
-            CDENA = "SELECT  idRecibo,concepto,impDocumento,impDocumentoME,fecEmision,idMoneda,c.idCliente,status , CL.nombres " &
-                    "From recibosClientes c " &
-                    "inner join clientes cl on cl.idCliente = c.idCliente " &
-                    "Where (concepto ='0'or concepto='3'or concepto='4'or concepto='5' or concepto='6'or concepto='7' or concepto='8'or concepto='9' or concepto='10') and " &
-                    "numDocGenACI ='' " &
-                    "And cl.nombres Like '" & "%" & Me.txtBuscaCliente.Text & "%" & "'" &
-                    "And status<>'X' "
-            Dim daCliente As SqlDataAdapter = New SqlDataAdapter(CDENA, Connection)
+            Dim daCliente As SqlDataAdapter = New SqlDataAdapter("SELECT * FROM clientes where nombres Like '" & "%" & Me.txtBuscaCliente.Text & "%" & "'", Connection)
             daCliente.Fill(oDataSet, "cliente")
 
-            'CDENA = "SELECT  idRecibo,concepto,impDocumento,impDocumentoME,fecEmision,idMoneda,idCliente,status FROM recibosClientes" &
-            '                                                    " where (concepto='0'or concepto='3'or concepto='4'or concepto='5' or concepto='6'or concepto='7'" &
-            '                                                    " or concepto='8'or concepto='9' or concepto='10') and numDocGenACI='' and idCliente=" & CInt(oDataSet.Tables(0).Rows(0).Item(0)) & " and status<>'X'"
-            'Dim daCTaCte As SqlDataAdapter = New SqlDataAdapter(CDENA, Connection)
-            'daCTaCte.Fill(oDataSet, "ctaCorriente")
+            Dim daCTaCte As SqlDataAdapter = New SqlDataAdapter("SELECT  idRecibo,concepto,impDocumento,impDocumentoME,fecEmision,idMoneda,idCliente,status FROM recibosClientes" & _
+                                                                " where (concepto='0'or concepto='3'or concepto='4'or concepto='5' or concepto='6'or concepto='7'" & _
+                                                                " or concepto='8'or concepto='9' or concepto='10') and numDocGenACI='' and idCliente=" & CInt(oDataSet.Tables(0).Rows(0).Item(0)) & " and status<>'X'", Connection)
+            daCTaCte.Fill(oDataSet, "ctaCorriente")
 
-            'Dim colNombre As DataColumn = New DataColumn()
-            'colNombre.AllowDBNull = True
-            'colNombre.Caption = "Nombre Cliente"
-            'colNombre.ColumnName = "nombreCliente"
-            'Me.oDataSet.Tables(0).Columns.Add(colNombre)
+            Dim colNombre As DataColumn = New DataColumn()
+            colNombre.AllowDBNull = True
+            colNombre.Caption = "Nombre Cliente"
+            colNombre.ColumnName = "nombreCliente"
+            Me.oDataSet.Tables(1).Columns.Add(colNombre)
 
-            'Dim oDataRow As DataRow
-            'For i As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
-            '    For x As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
-            '        If Me.oDataSet.Tables(0).Rows.Item(x).Item(0) = Me.oDataSet.Tables(0).Rows.Item(i).Item(6) Then
-            '            oDataRow = Me.oDataSet.Tables(0).Rows(i)
-            '            oDataRow(8) = Me.oDataSet.Tables(0).Rows.Item(x).Item(1)
-            '        End If
-            '    Next x
-            'Next i
+            Dim oDataRow As DataRow
+            For i As Integer = 0 To oDataSet.Tables(1).Rows.Count() - 1
+                For x As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
+                    If Me.oDataSet.Tables(0).Rows.Item(x).Item(0) = Me.oDataSet.Tables(1).Rows.Item(i).Item(6) Then
+                        oDataRow = Me.oDataSet.Tables(1).Rows(i)
+                        oDataRow(8) = Me.oDataSet.Tables(0).Rows.Item(x).Item(1)
+                    End If
+                Next x
+            Next i
 
-            For i As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
+            For i As Integer = 0 To oDataSet.Tables(1).Rows.Count() - 1
                 Me.dgvClientes.Rows.Add()
-                Me.dgvClientes.Rows(i).Cells(0).Value = oDataSet.Tables(0).Rows(i).Item(0).ToString
-                Me.dgvClientes.Rows(i).Cells(1).Value = arrayConceptos(oDataSet.Tables(0).Rows(i).Item(1))
-                Me.dgvClientes.Rows(i).Cells(2).Value = oDataSet.Tables(0).Rows(i).Item(2).ToString
-                Me.dgvClientes.Rows(i).Cells(3).Value = oDataSet.Tables(0).Rows(i).Item(3).ToString
-                Me.dgvClientes.Rows(i).Cells(4).Value = oDataSet.Tables(0).Rows(i).Item(4).ToString
-                Me.dgvClientes.Rows(i).Cells(5).Value = arrayMonedas(oDataSet.Tables(0).Rows(i).Item(5) - 1)
-                Me.dgvClientes.Rows(i).Cells(5).Value = oDataSet.Tables(0).Rows(i).Item(5).ToString
-                Me.dgvClientes.Rows(i).Cells(6).Value = oDataSet.Tables(0).Rows(i).Item(6).ToString
-                Me.dgvClientes.Rows(i).Cells(7).Value = oDataSet.Tables(0).Rows(i).Item(8).ToString
+                Me.dgvClientes.Rows(i).Cells(0).Value = oDataSet.Tables(1).Rows(i).Item(0).ToString
+                Me.dgvClientes.Rows(i).Cells(1).Value = arrayConceptos(oDataSet.Tables(1).Rows(i).Item(1))
+                Me.dgvClientes.Rows(i).Cells(2).Value = oDataSet.Tables(1).Rows(i).Item(2).ToString
+                Me.dgvClientes.Rows(i).Cells(3).Value = oDataSet.Tables(1).Rows(i).Item(3).ToString
+                Me.dgvClientes.Rows(i).Cells(4).Value = oDataSet.Tables(1).Rows(i).Item(4).ToString
+                'Me.dgvClientes.Rows(i).Cells(5).Value = arrayMonedas(oDataSet.Tables(1).Rows(i).Item(5) - 1)
+                Me.dgvClientes.Rows(i).Cells(5).Value = oDataSet.Tables(1).Rows(i).Item(5).ToString
+                Me.dgvClientes.Rows(i).Cells(6).Value = oDataSet.Tables(1).Rows(i).Item(6).ToString
+                Me.dgvClientes.Rows(i).Cells(7).Value = oDataSet.Tables(1).Rows(i).Item(8).ToString
             Next i
         Catch ex As Exception
-            'MessageBox.Show(ex.Message)
+            MessageBox.Show(ex.Message)
         Finally
             Connection.Close()
         End Try
@@ -111,18 +102,18 @@ Public Class frmbuscaRecibo
                 Dim row As Byte = 0
                 Me.dgvClientes.Rows.Clear()
 
-                For i As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
-                    If Me.oDataSet.Tables(0).Rows(i).Item(1).ToString.Trim = "0" Then
+                For i As Integer = 0 To oDataSet.Tables(1).Rows.Count() - 1
+                    If Me.oDataSet.Tables(1).Rows(i).Item(1).ToString.Trim = "0" Then
                         Me.dgvClientes.Rows.Add()
-                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(0).Rows(i).Item(0).ToString
-                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(0).Rows(i).Item(1))
-                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(0).Rows(i).Item(2).ToString
-                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(0).Rows(i).Item(3).ToString
-                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(0).Rows(i).Item(4).ToString
-                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(0).Rows(i).Item(5) - 1)
-                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(0).Rows(i).Item(5).ToString
-                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(0).Rows(i).Item(6).ToString
-                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(0).Rows(i).Item(8).ToString
+                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(1).Rows(i).Item(0).ToString
+                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(1).Rows(i).Item(1))
+                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(1).Rows(i).Item(2).ToString
+                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(1).Rows(i).Item(3).ToString
+                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(1).Rows(i).Item(4).ToString
+                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(1).Rows(i).Item(5) - 1)
+                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(1).Rows(i).Item(5).ToString
+                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(1).Rows(i).Item(6).ToString
+                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(1).Rows(i).Item(8).ToString
                         row += 1
                     End If
                 Next i
@@ -147,18 +138,18 @@ Public Class frmbuscaRecibo
                 Dim row As Byte = 0
                 Me.dgvClientes.Rows.Clear()
 
-                For i As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
-                    If Me.oDataSet.Tables(0).Rows(i).Item(1).ToString.Trim = "3" Then
+                For i As Integer = 0 To oDataSet.Tables(1).Rows.Count() - 1
+                    If Me.oDataSet.Tables(1).Rows(i).Item(1).ToString.Trim = "3" Then
                         Me.dgvClientes.Rows.Add()
-                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(0).Rows(i).Item(0).ToString
-                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(0).Rows(i).Item(1))
-                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(0).Rows(i).Item(2).ToString
-                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(0).Rows(i).Item(3).ToString
-                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(0).Rows(i).Item(4).ToString
-                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(0).Rows(i).Item(5) - 1)
-                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(0).Rows(i).Item(5).ToString
-                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(0).Rows(i).Item(6).ToString
-                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(0).Rows(i).Item(8).ToString
+                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(1).Rows(i).Item(0).ToString
+                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(1).Rows(i).Item(1))
+                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(1).Rows(i).Item(2).ToString
+                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(1).Rows(i).Item(3).ToString
+                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(1).Rows(i).Item(4).ToString
+                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(1).Rows(i).Item(5) - 1)
+                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(1).Rows(i).Item(5).ToString
+                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(1).Rows(i).Item(6).ToString
+                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(1).Rows(i).Item(8).ToString
                         row += 1
                     End If
                 Next i
@@ -183,18 +174,18 @@ Public Class frmbuscaRecibo
                 Dim row As Byte = 0
                 Me.dgvClientes.Rows.Clear()
 
-                For i As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
-                    If Me.oDataSet.Tables(0).Rows(i).Item(1).ToString.Trim = "4" Then
+                For i As Integer = 0 To oDataSet.Tables(1).Rows.Count() - 1
+                    If Me.oDataSet.Tables(1).Rows(i).Item(1).ToString.Trim = "4" Then
                         Me.dgvClientes.Rows.Add()
-                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(0).Rows(i).Item(0).ToString
-                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(0).Rows(i).Item(1))
-                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(0).Rows(i).Item(2).ToString
-                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(0).Rows(i).Item(3).ToString
-                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(0).Rows(i).Item(4).ToString
-                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(0).Rows(i).Item(5) - 1)
-                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(0).Rows(i).Item(5).ToString
-                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(0).Rows(i).Item(6).ToString
-                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(0).Rows(i).Item(8).ToString
+                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(1).Rows(i).Item(0).ToString
+                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(1).Rows(i).Item(1))
+                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(1).Rows(i).Item(2).ToString
+                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(1).Rows(i).Item(3).ToString
+                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(1).Rows(i).Item(4).ToString
+                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(1).Rows(i).Item(5) - 1)
+                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(1).Rows(i).Item(5).ToString
+                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(1).Rows(i).Item(6).ToString
+                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(1).Rows(i).Item(8).ToString
                         row += 1
                     End If
                 Next i
@@ -219,18 +210,18 @@ Public Class frmbuscaRecibo
                 Dim row As Byte = 0
                 Me.dgvClientes.Rows.Clear()
 
-                For i As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
-                    If Me.oDataSet.Tables(0).Rows(i).Item(1).ToString.Trim = "5" Then
+                For i As Integer = 0 To oDataSet.Tables(1).Rows.Count() - 1
+                    If Me.oDataSet.Tables(1).Rows(i).Item(1).ToString.Trim = "5" Then
                         Me.dgvClientes.Rows.Add()
-                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(0).Rows(i).Item(0).ToString
-                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(0).Rows(i).Item(1))
-                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(0).Rows(i).Item(2).ToString
-                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(0).Rows(i).Item(3).ToString
-                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(0).Rows(i).Item(4).ToString
-                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(0).Rows(i).Item(5) - 1)
-                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(0).Rows(i).Item(5).ToString
-                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(0).Rows(i).Item(6).ToString
-                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(0).Rows(i).Item(8).ToString
+                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(1).Rows(i).Item(0).ToString
+                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(1).Rows(i).Item(1))
+                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(1).Rows(i).Item(2).ToString
+                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(1).Rows(i).Item(3).ToString
+                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(1).Rows(i).Item(4).ToString
+                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(1).Rows(i).Item(5) - 1)
+                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(1).Rows(i).Item(5).ToString
+                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(1).Rows(i).Item(6).ToString
+                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(1).Rows(i).Item(8).ToString
                         row += 1
                     End If
                 Next i
@@ -255,18 +246,18 @@ Public Class frmbuscaRecibo
                 Dim row As Byte = 0
                 Me.dgvClientes.Rows.Clear()
 
-                For i As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
-                    If Me.oDataSet.Tables(0).Rows(i).Item(1).ToString.Trim = "6" Then
+                For i As Integer = 0 To oDataSet.Tables(1).Rows.Count() - 1
+                    If Me.oDataSet.Tables(1).Rows(i).Item(1).ToString.Trim = "6" Then
                         Me.dgvClientes.Rows.Add()
-                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(0).Rows(i).Item(0).ToString
-                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(0).Rows(i).Item(1))
-                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(0).Rows(i).Item(2).ToString
-                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(0).Rows(i).Item(3).ToString
-                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(0).Rows(i).Item(4).ToString
-                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(0).Rows(i).Item(5) - 1)
-                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(0).Rows(i).Item(5).ToString
-                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(0).Rows(i).Item(6).ToString
-                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(0).Rows(i).Item(8).ToString
+                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(1).Rows(i).Item(0).ToString
+                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(1).Rows(i).Item(1))
+                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(1).Rows(i).Item(2).ToString
+                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(1).Rows(i).Item(3).ToString
+                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(1).Rows(i).Item(4).ToString
+                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(1).Rows(i).Item(5) - 1)
+                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(1).Rows(i).Item(5).ToString
+                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(1).Rows(i).Item(6).ToString
+                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(1).Rows(i).Item(8).ToString
                         row += 1
                     End If
                 Next i
@@ -291,18 +282,18 @@ Public Class frmbuscaRecibo
                 Dim row As Byte = 0
                 Me.dgvClientes.Rows.Clear()
 
-                For i As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
-                    If Me.oDataSet.Tables(0).Rows(i).Item(1).ToString.Trim = "7" Then
+                For i As Integer = 0 To oDataSet.Tables(1).Rows.Count() - 1
+                    If Me.oDataSet.Tables(1).Rows(i).Item(1).ToString.Trim = "7" Then
                         Me.dgvClientes.Rows.Add()
-                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(0).Rows(i).Item(0).ToString
-                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(0).Rows(i).Item(1))
-                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(0).Rows(i).Item(2).ToString
-                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(0).Rows(i).Item(3).ToString
-                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(0).Rows(i).Item(4).ToString
-                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(0).Rows(i).Item(5) - 1)
-                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(0).Rows(i).Item(5).ToString
-                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(0).Rows(i).Item(6).ToString
-                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(0).Rows(i).Item(8).ToString
+                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(1).Rows(i).Item(0).ToString
+                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(1).Rows(i).Item(1))
+                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(1).Rows(i).Item(2).ToString
+                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(1).Rows(i).Item(3).ToString
+                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(1).Rows(i).Item(4).ToString
+                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(1).Rows(i).Item(5) - 1)
+                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(1).Rows(i).Item(5).ToString
+                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(1).Rows(i).Item(6).ToString
+                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(1).Rows(i).Item(8).ToString
                         row += 1
                     End If
                 Next i
@@ -327,18 +318,18 @@ Public Class frmbuscaRecibo
                 Dim row As Byte = 0
                 Me.dgvClientes.Rows.Clear()
 
-                For i As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
-                    If Me.oDataSet.Tables(0).Rows(i).Item(1).ToString.Trim = "8" Then
+                For i As Integer = 0 To oDataSet.Tables(1).Rows.Count() - 1
+                    If Me.oDataSet.Tables(1).Rows(i).Item(1).ToString.Trim = "8" Then
                         Me.dgvClientes.Rows.Add()
-                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(0).Rows(i).Item(0).ToString
-                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(0).Rows(i).Item(1))
-                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(0).Rows(i).Item(2).ToString
-                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(0).Rows(i).Item(3).ToString
-                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(0).Rows(i).Item(4).ToString
-                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(0).Rows(i).Item(5) - 1)
-                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(0).Rows(i).Item(5).ToString
-                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(0).Rows(i).Item(6).ToString
-                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(0).Rows(i).Item(8).ToString
+                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(1).Rows(i).Item(0).ToString
+                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(1).Rows(i).Item(1))
+                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(1).Rows(i).Item(2).ToString
+                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(1).Rows(i).Item(3).ToString
+                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(1).Rows(i).Item(4).ToString
+                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(1).Rows(i).Item(5) - 1)
+                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(1).Rows(i).Item(5).ToString
+                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(1).Rows(i).Item(6).ToString
+                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(1).Rows(i).Item(8).ToString
                         row += 1
                     End If
                 Next i
@@ -363,18 +354,18 @@ Public Class frmbuscaRecibo
                 Dim row As Byte = 0
                 Me.dgvClientes.Rows.Clear()
 
-                For i As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
-                    If Me.oDataSet.Tables(0).Rows(i).Item(1).ToString.Trim = "9" Then
+                For i As Integer = 0 To oDataSet.Tables(1).Rows.Count() - 1
+                    If Me.oDataSet.Tables(1).Rows(i).Item(1).ToString.Trim = "9" Then
                         Me.dgvClientes.Rows.Add()
-                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(0).Rows(i).Item(0).ToString
-                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(0).Rows(i).Item(1))
-                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(0).Rows(i).Item(2).ToString
-                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(0).Rows(i).Item(3).ToString
-                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(0).Rows(i).Item(4).ToString
-                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(0).Rows(i).Item(5) - 1)
-                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(0).Rows(i).Item(5).ToString
-                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(0).Rows(i).Item(6).ToString
-                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(0).Rows(i).Item(8).ToString
+                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(1).Rows(i).Item(0).ToString
+                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(1).Rows(i).Item(1))
+                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(1).Rows(i).Item(2).ToString
+                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(1).Rows(i).Item(3).ToString
+                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(1).Rows(i).Item(4).ToString
+                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(1).Rows(i).Item(5) - 1)
+                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(1).Rows(i).Item(5).ToString
+                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(1).Rows(i).Item(6).ToString
+                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(1).Rows(i).Item(8).ToString
                         row += 1
                     End If
                 Next i
@@ -399,18 +390,18 @@ Public Class frmbuscaRecibo
                 Dim row As Byte = 0
                 Me.dgvClientes.Rows.Clear()
 
-                For i As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
-                    If Me.oDataSet.Tables(0).Rows(i).Item(1).ToString.Trim = "10" Then
+                For i As Integer = 0 To oDataSet.Tables(1).Rows.Count() - 1
+                    If Me.oDataSet.Tables(1).Rows(i).Item(1).ToString.Trim = "10" Then
                         Me.dgvClientes.Rows.Add()
-                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(0).Rows(i).Item(0).ToString
-                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(0).Rows(i).Item(1))
-                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(0).Rows(i).Item(2).ToString
-                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(0).Rows(i).Item(3).ToString
-                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(0).Rows(i).Item(4).ToString
-                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(0).Rows(i).Item(5) - 1)
-                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(0).Rows(i).Item(5).ToString
-                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(0).Rows(i).Item(6).ToString
-                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(0).Rows(i).Item(8).ToString
+                        Me.dgvClientes.Rows(row).Cells(0).Value = oDataSet.Tables(1).Rows(i).Item(0).ToString
+                        Me.dgvClientes.Rows(row).Cells(1).Value = arrayConceptos(oDataSet.Tables(1).Rows(i).Item(1))
+                        Me.dgvClientes.Rows(row).Cells(2).Value = oDataSet.Tables(1).Rows(i).Item(2).ToString
+                        Me.dgvClientes.Rows(row).Cells(3).Value = oDataSet.Tables(1).Rows(i).Item(3).ToString
+                        Me.dgvClientes.Rows(row).Cells(4).Value = oDataSet.Tables(1).Rows(i).Item(4).ToString
+                        'Me.dgvClientes.Rows(row).Cells(5).Value = arrayMonedas(oDataSet.Tables(1).Rows(i).Item(5) - 1)
+                        Me.dgvClientes.Rows(row).Cells(5).Value = oDataSet.Tables(1).Rows(i).Item(5).ToString
+                        Me.dgvClientes.Rows(row).Cells(6).Value = oDataSet.Tables(1).Rows(i).Item(6).ToString
+                        Me.dgvClientes.Rows(row).Cells(7).Value = oDataSet.Tables(1).Rows(i).Item(8).ToString
                         row += 1
                     End If
                 Next i
@@ -760,7 +751,7 @@ Public Class frmbuscaRecibo
     Private Sub dgvClientes_CellValueChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles dgvClientes.CellValueChanged
         Try
             '---------- 10-08-15
-            If (dgvClientes.Columns(e.ColumnIndex).Name = "status") And (numModulo <> 1 And numModulo <> 3) Then
+            If (dgvClientes.Columns(e.ColumnIndex).Name = "status") And (numModulo <> 1 And numModulo <> 3 And numModulo <> 7 And numModulo <> 8 And numModulo <> 2) Then
                 contador += 1
                 If contador > 1 Then
                     Me.dgvClientes.ReadOnly = True

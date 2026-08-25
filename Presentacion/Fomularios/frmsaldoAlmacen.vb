@@ -20,7 +20,7 @@ Public Class frmsaldoAlmacen
         oDataSet = New DataSet()
 
         Try
-            Dim daSaldos As SqlDataAdapter = New SqlDataAdapter("select * from saldosAlmacenes order by idProducto", Connection)
+            Dim daSaldos As SqlDataAdapter = New SqlDataAdapter("exec stp_Actualizar", Connection)
             daSaldos.Fill(oDataSet, "saldos")
 
             If Me.oDataSet.Tables(0).Rows.Count <= 0 Then
@@ -28,7 +28,7 @@ Public Class frmsaldoAlmacen
                 Exit Sub
             End If
 
-            Dim daProducto As SqlDataAdapter = New SqlDataAdapter("SELECT  * from Productos where stoInicial>=0", Connection)
+            Dim daProducto As SqlDataAdapter = New SqlDataAdapter("SELECT  * from Productos where stoInicial <> -1", Connection)
             daProducto.Fill(oDataSet, "productos")
 
             Dim colDescripcion As DataColumn = New DataColumn()
@@ -81,6 +81,65 @@ Public Class frmsaldoAlmacen
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
+
+        'oDataSet = New DataSet()
+        'Try
+        '    ' Consulta optimizada con JOIN
+        '    Dim query As String = "SELECT " +
+        '    "    s.idProducto, " +
+        '    "    s.stock, " +
+        '    "    s.fechaSaldo, " +
+        '    "    p.desProducto, " +
+        '    "    p.marca, " +
+        '    "    p.modelo, " +
+        '    "    p.presentacion, " +
+        '    "    p.preContado, " +
+        '    "    p.stoInicial " +
+        '    "FROM saldosAlmacenes s " +
+        '    "LEFT JOIN Productos p ON s.idProducto = p.idProducto " +
+        '    "WHERE p.stoInicial >= 0 " +
+        '    "ORDER BY s.idProducto"
+
+        '    Dim da As SqlDataAdapter = New SqlDataAdapter(query, Connection)
+        '    da.Fill(oDataSet, "saldosProductos")
+
+        '    ' Verificar si hay registros
+        '    If oDataSet.Tables("saldosProductos").Rows.Count <= 0 Then
+        '        MsgBox("No existen saldos al " & Me.dtpFechaCierre.Text & ".", MsgBoxStyle.Information)
+        '        Exit Sub
+        '    End If
+
+        '    ' Asignar la tabla al DataGridView
+        '    Me.dgvProductos.DataSource = oDataSet
+        '    Me.dgvProductos.DataMember = "saldosProductos"
+
+        '    ' Configuración de columnas del DataGridView
+        '    With Me.dgvProductos
+        '        .Columns(0).HeaderText = "ID Producto"
+        '        .Columns(0).Width = 60
+        '        .Columns(0).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+
+        '        .Columns(1).HeaderText = "Stock"
+        '        .Columns(1).Width = 60
+        '        .Columns(1).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+
+        '        .Columns(2).HeaderText = "Fecha Saldo"
+        '        .Columns(2).Width = 80
+
+        '        .Columns(3).HeaderText = "Descripción"
+        '        .Columns(3).Width = 350
+
+        '        .Columns(4).HeaderText = "Marca"
+        '        .Columns(5).HeaderText = "Modelo"
+        '        .Columns(6).HeaderText = "Presentación"
+        '        .Columns(7).HeaderText = "Precio Contado"
+        '        .Columns(8).HeaderText = "Stock Inicial"
+        '    End With
+
+        '    Me.btnImprimir.Focus()
+        'Catch ex As Exception
+        '    MessageBox.Show(ex.Message)
+        'End Try
     End Sub
     Private Sub txtBuscaProducto_KeyUp(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtBuscaProducto.KeyUp
         oDataTable = New DataTable()

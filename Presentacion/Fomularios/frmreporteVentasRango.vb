@@ -33,10 +33,12 @@ Public Class frmreporteVentasRango
                                Dt.Rows(i)(0).ToString(), Dt.Rows(i)(1).ToString(),
                                Dt.Rows(i)(2).ToString(), Dt.Rows(i)(3).ToString(),
                                Dt.Rows(i)(4).ToString(), Dt.Rows(i)(5).ToString(),
-                               Dt.Rows(i)(6).ToString(), Dt.Rows(i)(7).ToString(),
-                               Dt.Rows(i)(8).ToString(), Dt.Rows(i)(9).ToString(),
-                               Dt.Rows(i)(10).ToString(), Dt.Rows(i)(11).ToString(),
-                               Dt.Rows(i)(12).ToString())
+                               CDec(Dt.Rows(i)(6).ToString()), CDec(Dt.Rows(i)(7).ToString()),
+                               CDec(Dt.Rows(i)(8).ToString()), CDec(Dt.Rows(i)(9).ToString()),
+                               CDec(Dt.Rows(i)(10).ToString()), Dt.Rows(i)(11).ToString(),
+                               Dt.Rows(i)(12).ToString(), CDec(Dt.Rows(i)(13).ToString()),
+                               CDec(Dt.Rows(i)(14).ToString()), CDec(Dt.Rows(i)(15).ToString()),
+                               CDec(Dt.Rows(i)(16).ToString()))
             Next
         End If
 

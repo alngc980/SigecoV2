@@ -9,6 +9,8 @@ Public Class frmguiaRemisionEN
     Dim txtCodigoProveedor As String
     Dim txtCodigoProducto As Integer
     Dim i, item, ultimoNumero As Integer
+    Dim nComisionVisa As Decimal
+
     Private Sub frmguiaRemisionEN_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.lblNombre.Text = txtNombreEmpresa
         Me.lblDireccion.Text = txtDireccionEmpresa
@@ -28,6 +30,12 @@ Public Class frmguiaRemisionEN
         Me.te.Multiline = True
         Me.te.Visible = False
         Me.KeyPreview = True
+
+        Dim datos As DataTable = RetornaDataTable("select * from FactorComisionVisa")
+        If datos.Rows.Count > 0 Then
+            nComisionVisa = datos.Rows(0)(0).ToString()
+        End If
+
     End Sub
     Private Sub btnBuscarProveedor_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnBuscarProveedor.Click
 
@@ -131,6 +139,12 @@ Public Class frmguiaRemisionEN
                     Me.dgvProductos.Rows(i).Cells(3).Value = arrayDatos(3)
                     Me.dgvProductos.Rows(i).Cells(4).Value = arrayDatos(4)
                     Me.dgvProductos.Rows(i).Cells(8).Value = 0
+
+                    Me.dgvProductos.Rows(i).Cells(9).Value = 0
+                    Me.dgvProductos.Rows(i).Cells(10).Value = 0
+                    Me.dgvProductos.Rows(i).Cells(11).Value = 0
+                    Me.dgvProductos.Rows(i).Cells(12).Value = 0
+
                     Me.dgvProductos.Focus()
                     Me.dgvProductos.CurrentCell = dgvProductos.Rows(i).Cells(8)
                     arrayDatos(0) = "" : arrayDatos(2) = "" : arrayDatos(3) = "" : arrayDatos(4) = ""
@@ -157,6 +171,18 @@ Public Class frmguiaRemisionEN
                         codigoProducto = Me.dgvProductos.Rows(i).Cells(1).Value
                         codigoGrupo = txtGrupo
                         canNumSeries = Me.dgvProductos.Rows(i).Cells(8).Value
+
+
+
+                        ofrmnumerosSerie.txtPrecioCF.Text = CDec(Me.dgvProductos.Rows(i).Cells(9).Value) +
+                                                            CDec(Me.dgvProductos.Rows(i).Cells(10).Value) +
+                                                            CDec(Me.dgvProductos.Rows(i).Cells(11).Value) +
+                                                            CDec(Me.dgvProductos.Rows(i).Cells(12).Value)
+                        ofrmnumerosSerie.txtCant.Text = canNumSeries
+                        ofrmnumerosSerie.txtCostoUnitario.Text = CDec(ofrmnumerosSerie.txtPrecioCF.Text) / canNumSeries
+                        ofrmnumerosSerie.ObtenerCostoPromedio(codigoProducto)
+                        ofrmnumerosSerie.ProcesarPrecios()
+
                         ofrmnumerosSerie.ShowDialog()
                         flagString = ""
                         codigoProducto = 0
@@ -207,9 +233,19 @@ Public Class frmguiaRemisionEN
                         Me.txtDNIRUC.Text & "','" & Me.dtpFecLlegada.Text & "',1,'" & Me.txtTransportista.Text & "','" & Me.txtStatus & "' )"
 
             For i As Integer = 0 To dgvProductos.Rows.Count - 1
-                SqlString1 = "INSERT INTO almDetalle (nomDocumento,tipDocumento,numDocumento,idProducto,cantidad,status) VALUES ('" & _
+                Dim nCostPreCF As Decimal = 0
+
+
+                nCostPreCF = CDec(dgvProductos.Rows(i).Cells(9).Value) +
+                                CDec(dgvProductos.Rows(i).Cells(10).Value) +
+                                CDec(dgvProductos.Rows(i).Cells(11).Value) +
+                                CDec(dgvProductos.Rows(i).Cells(12).Value)
+
+                SqlString1 = "INSERT INTO almDetalle (nomDocumento,tipDocumento,numDocumento,idProducto,cantidad,status, nCost, nCostFlete, nCostSeguro, nCostOtros, nCostPreCF) VALUES ('" & _
                              Me.cbxTipoDocumento.Text & "' ,'" & Me.cbxTipoMovimiento.Text & "' ," & Me.txtNumDocumento.Text & ",'" & _
-                             dgvProductos.Rows(i).Cells(1).Value & "' ," & dgvProductos.Rows(i).Cells(8).Value & ",'0')"
+                             dgvProductos.Rows(i).Cells(1).Value & "' ," & dgvProductos.Rows(i).Cells(8).Value & ",'0' " &
+                             ", " & dgvProductos.Rows(i).Cells(9).Value & ", " & dgvProductos.Rows(i).Cells(10).Value & ", " & dgvProductos.Rows(i).Cells(11).Value &
+                             ", " & dgvProductos.Rows(i).Cells(12).Value & ", " & nCostPreCF & ")"
 
                 Dim sqlSaldo, sqlCodigo As String
                 sqlSaldo = "select * from saldosAlmacenes where idProducto=" & CInt(dgvProductos.Rows(i).Cells(1).Value.ToString()) & " and fechaSaldo='" & CDate(fechaCierre) & "'"
@@ -239,10 +275,23 @@ Public Class frmguiaRemisionEN
             If Me.oDataSet.Tables(0).Rows.Count > 0 Then numero = Me.oDataSet.Tables(0).Rows(Me.oDataSet.Tables(0).Rows().Count() - 1).Item(8)
 
             For i As Integer = 0 To y - 1
-                SqlString4 = "INSERT INTO numerosSerie (idProducto,numSerie,numMotor,numChasis,numDoc,numDoc1,color,anoFab,numItem) VALUES ( " & _
+                SqlString4 = "INSERT INTO numerosSerie (idProducto,numSerie,numMotor,numChasis,numDoc,numDoc1,color,anoFab,numItem , nCostUnitario, nPrecContado, nPrecCredito, nPrecOferta, nPrecRemate, nPrecioProm) VALUES ( " & _
                              Val(matrizSeries(i, 0)) & ",'" & matrizSeries(i, 1) & "','" & matrizSeries(i, 2) & "','" & matrizSeries(i, 3) & "',' ','" & _
-                             Me.txtNumDocumento.Text & "','" & matrizSeries(i, 4) & "','" & matrizSeries(i, 5) & "', " & numero + i + 1 & ")"
+                             Me.txtNumDocumento.Text & "','" & matrizSeries(i, 4) & "','" & matrizSeries(i, 5) & "', " & numero + i + 1 &
+                             "," & matrizSeries(i, 6) & "," & matrizSeries(i, 7) & "," & matrizSeries(i, 8) & "," & matrizSeries(i, 9) & "," & matrizSeries(i, 10) & "," & matrizSeries(i, 11) & ")"
                 ListSqlStrings3.Add(SqlString4)
+
+
+                Dim nPreCont As Decimal = matrizSeries(i, 7)
+                Dim nPreCred As Decimal = matrizSeries(i, 8)
+                Dim nPreOfer As Decimal = matrizSeries(i, 9)
+                Dim nPreRema As Decimal = matrizSeries(i, 10)
+
+                Dim SqlStringPrecios As String = ""
+                SqlStringPrecios = "update productos set preContado=" & nPreCont & ", preCredito=" & nPreCred & ", preOferta=" & nPreOfer & ", preRemate=" & nPreRema &
+                                ", preTarjeta=" & Math.Round(nPreCont / nComisionVisa, 2) & ", preTarjetaOferta=" & Math.Round(nPreOfer / nComisionVisa, 2) &
+                                ", preTarjetaRemate=" & Math.Round(nPreRema / nComisionVisa, 2) & " where idProducto = " & matrizSeries(i, 0)
+                ListSqlStrings3.Add(SqlStringPrecios)
             Next
 
             If Me.cbxTipoDocumento.Text = "PD" Then
@@ -318,7 +367,7 @@ Public Class frmguiaRemisionEN
             End If
 
             PrintDialog1.Document = PrintDocument1
-            If PrintDialog1.ShowDialog = DialogResult.OK Then
+            If PrintDialog1.ShowDialog = Windows.Forms.DialogResult.OK Then
                 PrintDocument1.Print()
             End If
         Catch ex As Exception

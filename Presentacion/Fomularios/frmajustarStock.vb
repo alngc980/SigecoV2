@@ -41,7 +41,7 @@ Public Class frmajustarStock
                 z = x
             Next x
 
-            Dim daSaldos As SqlDataAdapter = New SqlDataAdapter("SELECT  * from saldosAlmacenes where fechaSaldo='" & CDate(fechaCierre) & "' order by idProducto", Connection)
+            Dim daSaldos As SqlDataAdapter = New SqlDataAdapter("SELECT  s.* from saldosAlmacenes s join productos p on p.idProducto = s.idProducto and stoInicial>=0 where fechaSaldo='" & CDate(fechaCierre) & "' order by s.idProducto", Connection)
             daSaldos.Fill(oDataSet, "saldos")
 
             Dim daProducto As SqlDataAdapter = New SqlDataAdapter("SELECT  * from Productos where stoInicial>=0", Connection)
@@ -332,15 +332,19 @@ Public Class frmajustarStock
             ProgressBar1.Maximum = dgvProductos.Rows.Count
             Dim vDiferenciaMas, vDiferenciaMenos As Int16
             For i As Integer = 0 To dgvProductos.Rows.Count - 1
-                If dgvProductos.Rows(i).Cells(8).Value > 0 Then
-                    vDiferenciaMas = dgvProductos.Rows(i).Cells(8).Value
-                Else
-                    vDiferenciaMenos = dgvProductos.Rows(i).Cells(8).Value
+
+                Dim valor As Double
+                If Double.TryParse(dgvProductos.Rows(i).Cells(8).Value, valor) Then
+                    If dgvProductos.Rows(i).Cells(8).Value > 0 Then
+                        vDiferenciaMas = dgvProductos.Rows(i).Cells(8).Value
+                    Else
+                        vDiferenciaMenos = dgvProductos.Rows(i).Cells(8).Value
+                    End If
+                    SqlString3 = "insert into resumenAjustes(idProducto,stockSistema,stockFisico,mas,menos,fecha) VALUES ( '" & _
+                    CInt(dgvProductos.Rows(i).Cells(0).Value.ToString()) & "','" & CInt(dgvProductos.Rows(i).Cells(1).Value.ToString()) & _
+                    "','" & CInt(dgvProductos.Rows(i).Cells(7).Value.ToString()) & "'," & vDiferenciaMas & "," & vDiferenciaMenos & ",'" & Now.Date & "')"
+                    ListSqlStrings2.Add(SqlString3)
                 End If
-                SqlString3 = "insert into resumenAjustes(idProducto,stockSistema,stockFisico,mas,menos,fecha) VALUES ( '" & _
-                CInt(dgvProductos.Rows(i).Cells(0).Value.ToString()) & "','" & CInt(dgvProductos.Rows(i).Cells(1).Value.ToString()) & _
-                "','" & CInt(dgvProductos.Rows(i).Cells(7).Value.ToString()) & "'," & vDiferenciaMas & "," & vDiferenciaMenos & ",'" & Now.Date & "')"
-                ListSqlStrings2.Add(SqlString3)
 
                 vDiferenciaMas = 0
                 vDiferenciaMenos = 0

@@ -3,6 +3,13 @@ Public Class frmbarraMenu
         'Dim oFrmAccesoAdministrador As New frmAccesoAdministrador()
         'If oFrmAcceso.ShowDialog = DialogResult.OK Then
         'End If
+        If bitProduccion Then
+            Me.Text = "Sistema Gestión Comercial - Facturación Electrónica (Comercial Oriente Hnos. SAC) Producción"
+            MsgBox("Conectado a Producción", MsgBoxStyle.Information, Title:="Mensaje")
+        Else
+            Me.Text = "Sistema Gestión Comercial - PRUEBAS!!!"
+            MsgBox("Conectado a Pruebas", MsgBoxStyle.Information, Title:="Mensaje")
+        End If
     End Sub
     Private Sub mnuArchivoConfigurar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuArchivoConfigurar.Click
         Dim ofrmconfigurarPapel As New frmconfigurarPapel()
@@ -421,5 +428,27 @@ Public Class frmbarraMenu
     End Sub
     Private Sub mnuArchivoSalir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuArchivoSalir.Click
         Me.Close()
+    End Sub
+
+    Private Sub ComisionVisaToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ComisionVisaToolStripMenuItem.Click
+        Dim dd As New frmFactorComisionVisa
+        dd.MdiParent = Me
+        dd.Show()
+    End Sub
+
+    Private Sub SaldosXMovimientosToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaldosXMovimientosToolStripMenuItem.Click
+        Dim ofrmsaldosAlmacen As New frmsaldoXMovimiento()
+        ofrmsaldosAlmacen.MdiParent = Me
+        ofrmsaldosAlmacen.Show()
+    End Sub
+
+    Private Sub ModifcarGarantíaGuiaToolStripMenuItem_Click(sender As Object, e As EventArgs)
+
+    End Sub
+
+    Private Sub PlazosGarantiasToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PlazosGarantiasToolStripMenuItem.Click
+        Dim Pla As New frmPlazosGarantia
+        Pla.MdiParent = Me
+        Pla.Show()
     End Sub
 End Class

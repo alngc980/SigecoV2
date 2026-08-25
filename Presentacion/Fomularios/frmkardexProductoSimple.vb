@@ -7,6 +7,8 @@ Public Class frmkardexProductoSimple
     Private flagProcesa As Boolean
     Dim NroPaginasImpresas As Integer = 0
     Dim cantidadDias As Integer
+
+    Dim VerEliminados As Boolean
     Private Sub frmkardexProductoSimple_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.Controls.Add(texto)
         Me.texto.Multiline = True
@@ -14,6 +16,7 @@ Public Class frmkardexProductoSimple
     End Sub
     Private Sub txtProducto_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtProducto.DoubleClick
         arrayDatos(0) = ""
+        frmbuscaProducto.VerTodosLosProductos = VerEliminados
         frmbuscaProducto.ShowDialog()
         If arrayDatos(0) <> "" Then
             Me.txtProducto.Text = arrayDatos(0)
@@ -39,7 +42,7 @@ Public Class frmkardexProductoSimple
                                Dt.Rows(i)(6).ToString(), Dt.Rows(i)(7).ToString(),
                                Dt.Rows(i)(8).ToString(), Dt.Rows(i)(9).ToString(),
                                Dt.Rows(i)(10).ToString(), Dt.Rows(i)(11).ToString(),
-                               Dt.Rows(i)(12).ToString())
+                               Dt.Rows(i)(12).ToString(), Dt.Rows(i)(13).ToString())
             Next
         End If
 
@@ -373,5 +376,24 @@ Public Class frmkardexProductoSimple
     End Sub
     Private Sub btnSalir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSalir.Click
         Me.Close()
+    End Sub
+
+    Private Sub txtProducto_TextChanged(sender As Object, e As EventArgs) Handles txtProducto.TextChanged
+
+    End Sub
+
+    Public Sub AbrirFormulario(nIdProducto As Integer)
+        dtpFechaInicio.Value = "2000-01-01"
+        dtpFechaLimite.Value = System.DateTime.Today
+        txtProducto.Text = nIdProducto
+        'btnProcesar.PerformClick()
+    End Sub
+
+    Private Sub ckEliminados_CheckedChanged(sender As Object, e As EventArgs) Handles ckEliminados.CheckedChanged
+        If ckEliminados.Checked Then
+            VerEliminados = True
+        Else
+            VerEliminados = False
+        End If
     End Sub
 End Class

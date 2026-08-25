@@ -55,7 +55,7 @@ Partial Class frmcierreCaja
         'btnProcesar
         '
         Me.btnProcesar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnProcesar.Image = My.Resources.FormRunHS
+        Me.btnProcesar.Image = My.Resources.Resources.FormRunHS
         Me.btnProcesar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnProcesar.Location = New System.Drawing.Point(10, 19)
         Me.btnProcesar.Name = "btnProcesar"
@@ -94,7 +94,7 @@ Partial Class frmcierreCaja
         'btnImprimir
         '
         Me.btnImprimir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnImprimir.Image = My.Resources.PrintHS
+        Me.btnImprimir.Image = My.Resources.Resources.PrintHS
         Me.btnImprimir.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnImprimir.Location = New System.Drawing.Point(151, 19)
         Me.btnImprimir.Name = "btnImprimir"
@@ -108,7 +108,7 @@ Partial Class frmcierreCaja
         '
         Me.btnSalir.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnSalir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSalir.Image = My.Resources.FillRightHS
+        Me.btnSalir.Image = My.Resources.Resources.FillRightHS
         Me.btnSalir.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnSalir.Location = New System.Drawing.Point(290, 19)
         Me.btnSalir.Name = "btnSalir"

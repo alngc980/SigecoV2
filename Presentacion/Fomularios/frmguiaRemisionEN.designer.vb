@@ -20,12 +20,12 @@ Partial Class frmguiaRemisionEN
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmguiaRemisionEN))
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.PrintDialog1 = New System.Windows.Forms.PrintDialog()
         Me.PrintDocument1 = New System.Drawing.Printing.PrintDocument()
         Me.Label23 = New System.Windows.Forms.Label()
@@ -51,6 +51,10 @@ Partial Class frmguiaRemisionEN
         Me.numMotor = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.numChasis = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cantidad = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PCosto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Flete = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Seguro = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Otros = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eliminar = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.txtTransportista = New System.Windows.Forms.TextBox()
         Me.txtTransLlegada = New System.Windows.Forms.TextBox()
@@ -230,56 +234,56 @@ Partial Class frmguiaRemisionEN
         Me.dgvProductos.AllowUserToAddRows = False
         Me.dgvProductos.AllowUserToDeleteRows = False
         Me.dgvProductos.AllowUserToResizeColumns = False
-        Me.dgvProductos.AllowUserToResizeRows = False
         Me.dgvProductos.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvProductos.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvProductos.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvProductos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvProductos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.numItem, Me.codProducto, Me.desProducto, Me.marca, Me.modelo, Me.numSerie, Me.numMotor, Me.numChasis, Me.cantidad, Me.eliminar})
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvProductos.DefaultCellStyle = DataGridViewCellStyle17
+        Me.dgvProductos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.numItem, Me.codProducto, Me.desProducto, Me.marca, Me.modelo, Me.numSerie, Me.numMotor, Me.numChasis, Me.cantidad, Me.PCosto, Me.Flete, Me.Seguro, Me.Otros, Me.eliminar})
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvProductos.DefaultCellStyle = DataGridViewCellStyle5
         Me.dgvProductos.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.dgvProductos.Location = New System.Drawing.Point(0, 250)
         Me.dgvProductos.Name = "dgvProductos"
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvProductos.RowHeadersDefaultCellStyle = DataGridViewCellStyle18
-        Me.dgvProductos.Size = New System.Drawing.Size(921, 210)
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvProductos.RowHeadersDefaultCellStyle = DataGridViewCellStyle6
+        Me.dgvProductos.RowHeadersVisible = False
+        Me.dgvProductos.Size = New System.Drawing.Size(1050, 210)
         Me.dgvProductos.TabIndex = 47
         '
         'numItem
         '
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle14.NullValue = Nothing
-        Me.numItem.DefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle2.NullValue = Nothing
+        Me.numItem.DefaultCellStyle = DataGridViewCellStyle2
         Me.numItem.Frozen = True
-        Me.numItem.HeaderText = "N° Item"
+        Me.numItem.HeaderText = "N°"
         Me.numItem.Name = "numItem"
         Me.numItem.ReadOnly = True
         Me.numItem.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.numItem.Width = 50
+        Me.numItem.Width = 30
         '
         'codProducto
         '
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.codProducto.DefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.codProducto.DefaultCellStyle = DataGridViewCellStyle3
         Me.codProducto.Frozen = True
         Me.codProducto.HeaderText = "Cod. Prod."
         Me.codProducto.Name = "codProducto"
@@ -335,14 +339,43 @@ Partial Class frmguiaRemisionEN
         '
         'cantidad
         '
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle16.NullValue = Nothing
-        Me.cantidad.DefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle4.NullValue = Nothing
+        Me.cantidad.DefaultCellStyle = DataGridViewCellStyle4
         Me.cantidad.Frozen = True
-        Me.cantidad.HeaderText = "Cantidad"
+        Me.cantidad.HeaderText = "Cant"
         Me.cantidad.Name = "cantidad"
         Me.cantidad.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.cantidad.Width = 80
+        Me.cantidad.Width = 50
+        '
+        'PCosto
+        '
+        Me.PCosto.Frozen = True
+        Me.PCosto.HeaderText = "P. Costo"
+        Me.PCosto.Name = "PCosto"
+        Me.PCosto.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.PCosto.Width = 50
+        '
+        'Flete
+        '
+        Me.Flete.Frozen = True
+        Me.Flete.HeaderText = "Flete"
+        Me.Flete.Name = "Flete"
+        Me.Flete.Width = 50
+        '
+        'Seguro
+        '
+        Me.Seguro.Frozen = True
+        Me.Seguro.HeaderText = "Seguro"
+        Me.Seguro.Name = "Seguro"
+        Me.Seguro.Width = 50
+        '
+        'Otros
+        '
+        Me.Otros.Frozen = True
+        Me.Otros.HeaderText = "Otros"
+        Me.Otros.Name = "Otros"
+        Me.Otros.Width = 50
         '
         'eliminar
         '
@@ -759,7 +792,7 @@ Partial Class frmguiaRemisionEN
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnSalir
-        Me.ClientSize = New System.Drawing.Size(920, 552)
+        Me.ClientSize = New System.Drawing.Size(1089, 552)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.dgvProductos)
         Me.Controls.Add(Me.GroupBox4)
@@ -833,6 +866,10 @@ Partial Class frmguiaRemisionEN
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents lblRUC As System.Windows.Forms.Label
+    Friend WithEvents cbxTipoDocumento As System.Windows.Forms.ComboBox
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents cbxTipoMovimiento As System.Windows.Forms.ComboBox
+    Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents numItem As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents codProducto As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents desProducto As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -842,9 +879,9 @@ Partial Class frmguiaRemisionEN
     Friend WithEvents numMotor As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents numChasis As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents cantidad As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents PCosto As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Flete As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Seguro As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Otros As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents eliminar As System.Windows.Forms.DataGridViewButtonColumn
-    Friend WithEvents cbxTipoDocumento As System.Windows.Forms.ComboBox
-    Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents cbxTipoMovimiento As System.Windows.Forms.ComboBox
-    Friend WithEvents Label1 As System.Windows.Forms.Label
 End Class

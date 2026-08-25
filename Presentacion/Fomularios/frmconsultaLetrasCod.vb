@@ -571,18 +571,18 @@ Public Class frmconsultaLetrasCod
                     For x As Integer = 0 To oDataSet.Tables(3).Rows.Count() - 1
                         If Me.oDataSet.Tables(3).Rows.Item(x).Item(0) = Me.oDataSet.Tables(2).Rows.Item(i).Item(3) Then
                             oDataRow = Me.oDataSet.Tables(2).Rows(i)
-                            oDataRow(11) = Me.oDataSet.Tables(3).Rows.Item(x).Item(2)
-                            oDataRow(12) = Me.oDataSet.Tables(3).Rows.Item(x).Item(4)
-                            oDataRow(13) = Me.oDataSet.Tables(3).Rows.Item(x).Item(5)
+                            oDataRow(11 - 1) = Me.oDataSet.Tables(3).Rows.Item(x).Item(2)
+                            oDataRow(12 - 1) = Me.oDataSet.Tables(3).Rows.Item(x).Item(4)
+                            oDataRow(13 - 1) = Me.oDataSet.Tables(3).Rows.Item(x).Item(5)
                         End If
                     Next x
                 Next i
 
                 For i As Integer = 0 To oDataSet.Tables(2).Rows.Count() - 1
                     te.Text = te.Text & Me.oDataSet.Tables(2).Rows.Item(i).Item(3).ToString.PadRight(5) & " "
-                    te.Text = te.Text & VisualBasic.Left(Me.oDataSet.Tables(2).Rows.Item(i).Item(11).ToString, 25).PadRight(25) & " "
-                    te.Text = te.Text & VisualBasic.Left(Me.oDataSet.Tables(2).Rows.Item(i).Item(12).ToString, 10).PadRight(10) & " "
-                    te.Text = te.Text & VisualBasic.Left(Me.oDataSet.Tables(2).Rows.Item(i).Item(13).ToString, 15).PadRight(15) & " "
+                    te.Text = te.Text & VisualBasic.Left(Me.oDataSet.Tables(2).Rows.Item(i).Item(11 - 1).ToString, 25).PadRight(25) & " "
+                    te.Text = te.Text & VisualBasic.Left(Me.oDataSet.Tables(2).Rows.Item(i).Item(12 - 1).ToString, 10).PadRight(10) & " "
+                    te.Text = te.Text & VisualBasic.Left(Me.oDataSet.Tables(2).Rows.Item(i).Item(13 - 1).ToString, 15).PadRight(15) & " "
                     te.Text = te.Text & Me.oDataSet.Tables(2).Rows.Item(i).Item(4).ToString.PadLeft(10)
                     te.Text = te.Text & Me.oDataSet.Tables(2).Rows.Item(i).Item(5).ToString.PadLeft(10)
                     te.Text = te.Text & Me.oDataSet.Tables(2).Rows.Item(i).Item(6).ToString.PadLeft(16) & enter
@@ -745,7 +745,8 @@ Public Class frmconsultaLetrasCod
             numDocumento = CInt(Me.oDataSet.Tables(0).Rows(0).Item(2))
             numeroLetra = Me.dgvLetras.Rows(Me.dgvLetras.CurrentCell.RowIndex).Cells(0).Value
             Me.btnAceptar_Click(sender, e)
-            Me.btnImprimir_Click(sender, e)
+            'Me.btnImprimir_Click(sender, e)
+            ImprimirUnaCuenta()
             tipMovimiento = ""
             numDocumento = 0
             numeroLetra = ""
@@ -792,4 +793,172 @@ Public Class frmconsultaLetrasCod
     Private Sub btnSalir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSalir.Click
         Me.Close()
     End Sub
+
+    Public Sub ImprimirUnaCuenta()
+        Dim en, t As Keys
+        Dim numDocGenACI As String = VisualBasic.Trim(tipMovimiento & numDocumento)
+        Dim enter, tab As Char
+        en = Keys.Enter
+        t = Keys.Tab
+        enter = Convert.ToChar(en)
+        tab = Convert.ToChar(t)
+
+        If Me.dgvLetras.RowCount <= 0 Then
+            MsgBox("No hay información procesada para imprimir.", MsgBoxStyle.Information)
+            Exit Sub
+        End If
+
+        Try
+            Me.codCliente = Me.dgvLetras.Rows(0).Cells(9).Value
+            Dim CuentaImprimir As String = ""
+            CuentaImprimir = Me.dgvLetras.SelectedRows(0).Cells(0).Value
+
+            oDataSet = New DataSet()
+            Connection.Open()
+            Dim daGarantes As SqlDataAdapter = New SqlDataAdapter("SELECT *from garantes where idCliente=" & Me.codCliente & "", Connection)
+            daGarantes.Fill(oDataSet, "garantes")
+            Connection.Close()
+
+            If Me.oDataSet.Tables(0).Rows.Count > 0 Then
+                Me.nomGarante = oDataSet.Tables(0).Rows(0).Item(1)
+                Me.dirGarante = oDataSet.Tables(0).Rows(0).Item(2)
+                Me.dniGarante = oDataSet.Tables(0).Rows(0).Item(3)
+            Else
+                Me.nomGarante = ""
+                Me.dirGarante = ""
+                Me.dniGarante = ""
+            End If
+
+            te.Text = _
+            "                                  Comercial Oriente Hnos. SAC" & enter & enter & _
+            "Movimientos de Cuenta Corriente" & enter & enter & _
+            "Datos del Cliente:" & enter & _
+            "Nombre Cliente: " & Me.lblNombre.Text & enter & _
+            "Dir.   Cliente: " & Me.dirCliente & enter & _
+            "Doc.   Cliente: " & Me.dniCliente & enter & enter & _
+            "Datos del Garante:" & enter & _
+            "Nombre Garante: " & Me.nomGarante & enter & _
+            "Dir.   Garante: " & Me.dirGarante & enter & _
+            "Doc.   Garante: " & Me.dniGarante & enter & _
+            "Fecha         : " & Me.dtpFecha.Text & enter
+            te.Text = te.Text & "-------------------------------------------------------------------------------------------------" & enter
+            te.Text = te.Text & "Núm.Letra     Num. Mon. Monto MN Monto ME Fec.Emis.  Fec.Venc.  Fec.Pago     Amortiz.    Saldos S" & enter
+            te.Text = te.Text & "-------------------------------------------------------------------------------------------------"
+            For i As Integer = 0 To Me.dgvLetras.RowCount - 1
+                If CuentaImprimir = Me.dgvLetras.Rows(i).Cells(0).Value.ToString.Trim Then
+                    te.Text = te.Text & Me.dgvLetras.Rows(i).Cells(0).Value.ToString.PadRight(14) & " "
+                    te.Text = te.Text & Me.dgvLetras.Rows(i).Cells(1).Value.ToString.PadRight(4)
+                    te.Text = te.Text & Me.arrayMonedas(Me.dgvLetras.Rows(i).Cells(8).Value - 1) & " "
+                    te.Text = te.Text & Me.dgvLetras.Rows(i).Cells(2).Value.ToString.PadLeft(10)
+                    te.Text = te.Text & Me.dgvLetras.Rows(i).Cells(3).Value.ToString.PadLeft(10) & " "
+                    te.Text = te.Text & VisualBasic.Left(Me.dgvLetras.Rows(i).Cells(4).Value.ToString, 10).PadLeft(10) & " "
+                    te.Text = te.Text & VisualBasic.Left(Me.dgvLetras.Rows(i).Cells(5).Value.ToString, 10).PadLeft(10) & " "
+                    te.Text = te.Text & VisualBasic.Left(Me.dgvLetras.Rows(i).Cells(6).Value.ToString, 10).PadLeft(10) & " "
+                    te.Text = te.Text & Me.dgvLetras.Rows(i).Cells(12).Value.ToString.PadLeft(10)
+                    te.Text = te.Text & Me.dgvLetras.Rows(i).Cells(13).Value.ToString.PadLeft(10) & " "
+                    te.Text = te.Text & Me.dgvLetras.Rows(i).Cells(10).Value & enter
+                End If
+            Next
+            te.Text = te.Text & "-------------------------------------------------------------------------------------------------" & enter
+
+            If flag <> 0 Then
+                Dim daVtaCabecera As SqlDataAdapter = New SqlDataAdapter("SELECT  *from vtaCabecera where tipDocumento='" & tipMovimiento & _
+                "' and numDocumento='" & numDocumento & "' and status<>'A' ", Connection)
+                daVtaCabecera.Fill(oDataSet, "vtaCabecera")
+
+                te.Text = te.Text & enter & "Datos del Producto" & enter
+                te.Text = te.Text & "-------------------------------------------------------------------------------------------------"
+                te.Text = te.Text & "Cód.  Descripción               Marca      Modelo             Precio      Cantidad     Total     " & enter
+                te.Text = te.Text & "-------------------------------------------------------------------------------------------------"
+                Me.totVentaMN = Me.oDataSet.Tables(1).Rows(0).Item(8)
+                Me.totVentaME = Me.oDataSet.Tables(1).Rows(0).Item(9)
+                Me.intFinanciero = Me.oDataSet.Tables(1).Rows(0).Item(10)
+                'Me.dtpFecha.Text = Me.oDataSet.Tables(0).Rows(0).Item(12)  
+                Me.tipoCambio = Me.oDataSet.Tables(1).Rows(0).Item(16)
+
+                Dim daVtaDetalle = New SqlDataAdapter("SELECT *from vtaDetalle where numDocumento='" & numDocumento & _
+                "' and tipDocumento='" & tipMovimiento & "'", Connection)
+                daVtaDetalle.Fill(oDataSet, "vtaDetalle")
+
+                Dim colNombreProducto As DataColumn = New DataColumn()
+                colNombreProducto.Caption = "Descripción Producto"
+                colNombreProducto.ColumnName = "descripcionProducto"
+                Me.oDataSet.Tables(2).Columns.Add(colNombreProducto)
+
+                Dim colMarcaProducto As DataColumn = New DataColumn()
+                colMarcaProducto.Caption = "Marca"
+                colMarcaProducto.ColumnName = "marca"
+                Me.oDataSet.Tables(2).Columns.Add(colMarcaProducto)
+
+                Dim colModeloProducto As DataColumn = New DataColumn()
+                colModeloProducto.Caption = "Modelo"
+                colModeloProducto.ColumnName = "modelo"
+                Me.oDataSet.Tables(2).Columns.Add(colModeloProducto)
+
+                For i As Integer = 0 To oDataSet.Tables(2).Rows.Count() - 1
+                    Dim daProductos As SqlDataAdapter = New SqlDataAdapter("SELECT *from productos where idProducto='" & Me.oDataSet.Tables(2).Rows(i).Item(3) & "' ", Connection)
+                    daProductos.Fill(oDataSet, "productos")
+                Next
+
+                Dim daRecibos As SqlDataAdapter = New SqlDataAdapter("SELECT *from recibosClientes where numDocGenACI='" & numDocGenACI & "'", Connection)
+                daRecibos.Fill(oDataSet, "recibosClientes")
+                Connection.Close()
+
+                Dim oDataRow As DataRow
+                For i As Integer = 0 To oDataSet.Tables(2).Rows.Count() - 1
+                    For x As Integer = 0 To oDataSet.Tables(3).Rows.Count() - 1
+                        If Me.oDataSet.Tables(3).Rows.Item(x).Item(0) = Me.oDataSet.Tables(2).Rows.Item(i).Item(3) Then
+                            oDataRow = Me.oDataSet.Tables(2).Rows(i)
+                            oDataRow(11 - 1) = Me.oDataSet.Tables(3).Rows.Item(x).Item(2)
+                            oDataRow(12 - 1) = Me.oDataSet.Tables(3).Rows.Item(x).Item(4)
+                            oDataRow(13 - 1) = Me.oDataSet.Tables(3).Rows.Item(x).Item(5)
+                        End If
+                    Next x
+                Next i
+
+                For i As Integer = 0 To oDataSet.Tables(2).Rows.Count() - 1
+                    te.Text = te.Text & Me.oDataSet.Tables(2).Rows.Item(i).Item(3).ToString.PadRight(5) & " "
+                    te.Text = te.Text & VisualBasic.Left(Me.oDataSet.Tables(2).Rows.Item(i).Item(11 - 1).ToString, 25).PadRight(25) & " "
+                    te.Text = te.Text & VisualBasic.Left(Me.oDataSet.Tables(2).Rows.Item(i).Item(12 - 1).ToString, 10).PadRight(10) & " "
+                    te.Text = te.Text & VisualBasic.Left(Me.oDataSet.Tables(2).Rows.Item(i).Item(13 - 1).ToString, 15).PadRight(15) & " "
+                    te.Text = te.Text & Me.oDataSet.Tables(2).Rows.Item(i).Item(4).ToString.PadLeft(10)
+                    te.Text = te.Text & Me.oDataSet.Tables(2).Rows.Item(i).Item(5).ToString.PadLeft(10)
+                    te.Text = te.Text & Me.oDataSet.Tables(2).Rows.Item(i).Item(6).ToString.PadLeft(16) & enter
+                    Me.sumaSubTotales += Me.oDataSet.Tables(2).Rows.Item(i).Item(6)
+                Next
+                te.Text = te.Text & "-------------------------------------------------------------------------------------------------" & enter
+                te.Text = te.Text & "SubTotal   :" & Me.sumaSubTotales.ToString.PadLeft(83) & enter
+                te.Text = te.Text & "Interés    :" & Me.intFinanciero.ToString.PadLeft(83) & enter
+                te.Text = te.Text & "Total MN   :" & Me.totVentaMN.ToString.PadLeft(83) & enter
+                te.Text = te.Text & "Total ME   :" & Me.totVentaME.ToString.PadLeft(83) & enter
+                te.Text = te.Text & "Tipo Cambio:" & Me.tipoCambio & enter
+                If Me.oDataSet.Tables(4).Rows.Count >= 1 Then
+                    For i As Integer = 0 To oDataSet.Tables(4).Rows.Count() - 1
+                        te.Text = te.Text & "Recibo " & Me.arrayConceptos(Me.oDataSet.Tables(4).Rows(i).Item(1)) & " N° " & Me.oDataSet.Tables(4).Rows(i).Item(0).ToString & " " & Me.arrayMonedas(Me.oDataSet.Tables(4).Rows(i).Item(14) - 1) & "/. " & Me.oDataSet.Tables(4).Rows(i).Item(3).ToString & enter
+                    Next
+                Else
+                    te.Text = te.Text & "No registra cuota inicial."
+                End If
+            End If
+
+            If MsgBox("Desea hacer una vista previa del documento?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                configurarImpresion()
+                PrintPreviewDialog1.Document = PrintDocument1
+                PrintPreviewDialog1.ShowDialog()
+            End If
+
+            PrintDialog1.Document = PrintDocument1
+            configurarImpresion()
+            If PrintDialog1.ShowDialog = DialogResult.OK Then
+                PrintDocument1.Print()
+            End If
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        Finally
+            Connection.Close()
+            Me.oDataSet.Tables.Clear()
+        End Try
+    End Sub
+
 End Class

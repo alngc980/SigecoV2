@@ -35,7 +35,7 @@ Public Class frmExcelToSqlServer
         Dim oDataTable As DataTable
 
         daProductos = New SqlDataAdapter("select * from productos", Connection)
-        odatatable = New DataTable
+        oDataTable = New DataTable
         daProductos.Fill(oDataTable)
 
         If oDataTable.Rows.Count > 9 Then
@@ -81,18 +81,25 @@ Public Class frmExcelToSqlServer
         daProductos.Fill(oDataTable)
 
         Try
-            For i As Integer = 0 To oDataTable.Rows.Count - 6
-                sqlString = "update productos set desProducto='" & Microsoft.VisualBasic.Left(dgvProductos.Rows(i).Cells(2).Value, 250) & _
-                                                              "',marca='" & Microsoft.VisualBasic.Left(dgvProductos.Rows(i).Cells(4).Value, 15) & _
-                                                              "',modelo='" & Microsoft.VisualBasic.Left(dgvProductos.Rows(i).Cells(5).Value, 20) & _
-                                                              "',preContado=" & dgvProductos.Rows(i).Cells(7).Value & _
-                                                              ",preCredito=" & dgvProductos.Rows(i).Cells(8).Value & _
-                                                              ",preTarjeta=" & dgvProductos.Rows(i).Cells(9).Value & _
-                                                              ",preTarjetaOferta=" & dgvProductos.Rows(i).Cells(10).Value & _
-                                                              ",preTarjetaRemate=" & dgvProductos.Rows(i).Cells(11).Value & _
-                                                              ",preOferta=" & dgvProductos.Rows(i).Cells(12).Value & _
-                                                              ",preRemate=" & dgvProductos.Rows(i).Cells(13).Value & " where idProducto='" & dgvProductos.Rows(i).Cells(0).Value & "'"
-                listaSqlStrings.Add(sqlString)
+            For i As Integer = 0 To dgvProductos.Rows.Count - 2
+                If dgvProductos.Rows(i).Cells(2).Value.ToString().Trim <> "" And dgvProductos.Rows(i).Cells(4).Value.ToString().Trim <> "" Then
+                    sqlString = ""
+                    sqlString = "update productos set desProducto='" & Microsoft.VisualBasic.Left(dgvProductos.Rows(i).Cells(2).Value, 250) & _
+                                                                  "',marca='" & Microsoft.VisualBasic.Left(dgvProductos.Rows(i).Cells(4).Value, 15) & _
+                                                                  "',modelo='" & Microsoft.VisualBasic.Left(dgvProductos.Rows(i).Cells(5).Value, 20) & _
+                                                                  "',preContado=" & dgvProductos.Rows(i).Cells(7).Value & _
+                                                                  ",preCredito=" & dgvProductos.Rows(i).Cells(8).Value & _
+                                                                  ",preTarjeta=" & dgvProductos.Rows(i).Cells(9).Value & _
+                                                                  ",preTarjetaOferta=" & dgvProductos.Rows(i).Cells(10).Value & _
+                                                                  ",preTarjetaRemate=" & dgvProductos.Rows(i).Cells(11).Value & _
+                                                                  ",preOferta=" & dgvProductos.Rows(i).Cells(12).Value & _
+                                                                  ",preRemate=" & dgvProductos.Rows(i).Cells(13).Value & " where idProducto='" & dgvProductos.Rows(i).Cells(0).Value & "'"
+                    listaSqlStrings.Add(sqlString)
+                    'grabarSqlString(sqlString)
+                End If
+                'If 140 = i Then
+                '    MsgBox("fgsdfgsdfg")
+                'End If
             Next
 
             If ejecutarTransaccion(listaSqlStrings) Then

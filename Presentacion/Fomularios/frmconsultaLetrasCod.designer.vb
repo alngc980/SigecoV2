@@ -20,25 +20,25 @@ Partial Class frmconsultaLetrasCod
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmconsultaLetrasCod))
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.txtcodCliente = New System.Windows.Forms.TextBox
-        Me.dgvLetras = New System.Windows.Forms.DataGridView
-        Me.txtCliente = New System.Windows.Forms.TextBox
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox
-        Me.btnGrabar = New System.Windows.Forms.Button
-        Me.btnImprimir = New System.Windows.Forms.Button
-        Me.btnAceptar = New System.Windows.Forms.Button
-        Me.btnSalir = New System.Windows.Forms.Button
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox
-        Me.Label3 = New System.Windows.Forms.Label
-        Me.lblNombre = New System.Windows.Forms.Label
-        Me.dtpFecha = New System.Windows.Forms.DateTimePicker
-        Me.Label14 = New System.Windows.Forms.Label
-        Me.PrintPreviewDialog1 = New System.Windows.Forms.PrintPreviewDialog
-        Me.PrintDialog1 = New System.Windows.Forms.PrintDialog
-        Me.PrintDocument1 = New System.Drawing.Printing.PrintDocument
-        Me.lblMensaje = New System.Windows.Forms.Label
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.txtcodCliente = New System.Windows.Forms.TextBox()
+        Me.dgvLetras = New System.Windows.Forms.DataGridView()
+        Me.txtCliente = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.btnGrabar = New System.Windows.Forms.Button()
+        Me.btnImprimir = New System.Windows.Forms.Button()
+        Me.btnAceptar = New System.Windows.Forms.Button()
+        Me.btnSalir = New System.Windows.Forms.Button()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.lblNombre = New System.Windows.Forms.Label()
+        Me.dtpFecha = New System.Windows.Forms.DateTimePicker()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.PrintPreviewDialog1 = New System.Windows.Forms.PrintPreviewDialog()
+        Me.PrintDialog1 = New System.Windows.Forms.PrintDialog()
+        Me.PrintDocument1 = New System.Drawing.Printing.PrintDocument()
+        Me.lblMensaje = New System.Windows.Forms.Label()
         CType(Me.dgvLetras, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
@@ -72,6 +72,7 @@ Partial Class frmconsultaLetrasCod
         Me.dgvLetras.Location = New System.Drawing.Point(6, 111)
         Me.dgvLetras.Name = "dgvLetras"
         Me.dgvLetras.RowHeadersVisible = False
+        Me.dgvLetras.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvLetras.Size = New System.Drawing.Size(897, 217)
         Me.dgvLetras.TabIndex = 2
         '
@@ -109,7 +110,7 @@ Partial Class frmconsultaLetrasCod
         'btnGrabar
         '
         Me.btnGrabar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnGrabar.Image = My.Resources.saveHS
+        Me.btnGrabar.Image = Global.Presentacion.My.Resources.Resources.saveHS
         Me.btnGrabar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnGrabar.Location = New System.Drawing.Point(300, 18)
         Me.btnGrabar.Name = "btnGrabar"
@@ -123,7 +124,7 @@ Partial Class frmconsultaLetrasCod
         '
         Me.btnImprimir.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnImprimir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnImprimir.Image = My.Resources.PrintHS
+        Me.btnImprimir.Image = Global.Presentacion.My.Resources.Resources.PrintHS
         Me.btnImprimir.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnImprimir.Location = New System.Drawing.Point(471, 18)
         Me.btnImprimir.Name = "btnImprimir"
@@ -136,7 +137,7 @@ Partial Class frmconsultaLetrasCod
         'btnAceptar
         '
         Me.btnAceptar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAceptar.Image = My.Resources.ZoomHS
+        Me.btnAceptar.Image = Global.Presentacion.My.Resources.Resources.ZoomHS
         Me.btnAceptar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnAceptar.Location = New System.Drawing.Point(127, 18)
         Me.btnAceptar.Name = "btnAceptar"
@@ -150,7 +151,7 @@ Partial Class frmconsultaLetrasCod
         '
         Me.btnSalir.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnSalir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSalir.Image = My.Resources.FillRightHS
+        Me.btnSalir.Image = Global.Presentacion.My.Resources.Resources.FillRightHS
         Me.btnSalir.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnSalir.Location = New System.Drawing.Point(645, 18)
         Me.btnSalir.Name = "btnSalir"

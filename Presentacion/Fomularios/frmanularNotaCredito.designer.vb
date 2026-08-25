@@ -525,7 +525,7 @@ Partial Class frmanularNotaCredito
         'cbxTipoDocumento
         '
         Me.cbxTipoDocumento.FormattingEnabled = True
-        Me.cbxTipoDocumento.Items.AddRange(New Object() {"NC", "CE"})
+        Me.cbxTipoDocumento.Items.AddRange(New Object() {"NC", "CE", "NX"})
         Me.cbxTipoDocumento.Location = New System.Drawing.Point(316, 17)
         Me.cbxTipoDocumento.Name = "cbxTipoDocumento"
         Me.cbxTipoDocumento.Size = New System.Drawing.Size(56, 21)

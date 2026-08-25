@@ -31,6 +31,9 @@ Public Class frmboletaVenta
     Dim flagGraba As Byte = 0
     Dim dsctoLetra As Decimal
     Dim i, item, resto As Integer
+
+    Private Property ose As Object
+
     Private Sub frmboletaVenta_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.lblNombre.Text = txtNombreEmpresa
         Me.lblDireccion.Text = txtDireccionEmpresa
@@ -74,6 +77,7 @@ Public Class frmboletaVenta
         Me.cbxTipoCredito.Enabled = False
         Me.txtCanCuotas.Enabled = False
         Me.KeyPreview = True
+
     End Sub
     Private Sub cbxGarantia_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cbxGarantia.SelectedIndexChanged
         Me.txtGlosa.Text = "Condiciones de garantía: a)Plazo " & Me.cbxGarantia.Text & " meses. Incluye certificado de garantía sólo por fallos de fabricación."
@@ -393,6 +397,7 @@ Public Class frmboletaVenta
         Dim fecVcto As DateTime
         Dim stockActual As Integer
         Dim sqlString As String
+        Dim listaSqlStringsLetras As New ArrayList
         Dim listaSqlStringsVenta As New ArrayList
         Dim listaSqlStringsAlmacen As New ArrayList
         Dim sqlStringNumero As String = "select * from vtaCabecera where tipDocumento='" & Me.txtTipoMovimiento & "' and numDocumento='" & CInt(Me.txtNumDocumento.Text) & "'"
@@ -461,34 +466,7 @@ Public Class frmboletaVenta
             End If
         End If
 
-        If MsgBoxResult.No = MsgBox("Esta conforme el importe y fecha de vencimiento de la venta?" + vbCrLf + "Continuar Grabando?", vbYesNo, Title:="Estas seguro de guardar?") Then
-            Exit Sub
-        End If
-
-        Try
-            Me.txtStringNumDocumento = oProducto.stringLetra(Me.txtTipoMovimiento, Me.txtNumDocumento.Text, "", "")
-            sqlString = "insert into vtaCabecera (tipDocumento,serDocumento,numDocumento,numGuia,tipOperacion,numLetra,idCliente,idVendedor,totVentaMN," &
-                        "totVentaME,intFinanciero,IGV,fecOperacion,comVendedor,cuoInicial,idMoneda,tipCambio,tasInteres,statusNC,statusNA,staEnvio,status) values ('" &
-                        Me.txtTipoMovimiento & "','" & Me.txtSerieDocumento.Text & "'," & Me.txtNumDocumento.Text & ",'" & Me.numDocumentoGR & "','" &
-                        chrConcepto & "','" & Me.txtStringLetra & "'," & Me.txtCodigoCliente & "," & Me.txtCodigoVendedor.Text & "," &
-                        Me.txtTotalPagar.Text & "," & Me.txtTotalPagar.Text & "," & Me.txtInteres.Text & "," & Me.txtIGV.Text & ",'" & Me.dtpFecha.Text & "'," &
-                        Me.txtComVendedor & "," & Me.vCuotaInicial & "," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & "," & txtTasa & ",'','','','')"
-            listaSqlStringsVenta.Add(sqlString)
-
-            For i As Integer = 0 To dgvProductos.Rows.Count - 1
-                sqlString = "insert into vtaDetalle (tipDocumento,serDocumento,numDocumento,idProducto,precio,cantidad,subTotal,afeIGV,fecOperacion,status) values ('" &
-                             Me.txtTipoMovimiento & "','" & Me.txtSerieDocumento.Text & "'," & Me.txtNumDocumento.Text & "," & dgvProductos.Rows(i).Cells(1).Value &
-                             "," & dgvProductos.Rows(i).Cells(5).Value & "," & dgvProductos.Rows(i).Cells(9).Value & "," & dgvProductos.Rows(i).Cells(10).Value &
-                             ",'','" & Me.dtpFecha.Text & "','')"
-                listaSqlStringsVenta.Add(sqlString)
-            Next
-
-            If Me.txtGlosa.Text <> "" Then
-                sqlString = "insert into glosasFacturas (tipDocumento,numDocumento,glosa,nomDocumento) values ('" &
-                             Me.tipMovimiento & "'," & Me.numDocumentoGR & ",'" & Me.txtGlosa.Text & "','" & Me.tipDocumento & "')"
-                listaSqlStringsVenta.Add(sqlString)
-            End If
-
+        If cbxTipoVenta.Text = "Venta Credito" Then
             For i As Integer = 0 To vCantidadCuotas - 1
                 If Me.cbxTipoCredito.SelectedIndex = 0 Then
                     fecVcto = Me.dtpFechaVcmto.Value.AddMonths(i).ToShortDateString
@@ -502,13 +480,95 @@ Public Class frmboletaVenta
                     End If
                 End If
 
+                Me.txtImpLetra = Math.Round((Val(txtSubTotal.Text) + Val(txtInteres.Text) - Val(txtTotalAnticipos.Text)) / Val(txtCanCuotas.Text), 0)
+                txtNumGuia.Text = Me.txtImpLetra
+
                 sqlString = "insert into letrasClientes (numLetra,idCliente,idVendedor,numCorrelativo,impLetra,impLetraME," &
                              "fecEmision,fecVencimiento,fecPago,numRecibo,idMoneda,tipCambio,statusNC,statusNA,zona,status) VALUES ('" &
                             Me.txtStringLetra & "'," & Me.txtCodigoCliente & "," & Me.txtCodigoVendedor.Text & "," & i + 1 & "," &
                             Me.txtImpLetra & "," & Me.txtImpLetraME & ",'" & Me.dtpFecha.Text & "','" & fecVcto & "','',''," &
                             CInt(Me.cbxTipoMoneda.SelectedIndex.ToString.Trim) + 1 & " ," & Me.txtTipoCambio.Text & ",'',''," & Me.txtZonaCliente & ",'')"
+                listaSqlStringsLetras.Add(sqlString)
+            Next
+            If transaccionLetras(listaSqlStringsLetras) Then
+                Dim frmLetras As New frmconsultaLetrasNom()
+                numeroLetra = txtStringLetra
+                frmLetras.ShowDialog()
+                numeroLetra = ""
+            End If
+
+
+            If MsgBoxResult.No = MsgBox("Esta conforme el importe y fecha de vencimiento de la venta?" + vbCrLf + "Continuar Grabando?", vbYesNo, Title:="Estas seguro de guardar?") Then
+                listaSqlStringsLetras.Clear()
+                sqlString = "delete from letrasClientes where numLetra = '" + Me.txtStringLetra + "'"
+                listaSqlStringsLetras.Add(sqlString)
+                transaccionLetras(listaSqlStringsLetras)
+                Exit Sub
+            Else
+                Dim ValorCuotas As Decimal
+                ValorCuotas = Convert.ToDecimal(txtNumGuia.Text) * Convert.ToDecimal(txtCanCuotas.Text) + Convert.ToDecimal(txtTotalRecibos.Text)
+                If Val(ValorCuotas) <> Val(txtTotalPagar.Text) Then
+                    MsgBox("El valor de las cuotas " & ValorCuotas & " No corresponde al total " & txtTotalPagar.Text & vbCrLf & " Diferencia " & Val(ValorCuotas) - Val(txtTotalPagar.Text), vbOKOnly, Title:="Error de Calculo")
+                    listaSqlStringsLetras.Clear()
+                    sqlString = "delete from letrasClientes where numLetra = '" + Me.txtStringLetra + "'"
+                    listaSqlStringsLetras.Add(sqlString)
+                    transaccionLetras(listaSqlStringsLetras)
+                    Exit Sub
+                End If
+            End If
+        End If
+
+
+        Try
+            Me.txtStringNumDocumento = oProducto.stringLetra(Me.txtTipoMovimiento, Me.txtNumDocumento.Text, "", "")
+            sqlString = "insert into vtaCabecera (tipDocumento,serDocumento,numDocumento,numGuia,tipOperacion,numLetra,idCliente,idVendedor,totVentaMN," &
+                        "totVentaME,intFinanciero,IGV,fecOperacion,comVendedor,cuoInicial,idMoneda,tipCambio,tasInteres,statusNC,statusNA,staEnvio,status) values ('" &
+                        Me.txtTipoMovimiento & "','" & Me.txtSerieDocumento.Text & "'," & Me.txtNumDocumento.Text & ",'" & Me.numDocumentoGR & "','" &
+                        chrConcepto & "','" & Me.txtStringLetra & "'," & Me.txtCodigoCliente & "," & Me.txtCodigoVendedor.Text & "," &
+                        Me.txtTotalPagar.Text & "," & Me.txtTotalPagar.Text & "," & Me.txtInteres.Text & "," & Me.txtIGV.Text & ",'" & Me.dtpFecha.Text & "'," &
+                        Me.txtComVendedor & "," & Me.vCuotaInicial & "," & Me.cbxTipoMoneda.SelectedIndex + 1 & "," & Me.txtTipoCambio.Text & "," & txtTasa & ",'','','','')"
+            listaSqlStringsVenta.Add(sqlString)
+
+            For i As Integer = 0 To dgvProductos.Rows.Count - 1
+                'sqlString = "insert into vtaDetalle (tipDocumento,serDocumento,numDocumento,idProducto,precio,cantidad,subTotal,afeIGV,fecOperacion,status) values ('" &
+                '             Me.txtTipoMovimiento & "','" & Me.txtSerieDocumento.Text & "'," & Me.txtNumDocumento.Text & "," & dgvProductos.Rows(i).Cells(1).Value &
+                '             "," & dgvProductos.Rows(i).Cells(5).Value & "," & dgvProductos.Rows(i).Cells(9).Value & "," & dgvProductos.Rows(i).Cells(10).Value &
+                '             ",'','" & Me.dtpFecha.Text & "','')"
+                'listaSqlStringsVenta.Add(sqlString)
+
+                sqlString = "EXEC STP_RegistrarVentaDetalle '" &
+                             Me.txtTipoMovimiento & "','" & Me.txtSerieDocumento.Text & "'," & Me.txtNumDocumento.Text & "," & dgvProductos.Rows(i).Cells(1).Value &
+                             "," & dgvProductos.Rows(i).Cells(5).Value & "," & dgvProductos.Rows(i).Cells(9).Value & "," & dgvProductos.Rows(i).Cells(10).Value &
+                             ",'','" & Me.dtpFecha.Text & "',''"
                 listaSqlStringsVenta.Add(sqlString)
             Next
+
+            If Me.txtGlosa.Text <> "" Then
+                sqlString = "insert into glosasFacturas (tipDocumento,numDocumento,glosa,nomDocumento) values ('" &
+                             Me.tipMovimiento & "'," & Me.numDocumentoGR & ",'" & Me.txtGlosa.Text & "','" & Me.tipDocumento & "')"
+                listaSqlStringsVenta.Add(sqlString)
+            End If
+
+            'For i As Integer = 0 To vCantidadCuotas - 1
+            '    If Me.cbxTipoCredito.SelectedIndex = 0 Then
+            '        fecVcto = Me.dtpFechaVcmto.Value.AddMonths(i).ToShortDateString
+            '    Else
+            '        If Me.cbxTipoCredito.SelectedIndex = 1 Then
+            '            fecVcto = Me.dtpFechaVcmto.Value.AddDays(vQuincena).ToShortDateString
+            '            vQuincena += 15
+            '        Else
+            '            fecVcto = Me.dtpFechaVcmto.Value.AddDays(vSemana).ToShortDateString
+            '            vSemana += 7
+            '        End If
+            '    End If
+
+            '    sqlString = "insert into letrasClientes (numLetra,idCliente,idVendedor,numCorrelativo,impLetra,impLetraME," &
+            '                 "fecEmision,fecVencimiento,fecPago,numRecibo,idMoneda,tipCambio,statusNC,statusNA,zona,status) VALUES ('" &
+            '                Me.txtStringLetra & "'," & Me.txtCodigoCliente & "," & Me.txtCodigoVendedor.Text & "," & i + 1 & "," &
+            '                Me.txtImpLetra & "," & Me.txtImpLetraME & ",'" & Me.dtpFecha.Text & "','" & fecVcto & "','',''," &
+            '                CInt(Me.cbxTipoMoneda.SelectedIndex.ToString.Trim) + 1 & " ," & Me.txtTipoCambio.Text & ",'',''," & Me.txtZonaCliente & ",'')"
+            '    listaSqlStringsVenta.Add(sqlString)
+            'Next
             'AQUI ME QUEDÉ
             If sinRecibo <> 1 Then
                 Dim y As Byte
@@ -569,7 +629,37 @@ Public Class frmboletaVenta
 
             If transaccionLetras(listaSqlStringsVenta) Then
                 flagGraba = 1
-                'generarDocumentoPlano()
+                'If bitProduccion Then
+                generarDocumentoPlano()
+
+                If transaccionLetras(listaSqlStringsAlmacen) Then
+                    'MsgBox("Información guardada correctamente.", MsgBoxStyle.Information)
+                    If chrConcepto <> "10" Then MsgBox("El proceso a generado la guía salida N° " & Me.numDocumentoGR & ".", MsgBoxStyle.Information)
+                Else
+                    MsgBox("Procesamiento de almacén no se realizó correctamente  !  !  !", MsgBoxStyle.Critical)
+                End If
+
+                'Dim pathData As String
+                'If generaDocumentoTicket = True Then
+                '    pathData = "\RPTA\"
+                'Else
+                '    pathData = "\SFS_v1.4_A4\sunat_archivos\sfs\RPTA\"
+                'End If
+
+                'Dim Verificar As Boolean = True
+                'Dim cRutaCDR As String = "\\" & devuelveNameComputer_sfs & pathData & "R" & ruc_archivoPlano & "-" & "03" & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".zip"
+                'Do While Verificar
+                '    If File.Exists(cRutaCDR) Then
+                '        Verificar = False
+                '    Else
+                '        If MsgBoxResult.Yes = MsgBox("No se pudo encontrar el CDR SUNAT!" + vbCrLf + "Desea volver a verificar?", MsgBoxStyle.YesNo) Then
+                '            Verificar = True
+                '        Else
+                '            Verificar = False
+                '        End If
+                '    End If
+                'Loop
+                'End If
 
                 Try
                     Dim ms1 As New System.IO.MemoryStream
@@ -596,7 +686,8 @@ Public Class frmboletaVenta
                                                Dt.Rows(0)(8).ToString(), Dt.Rows(0)(9).ToString(),
                                                Dt.Rows(i)(10).ToString(), Dt.Rows(i)(11).ToString(),
                                                Dt.Rows(i)(12).ToString(), Dt.Rows(i)(13).ToString(),
-                                               Dt.Rows(i)(14).ToString(), Dt.Rows(0)(15).ToString(), "")
+                                               Dt.Rows(i)(14).ToString(), Dt.Rows(0)(15).ToString(),
+                                               "", Dt.Rows(0)(17).ToString(), Dt.Rows(0)(18).ToString())
                             Next
                         End If
 
@@ -623,46 +714,39 @@ Public Class frmboletaVenta
             End If
 
             If flagGraba <> 0 Then
-                If transaccionLetras(listaSqlStringsAlmacen) Then
-                    'MsgBox("Información guardada correctamente.", MsgBoxStyle.Information)
-                    If chrConcepto <> "10" Then MsgBox("El proceso a generado la guía salida N° " & Me.numDocumentoGR & ".", MsgBoxStyle.Information)
 
-                    Dim dsGuia As New dsGuiaRemision
-                    Dim dt As New DataTable
-                    Dim cSql As String
-                    cSql = "EXEC rptGuia 'GX','" & txtSerieDocumento.Text & "','" & txtNumDocumento.Text & "'"
-                    dt = RetornaDataTable(cSql)
+                Dim dsGuia As New dsGuiaRemision
+                Dim dt As New DataTable
+                Dim cSql As String
+                cSql = "EXEC rptGuia 'GX','" & txtSerieDocumento.Text & "','" & txtNumDocumento.Text & "'"
+                dt = RetornaDataTable(cSql)
 
-                    If dt.Rows.Count > 0 Then
-                        For i = 0 To dt.Rows.Count - 1
-                            dsGuia.DataTable1.Rows.Add(
-                                   dt.Rows(0)(0).ToString(), dt.Rows(0)(1).ToString(),
-                                   dt.Rows(0)(2).ToString(), dt.Rows(0)(3).ToString(),
-                                   dt.Rows(0)(4).ToString(), dt.Rows(0)(5).ToString(),
-                                   dt.Rows(0)(6).ToString(), dt.Rows(0)(7).ToString(),
-                                   dt.Rows(0)(8).ToString(), dt.Rows(i)(9).ToString(),
-                                   dt.Rows(i)(10).ToString(), dt.Rows(i)(11).ToString(),
-                                   dt.Rows(i)(12).ToString(), dt.Rows(i)(13).ToString(),
-                                   dt.Rows(i)(14).ToString(), dt.Rows(0)(15).ToString(),
-                                   dt.Rows(0)(16).ToString(), dt.Rows(0)(17).ToString(),
-                                   dt.Rows(0)(18).ToString(), dt.Rows(0)(19).ToString(),
-                                   dt.Rows(0)(20).ToString(), dt.Rows(0)(21).ToString(),
-                                   dt.Rows(0)(22).ToString(), dt.Rows(0)(23).ToString(),
-                                   dt.Rows(0)(24).ToString(), dt.Rows(0)(25).ToString())
-                        Next
-                    End If
-
-                    Dim rpt As New rptGuia
-                    rpt.SetDataSource(dsGuia.Tables("DataTable1"))
-
-                    Dim frm As New frmReporte
-                    frm.CrystalReportViewer1.ReportSource = rpt
-                    frm.ShowDialog()
-
-
-                Else
-                    MsgBox("Procesamiento de almacén no se realizó correctamente  !  !  !", MsgBoxStyle.Critical)
+                If dt.Rows.Count > 0 Then
+                    For i = 0 To dt.Rows.Count - 1
+                        dsGuia.DataTable1.Rows.Add(
+                               dt.Rows(0)(0).ToString(), dt.Rows(0)(1).ToString(),
+                               dt.Rows(0)(2).ToString(), dt.Rows(0)(3).ToString(),
+                               dt.Rows(0)(4).ToString(), dt.Rows(0)(5).ToString(),
+                               dt.Rows(0)(6).ToString(), dt.Rows(0)(7).ToString(),
+                               dt.Rows(0)(8).ToString(), dt.Rows(i)(9).ToString(),
+                               dt.Rows(i)(10).ToString(), dt.Rows(i)(11).ToString(),
+                               dt.Rows(i)(12).ToString(), dt.Rows(i)(13).ToString(),
+                               dt.Rows(i)(14).ToString(), dt.Rows(0)(15).ToString(),
+                               dt.Rows(0)(16).ToString(), dt.Rows(0)(17).ToString(),
+                               dt.Rows(0)(18).ToString(), dt.Rows(0)(19).ToString(),
+                               dt.Rows(0)(20).ToString(), dt.Rows(0)(21).ToString(),
+                               dt.Rows(0)(22).ToString(), dt.Rows(0)(23).ToString(),
+                               dt.Rows(0)(24).ToString(), dt.Rows(0)(25).ToString(),
+                               dt.Rows(0)(26).ToString())
+                    Next
                 End If
+
+                Dim rpt As New rptGuia
+                rpt.SetDataSource(dsGuia.Tables("DataTable1"))
+
+                Dim frm As New frmReporte
+                frm.CrystalReportViewer1.ReportSource = rpt
+                frm.ShowDialog()
             End If
 
             If Me.cbxTipoVenta.SelectedIndex = 1 And flagGraba <> 0 Then
@@ -703,7 +787,9 @@ Public Class frmboletaVenta
         Try
             nomArchivo = "\\" & devuelveNameComputer_sfs & pathRepo & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".PDF"
             swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".CAB", True)
-            swEscritor.Write("0101|" & CDate(dtpFecha.Text).ToString("yyyy-MM-dd") & "|" & VisualBasic.Mid(Date.Now, 12, 8) & "|-|0000|" & numTipoDocumento & "|" & numDocumento & "|" & Me.txtNombre.Text & "|PEN|" & "0.0" & "|" & Format(CDec(Me.txtSubTotal.Text) + CDec(Me.txtInteres.Text), "#####0.00") & "|" & Format(CDec(Me.txtSubTotal.Text) + CDec(Me.txtInteres.Text), "#####0.00") & "|0.00|0.00|" & Format(CDec(Me.txtTotalAnticipos.Text), "#####0.00") & "|" & Format(CDec(Me.txtTotalPagar.Text), "#####0.00") & "|2.1|2.0|")
+            'swEscritor.Write("0101|" & CDate(dtpFecha.Text).ToString("yyyy-MM-dd") & "|" & VisualBasic.Mid(Date.Now, 12, 8) & "|-|0000|" & numTipoDocumento & "|" & numDocumento & "|" & Me.txtNombre.Text & "|PEN|" & "0.0" & "|" & Format(CDec(Me.txtSubTotal.Text) + CDec(Me.txtInteres.Text), "#####0.00") & "|" & Format(CDec(Me.txtSubTotal.Text) + CDec(Me.txtInteres.Text), "#####0.00") & "|0.00|0.00|" & Format(CDec(Me.txtTotalAnticipos.Text), "#####0.00") & "|" & Format(CDec(Me.txtTotalPagar.Text), "#####0.00") & "|2.1|2.0|")
+            'swEscritor.Write("0101|" & CDate(dtpFecha.Text).ToString("yyyy-MM-dd") & "|" & VisualBasic.Mid(Date.Now, 12, 8) & "|-|0000|" & numTipoDocumento & "|" & numDocumento & "|" & Me.txtNombre.Text & "|PEN|" & "0.0" & "|" & Format(CDec(Me.txtTotalPagar.Text), "#####0.00") & "|" & Format(CDec(Me.txtTotalPagar.Text), "#####0.00") & "|0.00|0.00|" & Format(CDec(Me.txtTotalAnticipos.Text), "#####0.00") & "|" & Format(CDec(Me.txtSubTotal.Text), "#####0.00") & "|2.1|2.0|") 'AAGC20240708 comentado
+            swEscritor.Write("0101|" & CDate(dtpFecha.Text).ToString("yyyy-MM-dd") & "|" & VisualBasic.Mid(Date.Now, 12, 8) & "|-|0000|" & numTipoDocumento & "|" & numDocumento & "|" & Me.txtNombre.Text & "|PEN|" & "0.0" & "|" & Format(CDec(Me.txtTotalPagar.Text), "#####0.00") & "|" & Format(CDec(Me.txtTotalPagar.Text), "#####0.00") & "|0.00|0.00|" & Format(CDec(0), "#####0.00") & "|" & Format(CDec(Me.txtTotalPagar.Text), "#####0.00") & "|2.1|2.0|") 'AAGC20240708
             swEscritor.Close()
 
             swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".DET", True)
@@ -732,19 +818,24 @@ Public Class frmboletaVenta
             swEscritor.Write("| | | | |PE|160101|" & Me.txtDireccion.Text & "|-| | |")
             swEscritor.Close()
 
-            If (CDec(txtTotalRecibos.Text) > 0 And Me.cbxTipoVenta.SelectedIndex = 1) Then
-                swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".REL", True)
-                Dim y As Byte
-                For y = matrizRecibos.GetLowerBound(0) To matrizRecibos.GetUpperBound(0)
-                    If matrizRecibos(y, 0) <> "" Then
-                        swEscritor.WriteLine("2|" & y + 1 & "|" & Me.codDocGenCI & "|" & Me.serDocGenCI & "-" & matrizRecibos(y, 0) & "|6|" & ruc_archivoPlano & "|" & Format(Decimal.Parse(matrizRecibos(y, 1)), "#####0.00") & "|")
-                    End If
-                Next y
-                swEscritor.Close()
-                swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".ACV", True)
-                swEscritor.Write("false|05|1.00|PEN|" & Format(Decimal.Parse(Me.txtTotalAnticipos.Text), "#####0.00") & "|PEN|" & Format(Decimal.Parse(Me.txtTotalAnticipos.Text), "#####0.00") & "|")
-                swEscritor.Close()
-            End If
+            'If (CDec(txtTotalRecibos.Text) > 0 And Me.cbxTipoVenta.SelectedIndex = 1) Then
+            '    swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".REL", True)
+            '    Dim y As Byte
+            '    For y = matrizRecibos.GetLowerBound(0) To matrizRecibos.GetUpperBound(0)
+            '        If matrizRecibos(y, 0) <> "" Then
+
+            '            Dim Dt As New DataTable
+            '            Dt = RetornaDataTable("exec stp_ObtenerDocumeto '" & matrizRecibos(y, 0) & "'")
+            '            If Dt.Rows.Count > 0 Then
+            '                swEscritor.WriteLine("2|" & y + 1 & "|" & Me.codDocGenCI & "|" & Me.serDocGenCI & "-" & Dt.Rows(0)(1).ToString() & "|6|" & ruc_archivoPlano & "|" & Format(Decimal.Parse(matrizRecibos(y, 1)), "#####0.00") & "|")
+            '            End If
+            '        End If
+            '    Next y
+            '    swEscritor.Close()
+            '    swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".ACV", True)
+            '    swEscritor.Write("false|05|1.00|PEN|" & Format(Decimal.Parse(Me.txtTotalAnticipos.Text), "#####0.00") & "|PEN|" & Format(Decimal.Parse(Me.txtTotalAnticipos.Text), "#####0.00") & "|")
+            '    swEscritor.Close()
+            'End If
             sqlString = "update vtaCabecera set staEnvio='@' where tipDocumento='" & txtTipoMovimiento & "' and numDocumento=" & Me.txtNumDocumento.Text & ""
             listaSqlString.Add(sqlString)
 
@@ -835,7 +926,8 @@ Public Class frmboletaVenta
                                                Dt.Rows(0)(8).ToString(), Dt.Rows(0)(9).ToString(),
                                                Dt.Rows(i)(10).ToString(), Dt.Rows(i)(11).ToString(),
                                                Dt.Rows(i)(12).ToString(), Dt.Rows(i)(13).ToString(),
-                                               Dt.Rows(i)(14).ToString(), Dt.Rows(0)(15).ToString(), "")
+                                               Dt.Rows(i)(14).ToString(), Dt.Rows(0)(15).ToString(),
+                                               "", Dt.Rows(0)(17).ToString(), Dt.Rows(0)(18).ToString())
                     Next
                 End If
 
@@ -1014,8 +1106,9 @@ Public Class frmboletaVenta
             '--------------- Datos del Recibo ---------------------
             Me.chrConcepto = Me.oDataSet.Tables(0).Rows(0).Item(1).ToString.Trim
 
-            If chrConcepto = "3" Or chrConcepto = "4" Then
-                Me.numDocGenCI = Mid(Me.oDataSet.Tables(0).Rows(0).Item(6).ToString.Trim, 3, Len(Me.oDataSet.Tables(0).Rows(0).Item(6).ToString.Trim) - 2)
+            'If chrConcepto = "3" Or chrConcepto = "4" Then
+            If chrConcepto = "4" Then
+                'Me.numDocGenCI = Mid(Me.oDataSet.Tables(0).Rows(0).Item(6).ToString.Trim, 3, Len(Me.oDataSet.Tables(0).Rows(0).Item(6).ToString.Trim) - 2)
                 Me.tipDocGenCI = Microsoft.VisualBasic.Left(Me.oDataSet.Tables(0).Rows(0).Item(6).ToString.Trim, 2)
                 If Me.tipDocGenCI = "FV" Then
                     Me.codDocGenCI = "02"
@@ -1023,7 +1116,10 @@ Public Class frmboletaVenta
                     Me.codDocGenCI = "03"
                 End If
             End If
-            Me.serDocGenCI = Microsoft.VisualBasic.Left(Me.tipDocGenCI, 1) + "001"
+
+            If chrConcepto <> "3" Then
+                Me.serDocGenCI = Microsoft.VisualBasic.Left(Me.tipDocGenCI, 1) + "001"
+            End If
 
             If numModulo = 1 Then
                 Me.txtMonto = totalRecibosMN
@@ -1129,11 +1225,7 @@ Public Class frmboletaVenta
 
                 If Me.cbxTipoVenta.SelectedIndex = 1 Then
                     Me.txtSubTotal.Text = Format(Val(Me.txtSubTotal.Text) + Val(Me.dgvProductos.Rows(i).Cells(10).Value) - txtCuotaInicial, "#####0.00")
-                Else
-                    Me.txtSubTotal.Text = Format(Val(Me.txtSubTotal.Text) + Val(Me.dgvProductos.Rows(i).Cells(10).Value), "#####0.00")
-                End If
 
-                If Me.cbxTipoVenta.SelectedIndex = 1 Then
                     If Me.dgvProductos.Rows(i).Cells(5).Value > 0 Then
                         percentPrecio = Format(Me.txtCuotaInicial / Val(Me.dgvProductos.Rows(i).Cells(5).Value), "0.00")
                     End If
@@ -1161,9 +1253,11 @@ Public Class frmboletaVenta
                     Me.txtCuotaInicial = 0
                     Me.txtNumGuia.Text = Me.txtImpLetra
                 Else
+                    Me.txtSubTotal.Text = Format(Val(Me.txtSubTotal.Text) + Val(Me.dgvProductos.Rows(i).Cells(10).Value), "#####0.00")
                     Me.txtTotalPagar.Text = Format(Val(Me.txtSubTotal.Text), "#####0.00")
                 End If
             Next i
+            CalcularTotales()
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
@@ -1189,19 +1283,71 @@ Public Class frmboletaVenta
             End If
         End If
     End Sub
-    Private Sub txtTotalPagar_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtTotalPagar.DoubleClick
-        Try
-            Me.txtTotalPagar.Text = Format(Val(Me.txtSubTotal.Text) + Val(Me.txtInteres.Text), "#####0.00")
-            Me.txtImpLetra = Me.txtTotalPagar.Text / Me.vCantidadCuotas
 
-            valorDecimal = CByte(VisualBasic.Right(Me.txtImpLetra, 2))
-            If valorDecimal >= 1 Then
-                Me.txtImpLetra = Math.Floor(Me.txtImpLetra) + 1
+    Public Sub CalcularTotales()    'AAGC
+        Dim total As Decimal = 0
+        For Each row As DataGridViewRow In dgvProductos.Rows
+            If Not row.IsNewRow Then
+                Dim valor As Decimal
+                If Decimal.TryParse(row.Cells(10).Value.ToString(), valor) Then
+                    total += valor
+                End If
             End If
+        Next
+
+        txtSubTotal.Text = total
+        txtTotalPagar.Text = Val(txtSubTotal.Text) + Val(txtInteres.Text)
+
+        If Me.cbxTipoVenta.SelectedIndex = 1 Then
+            Dim oProducto As Producto = New Producto()
+            Dim percentPrecio As Decimal
+            Dim sqlString As String = "select * from tasasCreditos where numMes=" & vCantidadMeses & ""
+
+            If Me.dgvProductos.Rows(i).Cells(5).Value > 0 Then
+                percentPrecio = Format(vCuotaInicial / total, "0.00")
+            End If
+            txtTasa = devuelveTasa(sqlString, percentPrecio)
+
+            Me.txtImpLetrav = Format(oProducto.importeLetra(total, vCuotaInicial, txtTasa, Me.cbxTipoCredito.SelectedIndex), "####0.00")
+
+            valorDecimal = CByte(VisualBasic.Right(Me.txtImpLetrav, 2))
+            If valorDecimal >= 1 Then
+                Me.txtImpLetrav = Math.Floor(Me.txtImpLetrav) + 1
+            End If
+
+            Me.txtImpLetra = Me.txtImpLetrav - dsctoLetra
+
+            Me.txtTotalPagarv = Me.txtImpLetrav * Me.vCantidadCuotas
+            Me.txtPrecioVenta = Val(total) - vCuotaInicial
+            Me.txtInteresv = Me.txtTotalPagarv - Me.txtPrecioVenta
+            Me.txtInteres.Text = Format(Me.txtInteresv, "#####0.00")
+            Me.txtTotalPagar.Text = Format(total + txtInteresv, "#####0.00")
+
+            Me.txtImpLetrav = 0
+            Me.txtInteresv = 0
+            Me.txtTotalPagarv = 0
+            Me.txtPrecioVenta = 0
+            Me.txtCuotaInicial = 0
             Me.txtNumGuia.Text = Me.txtImpLetra
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        End Try
+        End If
+
+    End Sub
+
+    Private Sub txtTotalPagar_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtTotalPagar.DoubleClick
+        'Try
+        '    'Me.txtTotalPagar.Text = Format(Val(Me.txtSubTotal.Text) + Val(Me.txtInteres.Text), "#####0.00")
+        '    Me.txtTotalPagar.Text = Format(Val(Me.txtSubTotal.Text) + Val(Me.txtInteres.Text) - Val(txtTotalAnticipos.Text), "#####0.00")
+        '    Me.txtImpLetra = Me.txtTotalPagar.Text / Me.vCantidadCuotas
+
+        '    valorDecimal = CByte(VisualBasic.Right(Me.txtImpLetra, 2))
+        '    If valorDecimal >= 1 Then
+        '        Me.txtImpLetra = Math.Floor(Me.txtImpLetra) + 1
+        '    End If
+        '    Me.txtNumGuia.Text = Me.txtImpLetra
+        'Catch ex As Exception
+        '    MessageBox.Show(ex.Message)
+        'End Try
+        CalcularTotales()
     End Sub
     Private Sub txtcanCuotas_KeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtCanCuotas.KeyPress
         Dim letra As Short = CShort(Asc(e.KeyChar))
@@ -1338,4 +1484,30 @@ Public Class frmboletaVenta
 
 
 
+    Private Sub txtTotalRecibos_TextChanged(sender As Object, e As EventArgs) Handles txtTotalRecibos.TextChanged
+        Dim cPlazo As String = ""
+        If txtTotalRecibos.Text > 0 And txtTotalRecibos.Text <= 250 Then
+            cPlazo = "3"
+        ElseIf txtTotalRecibos.Text > 250 And txtTotalRecibos.Text <= 500 Then
+            cPlazo = "6"
+        ElseIf txtTotalRecibos.Text > 500 And txtTotalRecibos.Text <= 1000 Then
+            cPlazo = "9"
+        ElseIf txtTotalRecibos.Text > 1000 Then
+            cPlazo = "12"
+        End If
+        Me.cbxGarantia.Text = cPlazo
+        Me.txtGlosa.Text = "Condiciones de garantía: a)Plazo " & cPlazo & " meses. Incluye certificado de garantía sólo por fallos de fabricación."
+    End Sub
+
+    Private Sub txtTotalPagar_TextChanged(sender As Object, e As EventArgs) Handles txtTotalPagar.TextChanged
+
+    End Sub
+
+    Private Sub txtInteres_DoubleClick(sender As Object, e As EventArgs) Handles txtInteres.DoubleClick
+        Try
+            Me.txtTotalPagar.Text = Format(Val(txtSubTotal.Text) + Val(txtInteres.Text), "#####0.00")
+        Catch ex As Exception
+            CalcularTotales()
+        End Try
+    End Sub
 End Class

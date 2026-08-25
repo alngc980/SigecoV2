@@ -19,25 +19,25 @@ Partial Class frminiciarSaldos
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.btnSalir = New System.Windows.Forms.Button
-        Me.btnGrabar = New System.Windows.Forms.Button
-        Me.dtpFechaSaldo = New System.Windows.Forms.DateTimePicker
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox
-        Me.Label4 = New System.Windows.Forms.Label
-        Me.txtMarca = New System.Windows.Forms.TextBox
-        Me.txtDescripcion = New System.Windows.Forms.TextBox
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox
-        Me.Label7 = New System.Windows.Forms.Label
-        Me.txtModelo = New System.Windows.Forms.TextBox
-        Me.Label6 = New System.Windows.Forms.Label
-        Me.txtCodigoProducto = New System.Windows.Forms.TextBox
-        Me.txtStockInicial = New System.Windows.Forms.TextBox
-        Me.btnProducto = New System.Windows.Forms.Button
-        Me.Label5 = New System.Windows.Forms.Label
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.txtStockMinimo = New System.Windows.Forms.TextBox
-        Me.Label3 = New System.Windows.Forms.Label
+        Me.btnSalir = New System.Windows.Forms.Button()
+        Me.btnGrabar = New System.Windows.Forms.Button()
+        Me.dtpFechaSaldo = New System.Windows.Forms.DateTimePicker()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.txtMarca = New System.Windows.Forms.TextBox()
+        Me.txtDescripcion = New System.Windows.Forms.TextBox()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.txtModelo = New System.Windows.Forms.TextBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.txtCodigoProducto = New System.Windows.Forms.TextBox()
+        Me.txtStockInicial = New System.Windows.Forms.TextBox()
+        Me.btnProducto = New System.Windows.Forms.Button()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.txtStockMinimo = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -46,7 +46,7 @@ Partial Class frminiciarSaldos
         '
         Me.btnSalir.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnSalir.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSalir.Image = My.Resources.FillRightHS
+        Me.btnSalir.Image = Global.Presentacion.My.Resources.Resources.FillRightHS
         Me.btnSalir.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnSalir.Location = New System.Drawing.Point(242, 14)
         Me.btnSalir.Name = "btnSalir"
@@ -59,7 +59,7 @@ Partial Class frminiciarSaldos
         'btnGrabar
         '
         Me.btnGrabar.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnGrabar.Image = My.Resources.saveHS
+        Me.btnGrabar.Image = Global.Presentacion.My.Resources.Resources.saveHS
         Me.btnGrabar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnGrabar.Location = New System.Drawing.Point(85, 14)
         Me.btnGrabar.Name = "btnGrabar"
@@ -183,11 +183,13 @@ Partial Class frminiciarSaldos
         '
         'txtStockInicial
         '
+        Me.txtStockInicial.Enabled = False
         Me.txtStockInicial.Location = New System.Drawing.Point(114, 145)
         Me.txtStockInicial.MaxLength = 10
         Me.txtStockInicial.Name = "txtStockInicial"
         Me.txtStockInicial.Size = New System.Drawing.Size(94, 20)
         Me.txtStockInicial.TabIndex = 15
+        Me.txtStockInicial.Text = "0"
         Me.txtStockInicial.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'btnProducto

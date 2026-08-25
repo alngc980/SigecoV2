@@ -42,6 +42,16 @@ Partial Class frmanularGuia
         Me.dtpFecOrigen = New System.Windows.Forms.DateTimePicker()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.dgvProductos = New System.Windows.Forms.DataGridView()
+        Me.numItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.codProducto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.desProducto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.marca = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.modelo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.numSerie = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.numMotor = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.numChasis = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.color = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cantidad = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtTransportista = New System.Windows.Forms.TextBox()
         Me.txtTransLlegada = New System.Windows.Forms.TextBox()
         Me.txtDNIRUC = New System.Windows.Forms.TextBox()
@@ -80,18 +90,10 @@ Partial Class frmanularGuia
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.lblRUC = New System.Windows.Forms.Label()
-        Me.numItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.codProducto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.desProducto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.marca = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.modelo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.numSerie = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.numMotor = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.numChasis = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.color = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cantidad = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.btnModificarGarantia = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         CType(Me.dgvProductos, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox4.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
@@ -268,6 +270,81 @@ Partial Class frmanularGuia
         Me.dgvProductos.Size = New System.Drawing.Size(921, 210)
         Me.dgvProductos.TabIndex = 47
         '
+        'numItem
+        '
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle8.NullValue = Nothing
+        Me.numItem.DefaultCellStyle = DataGridViewCellStyle8
+        Me.numItem.HeaderText = "N°"
+        Me.numItem.Name = "numItem"
+        Me.numItem.ReadOnly = True
+        Me.numItem.Width = 40
+        '
+        'codProducto
+        '
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.codProducto.DefaultCellStyle = DataGridViewCellStyle9
+        Me.codProducto.HeaderText = "Código"
+        Me.codProducto.Name = "codProducto"
+        Me.codProducto.ReadOnly = True
+        Me.codProducto.Width = 50
+        '
+        'desProducto
+        '
+        Me.desProducto.HeaderText = "Descripción Producto"
+        Me.desProducto.Name = "desProducto"
+        Me.desProducto.ReadOnly = True
+        Me.desProducto.Width = 180
+        '
+        'marca
+        '
+        Me.marca.HeaderText = "Marca"
+        Me.marca.Name = "marca"
+        Me.marca.ReadOnly = True
+        Me.marca.Width = 80
+        '
+        'modelo
+        '
+        Me.modelo.HeaderText = "Modelo"
+        Me.modelo.Name = "modelo"
+        Me.modelo.ReadOnly = True
+        '
+        'numSerie
+        '
+        Me.numSerie.HeaderText = "N° Serie"
+        Me.numSerie.Name = "numSerie"
+        Me.numSerie.ReadOnly = True
+        Me.numSerie.Width = 200
+        '
+        'numMotor
+        '
+        Me.numMotor.HeaderText = "N° Motor"
+        Me.numMotor.Name = "numMotor"
+        Me.numMotor.ReadOnly = True
+        '
+        'numChasis
+        '
+        Me.numChasis.HeaderText = "N° Chásis"
+        Me.numChasis.Name = "numChasis"
+        Me.numChasis.ReadOnly = True
+        '
+        'color
+        '
+        Me.color.HeaderText = "Color"
+        Me.color.Name = "color"
+        Me.color.ReadOnly = True
+        Me.color.Width = 80
+        '
+        'cantidad
+        '
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle10.NullValue = Nothing
+        Me.cantidad.DefaultCellStyle = DataGridViewCellStyle10
+        Me.cantidad.HeaderText = "Cantidad"
+        Me.cantidad.Name = "cantidad"
+        Me.cantidad.ReadOnly = True
+        Me.cantidad.Width = 70
+        '
         'txtTransportista
         '
         Me.txtTransportista.BackColor = System.Drawing.SystemColors.Window
@@ -299,6 +376,7 @@ Partial Class frmanularGuia
         '
         'GroupBox4
         '
+        Me.GroupBox4.Controls.Add(Me.btnModificarGarantia)
         Me.GroupBox4.Location = New System.Drawing.Point(653, 466)
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Size = New System.Drawing.Size(268, 87)
@@ -694,79 +772,16 @@ Partial Class frmanularGuia
         Me.lblRUC.Size = New System.Drawing.Size(0, 25)
         Me.lblRUC.TabIndex = 0
         '
-        'numItem
+        'btnModificarGarantia
         '
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle8.NullValue = Nothing
-        Me.numItem.DefaultCellStyle = DataGridViewCellStyle8
-        Me.numItem.HeaderText = "N°"
-        Me.numItem.Name = "numItem"
-        Me.numItem.ReadOnly = True
-        Me.numItem.Width = 40
-        '
-        'codProducto
-        '
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.codProducto.DefaultCellStyle = DataGridViewCellStyle9
-        Me.codProducto.HeaderText = "Código"
-        Me.codProducto.Name = "codProducto"
-        Me.codProducto.ReadOnly = True
-        Me.codProducto.Width = 50
-        '
-        'desProducto
-        '
-        Me.desProducto.HeaderText = "Descripción Producto"
-        Me.desProducto.Name = "desProducto"
-        Me.desProducto.ReadOnly = True
-        Me.desProducto.Width = 180
-        '
-        'marca
-        '
-        Me.marca.HeaderText = "Marca"
-        Me.marca.Name = "marca"
-        Me.marca.ReadOnly = True
-        Me.marca.Width = 80
-        '
-        'modelo
-        '
-        Me.modelo.HeaderText = "Modelo"
-        Me.modelo.Name = "modelo"
-        Me.modelo.ReadOnly = True
-        '
-        'numSerie
-        '
-        Me.numSerie.HeaderText = "N° Serie"
-        Me.numSerie.Name = "numSerie"
-        Me.numSerie.ReadOnly = True
-        '
-        'numMotor
-        '
-        Me.numMotor.HeaderText = "N° Motor"
-        Me.numMotor.Name = "numMotor"
-        Me.numMotor.ReadOnly = True
-        '
-        'numChasis
-        '
-        Me.numChasis.HeaderText = "N° Chásis"
-        Me.numChasis.Name = "numChasis"
-        Me.numChasis.ReadOnly = True
-        '
-        'color
-        '
-        Me.color.HeaderText = "Color"
-        Me.color.Name = "color"
-        Me.color.ReadOnly = True
-        Me.color.Width = 80
-        '
-        'cantidad
-        '
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle10.NullValue = Nothing
-        Me.cantidad.DefaultCellStyle = DataGridViewCellStyle10
-        Me.cantidad.HeaderText = "Cantidad"
-        Me.cantidad.Name = "cantidad"
-        Me.cantidad.ReadOnly = True
-        Me.cantidad.Width = 70
+        Me.btnModificarGarantia.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnModificarGarantia.Location = New System.Drawing.Point(9, 28)
+        Me.btnModificarGarantia.Name = "btnModificarGarantia"
+        Me.btnModificarGarantia.Size = New System.Drawing.Size(75, 37)
+        Me.btnModificarGarantia.TabIndex = 22
+        Me.btnModificarGarantia.Text = "Modificar Garantia"
+        Me.btnModificarGarantia.UseVisualStyleBackColor = True
+        Me.btnModificarGarantia.Visible = False
         '
         'frmanularGuia
         '
@@ -790,6 +805,7 @@ Partial Class frmanularGuia
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         CType(Me.dgvProductos, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox4.ResumeLayout(False)
         Me.GroupBox7.ResumeLayout(False)
         Me.GroupBox7.PerformLayout()
         Me.GroupBox3.ResumeLayout(False)
@@ -864,4 +880,5 @@ Partial Class frmanularGuia
     Friend WithEvents numChasis As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents color As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents cantidad As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents btnModificarGarantia As System.Windows.Forms.Button
 End Class

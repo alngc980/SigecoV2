@@ -33,6 +33,8 @@
               <xs:element name="subTotal" msprop:Generator_ColumnVarNameInTable="columnsubTotal" msprop:Generator_ColumnPropNameInRow="subTotal" msprop:Generator_ColumnPropNameInTable="subTotalColumn" msprop:Generator_UserColumnName="subTotal" type="xs:double" minOccurs="0" />
               <xs:element name="Leyenda" msprop:Generator_ColumnVarNameInTable="columnLeyenda" msprop:Generator_ColumnPropNameInRow="Leyenda" msprop:Generator_ColumnPropNameInTable="LeyendaColumn" msprop:Generator_UserColumnName="Leyenda" type="xs:string" minOccurs="0" />
               <xs:element name="docReferencia" msprop:Generator_ColumnVarNameInTable="columndocReferencia" msprop:Generator_ColumnPropNameInRow="docReferencia" msprop:Generator_ColumnPropNameInTable="docReferenciaColumn" msprop:Generator_UserColumnName="docReferencia" type="xs:string" minOccurs="0" />
+              <xs:element name="IntFinanciero" msprop:Generator_ColumnVarNameInTable="columnIntFinanciero" msprop:Generator_ColumnPropNameInRow="IntFinanciero" msprop:Generator_ColumnPropNameInTable="IntFinancieroColumn" msprop:Generator_UserColumnName="IntFinanciero" type="xs:decimal" minOccurs="0" />
+              <xs:element name="nTotalFinal" msprop:Generator_ColumnVarNameInTable="columnnTotalFinal" msprop:Generator_ColumnPropNameInRow="nTotalFinal" msprop:Generator_ColumnPropNameInTable="nTotalFinalColumn" msprop:Generator_UserColumnName="nTotalFinal" type="xs:decimal" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

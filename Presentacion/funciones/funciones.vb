@@ -1,4 +1,8 @@
 Imports System.Data.SqlClient
+Imports System.IO
+Imports System.IO.Compression
+Imports System.Xml
+
 Module funciones
     Public txtNombreEmpresa As String = "Comercial Oriente Hnos. SAC"
     Public txtDireccionEmpresa As String = "Próspero N° 663 - Iquitos"
@@ -10,7 +14,8 @@ Module funciones
     Public codigoGrupo As Integer
     Public canNumSeries As Integer
     Public nSeriesBorrar As Integer
-    Public matrizSeries(250, 5) As String
+    'Public matrizSeries(250, 5) As String
+    Public matrizSeries(250, 11) As String
 
     Public numModulo As Byte
     Public totalRecibosMN As Decimal
@@ -43,6 +48,9 @@ Module funciones
     Public ImpresoraActual As New Printing.PrinterSettings
     Dim cnd As New conexion
     Public CadenaConexion As String = cnd.ObtenerCadena()
+
+    Public Const bitProduccion As Boolean = 1
+
 
     Public Connection As New SqlConnection(CadenaConexion)
     'Public Connection As New SqlConnection("Data Source=SERVER;Initial Catalog=SIGECO;User ID=sa;Password=123456")
@@ -128,6 +136,16 @@ Module funciones
             Validar_Letras_NC = Letra
         End If
         If Letra = 8 Then Validar_Letras_NC = Letra 'Validar Tecla Backspace
+    End Function
+    Public Function Validar_EsDecimal(ByVal txt As TextBox) As Boolean
+        If IsNumeric(txt.Text) Then
+            Return True
+        Else
+            MessageBox.Show("Ingrese un valor decimal válido.")
+            txt.SelectAll()
+            txt.Focus()
+            Return False
+        End If
     End Function
     Public Function devuelveCodigo(ByVal SQL As String) As Integer
         Dim objcommand As SqlCommand
@@ -425,7 +443,7 @@ Module funciones
                 Try
                     transaction.Rollback()
                 Catch ex2 As Exception
-                    MessageBox.Show(ex2.Message)
+                    MessageBox.Show(ex2.Message & " Consulta:" & command.CommandText)
                 End Try
             Finally
                 CerrarConexion()
@@ -949,7 +967,55 @@ Module funciones
         proceso.Start()
 
         ' Esperar a que el proceso termine
-        proceso.WaitForExit()
+        'proceso.WaitForExit()
     End Sub
+
+
+    Public Function DescomprimirConComando(rutaArchivoZip As String, rutaDestino As String) As Boolean
+        Try
+            ' Crear el directorio de destino si no existe
+            If Not Directory.Exists(rutaDestino) Then
+                Directory.CreateDirectory(rutaDestino)
+            End If
+
+            ' Ejecutar el comando expand para descomprimir el archivo ZIP
+            Dim proceso As New Process()
+            proceso.StartInfo.FileName = "expand.exe"
+            proceso.StartInfo.Arguments = Chr(34) & rutaArchivoZip & Chr(34) & " " & Chr(34) & rutaDestino & Chr(34)
+            proceso.StartInfo.UseShellExecute = False
+            proceso.StartInfo.RedirectStandardOutput = True
+            proceso.StartInfo.CreateNoWindow = True
+            proceso.Start()
+
+            ' Esperar a que el proceso termine
+            proceso.WaitForExit()
+
+            Return True
+        Catch ex As Exception
+            Console.WriteLine("Error al descomprimir el archivo ZIP: " & ex.Message)
+            Return False
+        End Try
+    End Function
+
+    Public Function LeerArchivoXML(rutaArchivoXML As String) As String
+        Try
+            ' Crear una instancia de XmlDocument
+            Dim xmlDoc As New XmlDocument()
+
+            ' Cargar el archivo XML
+            xmlDoc.Load(rutaArchivoXML)
+
+            ' Acceder a nodos, atributos, etc.
+            Dim nodoRaiz As XmlNode = xmlDoc.DocumentElement
+
+            ' Aquí puedes realizar las operaciones que necesites con el contenido XML
+            ' Por ejemplo, acceder a nodos, atributos, etc.
+
+            ' Ejemplo: Mostrar el contenido del nodo raíz
+            Return (nodoRaiz.OuterXml)
+        Catch ex As Exception
+            Return ("Error al leer el archivo XML: " & ex.Message)
+        End Try
+    End Function
 
 End Module

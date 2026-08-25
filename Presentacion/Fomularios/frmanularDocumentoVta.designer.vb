@@ -822,7 +822,7 @@ Partial Class frmanularDocumentoVta
         Me.numSerie.HeaderText = "N° Serie"
         Me.numSerie.Name = "numSerie"
         Me.numSerie.ReadOnly = True
-        Me.numSerie.Width = 90
+        Me.numSerie.Width = 200
         '
         'numMotor
         '
@@ -1002,7 +1002,7 @@ Partial Class frmanularDocumentoVta
         '
         'PictureBox1
         '
-        Me.PictureBox1.Location = New System.Drawing.Point(-23, -46)
+        Me.PictureBox1.Location = New System.Drawing.Point(377, 303)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(100, 50)
         Me.PictureBox1.TabIndex = 46
@@ -1015,14 +1015,14 @@ Partial Class frmanularDocumentoVta
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnSalir
         Me.ClientSize = New System.Drawing.Size(944, 571)
-        Me.Controls.Add(Me.dgvProductos)
-        Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.GroupBox4)
+        Me.Controls.Add(Me.dgvProductos)
         Me.Controls.Add(Me.GroupBox5)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.GroupBox7)
+        Me.Controls.Add(Me.PictureBox1)
         Me.ForeColor = System.Drawing.SystemColors.ControlText
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.MaximizeBox = False
@@ -1112,6 +1112,9 @@ Partial Class frmanularDocumentoVta
     Friend WithEvents txtCuotas As System.Windows.Forms.TextBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents txtNumGuia As System.Windows.Forms.TextBox
+    Friend WithEvents Label5 As System.Windows.Forms.Label
+    Friend WithEvents txtAnticipos As System.Windows.Forms.TextBox
+    Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents numItem As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents codProducto As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents desProducto As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -1124,7 +1127,4 @@ Partial Class frmanularDocumentoVta
     Friend WithEvents color As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents cantidad As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents totProducto As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents txtAnticipos As System.Windows.Forms.TextBox
-    Friend WithEvents PictureBox1 As PictureBox
 End Class

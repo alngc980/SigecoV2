@@ -249,7 +249,7 @@ Partial Class frmreciboPago
         '
         Me.btnLimpiar.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnLimpiar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnLimpiar.Image = My.Resources.DeleteHS
+        Me.btnLimpiar.Image = Global.Presentacion.My.Resources.Resources.DeleteHS
         Me.btnLimpiar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnLimpiar.Location = New System.Drawing.Point(539, 16)
         Me.btnLimpiar.Name = "btnLimpiar"
@@ -263,7 +263,7 @@ Partial Class frmreciboPago
         '
         Me.btnSalir.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnSalir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSalir.Image = My.Resources.FillRightHS
+        Me.btnSalir.Image = Global.Presentacion.My.Resources.Resources.FillRightHS
         Me.btnSalir.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnSalir.Location = New System.Drawing.Point(657, 16)
         Me.btnSalir.Name = "btnSalir"
@@ -277,7 +277,7 @@ Partial Class frmreciboPago
         '
         Me.btnAnular.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnAnular.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAnular.Image = My.Resources.CutHS1
+        Me.btnAnular.Image = Global.Presentacion.My.Resources.Resources.CutHS1
         Me.btnAnular.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnAnular.Location = New System.Drawing.Point(303, 16)
         Me.btnAnular.Name = "btnAnular"
@@ -290,7 +290,7 @@ Partial Class frmreciboPago
         'btnGrabar
         '
         Me.btnGrabar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnGrabar.Image = My.Resources.FormRunHS
+        Me.btnGrabar.Image = Global.Presentacion.My.Resources.Resources.FormRunHS
         Me.btnGrabar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnGrabar.Location = New System.Drawing.Point(185, 16)
         Me.btnGrabar.Name = "btnGrabar"
@@ -303,7 +303,7 @@ Partial Class frmreciboPago
         'btnImprimir
         '
         Me.btnImprimir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnImprimir.Image = My.Resources.PrintHS
+        Me.btnImprimir.Image = Global.Presentacion.My.Resources.Resources.PrintHS
         Me.btnImprimir.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnImprimir.Location = New System.Drawing.Point(421, 16)
         Me.btnImprimir.Name = "btnImprimir"
@@ -318,7 +318,7 @@ Partial Class frmreciboPago
         Me.btnProducto.FlatAppearance.BorderColor = System.Drawing.Color.White
         Me.btnProducto.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnProducto.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.btnProducto.Image = My.Resources.ZoomHS
+        Me.btnProducto.Image = Global.Presentacion.My.Resources.Resources.ZoomHS
         Me.btnProducto.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnProducto.Location = New System.Drawing.Point(68, 16)
         Me.btnProducto.Name = "btnProducto"

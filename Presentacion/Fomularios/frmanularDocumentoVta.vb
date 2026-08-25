@@ -204,7 +204,7 @@ Public Class frmanularDocumentoVta
                 daProductos.Fill(oDataSet, "productos")
             Next
 
-            Dim daSeries As SqlDataAdapter = New SqlDataAdapter("select * from numerosSerie where numDoc='" & Me.oDataSet.Tables(2).Rows(0).Item(10) & "' order by idProducto asc", Connection)
+            Dim daSeries As SqlDataAdapter = New SqlDataAdapter("select distinct * from numerosSerie where numDoc='" & Me.oDataSet.Tables(2).Rows(0).Item(10) & "' order by idProducto asc", Connection)
             daSeries.Fill(oDataSet, "series")
 
             Dim daLetras As SqlDataAdapter = New SqlDataAdapter("select *from letrasClientes where numLetra='" & Me.numLetra & "' and idCliente=" & Me.codigoCliente & "", Connection)
@@ -257,22 +257,24 @@ Public Class frmanularDocumentoVta
             If Me.cbxTipoVenta.SelectedIndex = 1 Then
                 If oDataSet.Tables(6).Rows.Count >= 1 Then
                     Me.txtNumRecibo.Text = Me.oDataSet.Tables(6).Rows(0).Item(0)
-                    Me.txtMontoRecibo.Text = Format(Me.oDataSet.Tables(6).Rows(0).Item(3), "###,###0.00")
+                    Me.txtMontoRecibo.Text = Format(cuotaInicial, "###,###0.00") ' Format(Me.oDataSet.Tables(6).Rows(0).Item(3), "###,###0.00")    'AAGC20240712
                 End If
                 Me.txtCuotas.Text = Me.oDataSet.Tables(5).Rows.Count
                 Me.txtImpLetra = Me.oDataSet.Tables(5).Rows(CInt(Me.txtCuotas.Text) - 1).Item(4)
                 Me.txtImpLetraME = Me.oDataSet.Tables(5).Rows(CInt(Me.txtCuotas.Text) - 1).Item(5)
             Else
-                Me.txtNumRecibo.Text = Me.oDataSet.Tables(6).Rows(0).Item(0)
-                Me.txtMontoRecibo.Text = Format(Me.oDataSet.Tables(6).Rows(0).Item(3), "###,###0.00")
-                For i As Integer = 0 To Me.oDataSet.Tables(6).Rows.Count - 1
-                    matrizRecibos(i, 0) = Me.oDataSet.Tables(6).Rows(i).Item(0)
-                    If Me.oDataSet.Tables(6).Rows(0).Item(14) > 1 Then
-                        matrizRecibos(i, 1) = Me.oDataSet.Tables(6).Rows(i).Item(4)
-                    Else
-                        matrizRecibos(i, 1) = Me.oDataSet.Tables(6).Rows(i).Item(3)
-                    End If
-                Next i
+                If oDataSet.Tables(6).Rows.Count > 0 Then
+                    Me.txtNumRecibo.Text = Me.oDataSet.Tables(6).Rows(0).Item(0)
+                    Me.txtMontoRecibo.Text = Format(Me.oDataSet.Tables(6).Rows(0).Item(3), "###,###0.00")
+                    For i As Integer = 0 To Me.oDataSet.Tables(6).Rows.Count - 1
+                        matrizRecibos(i, 0) = Me.oDataSet.Tables(6).Rows(i).Item(0)
+                        If Me.oDataSet.Tables(6).Rows(0).Item(14) > 1 Then
+                            matrizRecibos(i, 1) = Me.oDataSet.Tables(6).Rows(i).Item(4)
+                        Else
+                            matrizRecibos(i, 1) = Me.oDataSet.Tables(6).Rows(i).Item(3)
+                        End If
+                    Next i
+                End If
             End If
             Me.txtNumGuia.Text = Me.numGuia
 
@@ -343,9 +345,9 @@ Public Class frmanularDocumentoVta
         '        t = Keys.Tab
         '        enter = Convert.ToChar(en)
         '        tab = Convert.ToChar(t)
-        '        te.Text = enter & enter & enter & enter & enter &
-        '        "   " & Me.txtDNI.Text & "                                             " & Me.numGuia & enter & enter & enter &
-        '        "   " & Me.txtNombre.Text & enter & enter & enter &
+        '        te.Text = enter & enter & enter & enter & enter & _
+        '        "   " & Me.txtDNI.Text & "                                             " & Me.numGuia & enter & enter & enter & _
+        '        "   " & Me.txtNombre.Text & enter & enter & enter & _
         '        "   " & Me.txtDireccion.Text & "                            " & Me.dtpFecha.Text & enter & enter & enter & enter
 
         '        'te.Text = te.Text & _
@@ -369,8 +371,8 @@ Public Class frmanularDocumentoVta
         '        te.Text = te.Text & Me.txtGlosa.Text
 
         '        te.Text = te.Text & enter & enter & enter & enter & enter
-        '        te.Text = te.Text & enter & "          " &
-        '        numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtTotalPagar.Text), "###,##0.00"), Len(Format(Decimal.Parse(Me.txtTotalPagar.Text), "###,##0.00")) - 3)) &
+        '        te.Text = te.Text & enter & "          " & _
+        '        numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtTotalPagar.Text), "###,##0.00"), Len(Format(Decimal.Parse(Me.txtTotalPagar.Text), "###,##0.00")) - 3)) & _
         '                                    " Y " & obtieneDecimales(Format(Decimal.Parse(Me.txtTotalPagar.Text), "###,##0.00")) & " /100 " & Me.cbxTipoMoneda.Text & enter
         '        te.Text = te.Text & "                          S.E.ú.O." & enter & enter
 
@@ -408,9 +410,9 @@ Public Class frmanularDocumentoVta
         '        t = Keys.Tab
         '        enter = Convert.ToChar(en)
         '        tab = Convert.ToChar(t)
-        '        te.Text = enter & enter & enter & enter &
-        '        "                    " & Me.txtDNI.Text & "                      " & Me.numGuia & enter & enter &
-        '        "   " & Me.txtNombre.Text & enter & enter & enter & enter &
+        '        te.Text = enter & enter & enter & enter & _
+        '        "                    " & Me.txtDNI.Text & "                      " & Me.numGuia & enter & enter & _
+        '        "   " & Me.txtNombre.Text & enter & enter & enter & enter & _
         '        "   " & Me.txtDireccion.Text & "                                         " & Me.dtpFecha.Text & enter & enter & enter & enter
 
         '        'te.Text = te.Text & _
@@ -434,8 +436,8 @@ Public Class frmanularDocumentoVta
         '        te.Text = te.Text & Me.txtGlosa.Text
 
         '        te.Text = te.Text & enter & enter & enter & enter & enter
-        '        te.Text = te.Text & enter & "          " &
-        '        numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtTotalPagar.Text), "###,##0.00"), Len(Format(Decimal.Parse(Me.txtTotalPagar.Text), "###,##0.00")) - 3)) &
+        '        te.Text = te.Text & enter & "          " & _
+        '        numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtTotalPagar.Text), "###,##0.00"), Len(Format(Decimal.Parse(Me.txtTotalPagar.Text), "###,##0.00")) - 3)) & _
         '                                    " Y " & obtieneDecimales(Format(Decimal.Parse(Me.txtTotalPagar.Text), "###,##0.00")) & " /100 " & Me.cbxTipoMoneda.Text & enter
         '        te.Text = te.Text & "                          S.E.ú.O." & enter & enter
 
@@ -480,6 +482,7 @@ Public Class frmanularDocumentoVta
         'Catch ex As Exception
         '    MessageBox.Show(ex.Message)
         'End Try
+
         Try
             Dim ms1 As New System.IO.MemoryStream
             Dim rep As New ReportesBD
@@ -487,39 +490,48 @@ Public Class frmanularDocumentoVta
             Dim imagePath As String = Application.StartupPath + "\QR\" & txtSerieDocumento.Text & "-" & txtNumDocumento.Text & ".jpg"
 
             ' Verifica si el archivo de imagen existe antes de intentar cargarlo
+            'If System.IO.File.Exists(imagePath) Then
+            'PictureBox1.Image = Image.FromFile(imagePath)
+            'PictureBox1.Image.Save(ms1, PictureBox1.Image.RawFormat)
+            Dim byt() As Byte '= ms1.ToArray
+
             If System.IO.File.Exists(imagePath) Then
                 PictureBox1.Image = Image.FromFile(imagePath)
                 PictureBox1.Image.Save(ms1, PictureBox1.Image.RawFormat)
-                Dim byt() As Byte = ms1.ToArray
-
-                Dim ds As New DataSet1
-                Dim Dt As New DataTable
-                Dim query As String
-                query = "exec rpt_Comprobante '" & cbxTipoDocumento.Text & "','" & txtSerieDocumento.Text & "','" & txtNumDocumento.Text & "'"
-                Dt = RetornaDataTable(query)
-                If Dt.Rows.Count > 0 Then
-                    For i = 0 To Dt.Rows.Count - 1
-                        ds.DataTable1.Rows.Add(byt,
-                                               Dt.Rows(0)(0).ToString(), Dt.Rows(0)(1).ToString(),
-                                               Dt.Rows(0)(2).ToString(), Dt.Rows(0)(3).ToString(),
-                                               Dt.Rows(0)(4).ToString(), Dt.Rows(0)(5).ToString(),
-                                               Dt.Rows(0)(6).ToString(), Dt.Rows(0)(7).ToString(),
-                                               Dt.Rows(0)(8).ToString(), Dt.Rows(0)(9).ToString(),
-                                               Dt.Rows(i)(10).ToString(), Dt.Rows(i)(11).ToString(),
-                                               Dt.Rows(i)(12).ToString(), Dt.Rows(i)(13).ToString(),
-                                               Dt.Rows(i)(14).ToString(), Dt.Rows(0)(15).ToString(), "")
-                    Next
-                End If
-
-                Dim rpt As New rptComprobante
-                rpt.SetDataSource(ds.Tables("DataTable1"))
-
-                Dim frm As New frmReporte
-                frm.CrystalReportViewer1.ReportSource = rpt
-                frm.ShowDialog()
+                byt = ms1.ToArray()
             Else
-                MessageBox.Show("No se encontró el archivo de imagen: " & imagePath)
+                PictureBox1.Image = Nothing
+                byt = Nothing
             End If
+
+
+            Dim ds As New DataSet1
+            Dim Dt As New DataTable
+            Dt = RetornaDataTable("rpt_Comprobante '" & cbxTipoDocumento.Text & "','" & txtSerieDocumento.Text & "','" & txtNumDocumento.Text & "'")
+            If Dt.Rows.Count > 0 Then
+                For i = 0 To Dt.Rows.Count - 1
+                    ds.DataTable1.Rows.Add(byt,
+                                           Dt.Rows(0)(0).ToString(), Dt.Rows(0)(1).ToString(),
+                                           Dt.Rows(0)(2).ToString(), Dt.Rows(0)(3).ToString(),
+                                           Dt.Rows(0)(4).ToString(), Dt.Rows(0)(5).ToString(),
+                                           Dt.Rows(0)(6).ToString(), Dt.Rows(0)(7).ToString(),
+                                           Dt.Rows(0)(8).ToString(), Dt.Rows(0)(9).ToString(),
+                                           Dt.Rows(i)(10).ToString(), Dt.Rows(i)(11).ToString(),
+                                           Dt.Rows(i)(12).ToString(), Dt.Rows(i)(13).ToString(),
+                                           Dt.Rows(i)(14).ToString(), Dt.Rows(0)(15).ToString(),
+                                           "", Dt.Rows(0)(17).ToString(), Dt.Rows(0)(18).ToString())
+                Next
+            End If
+
+            Dim rpt As New rptComprobante
+            rpt.SetDataSource(ds.Tables("DataTable1"))
+
+            Dim frm As New frmReporte
+            frm.CrystalReportViewer1.ReportSource = rpt
+            frm.ShowDialog()
+            'Else
+            'MessageBox.Show("No se encontró el archivo de imagen: " & imagePath)
+            'End If
 
         Catch ex As Exception
             MessageBox.Show(ex.Message)
@@ -544,15 +556,15 @@ Public Class frmanularDocumentoVta
                 AreaImpresion_Ancho = NroTemp
             End If
             Dim Formato As New StringFormat(StringFormatFlags.LineLimit)
-            Dim Rectangulo As New RectangleF(MargenIzquierdo, MargenSuperior,
+            Dim Rectangulo As New RectangleF(MargenIzquierdo, MargenSuperior, _
             AreaImpresion_Ancho, AreaImpresion_Alto)
             Dim NroLineasImpresion As Integer = CInt(AreaImpresion_Alto / Fuente.Height)
             Dim NroLineasRelleno, NroLetrasLinea As Integer
             Static CaracterActual As Integer
-            e.Graphics.MeasureString(Mid(te.Text, +1), Fuente,
-            New SizeF(AreaImpresion_Ancho, AreaImpresion_Alto), Formato, NroLetrasLinea,
+            e.Graphics.MeasureString(Mid(te.Text, +1), Fuente, _
+            New SizeF(AreaImpresion_Ancho, AreaImpresion_Alto), Formato, NroLetrasLinea, _
             NroLineasRelleno)
-            e.Graphics.DrawString(Mid(TextoImpresion, CaracterActual + 1), Fuente,
+            e.Graphics.DrawString(Mid(TextoImpresion, CaracterActual + 1), Fuente, _
             Brushes.Black, Rectangulo, Formato)
             CaracterActual += NroLetrasLinea
             If CaracterActual < TextoImpresion.Length Then
@@ -639,9 +651,9 @@ Public Class frmanularDocumentoVta
                     Exit Sub
                 End If
 
-                sqlString = "update vtaCabecera set numGuia='',numLetra='',totVentaMN=0,totVentaME=0,intFinanciero=0,comVendedor=0,cuoInicial=0,status='A' " &
+                sqlString = "update vtaCabecera set numGuia='',numLetra='',totVentaMN=0,totVentaME=0,intFinanciero=0,comVendedor=0,cuoInicial=0,status='A' " & _
                             "where tipDocumento='" & Me.cbxTipoDocumento.Text & "' and numDocumento=" & Me.txtNumDocumento.Text & ""
-                listaSqlStrings.Add(sqlString)
+                listaSqlStrings.Add(SqlString)
 
                 sqlString = "update vtaDetalle set precio=0,subTotal=0,status='A' where tipDocumento='" & Me.cbxTipoDocumento.Text & "' and numDocumento=" & Me.txtNumDocumento.Text & ""
                 listaSqlStrings.Add(sqlString)
@@ -654,7 +666,7 @@ Public Class frmanularDocumentoVta
                 sqlString = "update recibosClientes set numDocGenACI='' where numDocGenACI='" & Me.cbxTipoDocumento.Text & "' + '" & Me.txtNumDocumento.Text & "'"
                 listaSqlStrings.Add(sqlString)
 
-                sqlString = "update almCabecera set nomOrigen='',dirOrigen='',rucDNI_1='',transLlegada='',status='A' where tipDocumento='SA' and numDocumento=" & CInt(Me.numGuia) & ""
+                sqlString = "update almCabecera set nomOrigen='',dirOrigen='',rucDNI_1='',transLlegada='',status='A' where nomDocumento = 'GX' AND tipDocumento='SA' and numDocumento=" & CInt(Me.numGuia) & ""
                 listaSqlStrings.Add(sqlString)
 
                 For i As Integer = 0 To dgvProductos.Rows.Count - 1
@@ -764,5 +776,9 @@ Public Class frmanularDocumentoVta
     End Sub
     Private Sub btnSalir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSalir.Click
         Me.Close()
+    End Sub
+
+    Private Sub btnGrabar_Click(sender As Object, e As EventArgs) Handles btnGrabar.Click
+
     End Sub
 End Class

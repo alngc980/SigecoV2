@@ -181,6 +181,7 @@ Partial Class frmbarraMenu
         Me.mnuInventariosAjustarPrecios = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuInventariosSaldos = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator33 = New System.Windows.Forms.ToolStripSeparator()
+        Me.SaldosXMovimientosToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuInventariosIniciarSaldos = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuInventariosAjustarStock = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator42 = New System.Windows.Forms.ToolStripSeparator()
@@ -228,6 +229,7 @@ Partial Class frmbarraMenu
         Me.mnuUtilitarioCuotasNA = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuUtilitarioCuotasNAAnular = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuUtilitarioCuotasNACancelar = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ComisionVisaToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuSistema = New System.Windows.Forms.MenuStrip()
         Me.mnuFacturacion = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuFacturacionNotaCredito = New System.Windows.Forms.ToolStripMenuItem()
@@ -288,6 +290,7 @@ Partial Class frmbarraMenu
         Me.sstDetalles = New System.Windows.Forms.StatusStrip()
         Me.ss = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ToolStripStatusLabel2 = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.PlazosGarantiasToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsbBarra.SuspendLayout()
         Me.mnuSistema.SuspendLayout()
         Me.sstDetalles.SuspendLayout()
@@ -896,7 +899,7 @@ Partial Class frmbarraMenu
         'tsbCalculator
         '
         Me.tsbCalculator.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbCalculator.Image = My.Resources.CalculatorHS
+        Me.tsbCalculator.Image = Global.Presentacion.My.Resources.Resources.CalculatorHS
         Me.tsbCalculator.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbCalculator.Name = "tsbCalculator"
         Me.tsbCalculator.Size = New System.Drawing.Size(23, 22)
@@ -910,7 +913,7 @@ Partial Class frmbarraMenu
         'tsbReciboEntrada
         '
         Me.tsbReciboEntrada.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbReciboEntrada.Image = My.Resources.clipboard_en
+        Me.tsbReciboEntrada.Image = Global.Presentacion.My.Resources.Resources.clipboard_en
         Me.tsbReciboEntrada.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbReciboEntrada.Name = "tsbReciboEntrada"
         Me.tsbReciboEntrada.Size = New System.Drawing.Size(23, 22)
@@ -919,7 +922,7 @@ Partial Class frmbarraMenu
         'tsbReciboSalida
         '
         Me.tsbReciboSalida.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbReciboSalida.Image = My.Resources.clipboard_dis
+        Me.tsbReciboSalida.Image = Global.Presentacion.My.Resources.Resources.clipboard_dis
         Me.tsbReciboSalida.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbReciboSalida.Name = "tsbReciboSalida"
         Me.tsbReciboSalida.Size = New System.Drawing.Size(23, 22)
@@ -933,7 +936,7 @@ Partial Class frmbarraMenu
         'tsbGuiaSalida
         '
         Me.tsbGuiaSalida.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbGuiaSalida.Image = My.Resources.LegendHS
+        Me.tsbGuiaSalida.Image = Global.Presentacion.My.Resources.Resources.LegendHS
         Me.tsbGuiaSalida.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.tsbGuiaSalida.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbGuiaSalida.Name = "tsbGuiaSalida"
@@ -944,7 +947,7 @@ Partial Class frmbarraMenu
         'tsbGuiaEntrada
         '
         Me.tsbGuiaEntrada.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbGuiaEntrada.Image = My.Resources.ShowRulelinesHS
+        Me.tsbGuiaEntrada.Image = Global.Presentacion.My.Resources.Resources.ShowRulelinesHS
         Me.tsbGuiaEntrada.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.tsbGuiaEntrada.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbGuiaEntrada.Name = "tsbGuiaEntrada"
@@ -960,7 +963,7 @@ Partial Class frmbarraMenu
         'tsbboletaVenta
         '
         Me.tsbboletaVenta.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbboletaVenta.Image = My.Resources.EditTableHS
+        Me.tsbboletaVenta.Image = Global.Presentacion.My.Resources.Resources.EditTableHS
         Me.tsbboletaVenta.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbboletaVenta.Name = "tsbboletaVenta"
         Me.tsbboletaVenta.Size = New System.Drawing.Size(23, 22)
@@ -970,7 +973,7 @@ Partial Class frmbarraMenu
         'tsbfacturaVenta
         '
         Me.tsbfacturaVenta.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbfacturaVenta.Image = My.Resources.EditInformationHS
+        Me.tsbfacturaVenta.Image = Global.Presentacion.My.Resources.Resources.EditInformationHS
         Me.tsbfacturaVenta.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbfacturaVenta.Name = "tsbfacturaVenta"
         Me.tsbfacturaVenta.Size = New System.Drawing.Size(23, 22)
@@ -985,7 +988,7 @@ Partial Class frmbarraMenu
         'tsbLetrasCodigo
         '
         Me.tsbLetrasCodigo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbLetrasCodigo.Image = My.Resources.book_addressHS
+        Me.tsbLetrasCodigo.Image = Global.Presentacion.My.Resources.Resources.book_addressHS
         Me.tsbLetrasCodigo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbLetrasCodigo.Name = "tsbLetrasCodigo"
         Me.tsbLetrasCodigo.Size = New System.Drawing.Size(23, 22)
@@ -995,7 +998,7 @@ Partial Class frmbarraMenu
         'tsbLetrasNombre
         '
         Me.tsbLetrasNombre.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbLetrasNombre.Image = My.Resources.Book_openHS
+        Me.tsbLetrasNombre.Image = Global.Presentacion.My.Resources.Resources.Book_openHS
         Me.tsbLetrasNombre.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbLetrasNombre.Name = "tsbLetrasNombre"
         Me.tsbLetrasNombre.Size = New System.Drawing.Size(23, 22)
@@ -1005,7 +1008,7 @@ Partial Class frmbarraMenu
         'tsbLetrasVarias
         '
         Me.tsbLetrasVarias.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbLetrasVarias.Image = My.Resources.BarCodeHS
+        Me.tsbLetrasVarias.Image = Global.Presentacion.My.Resources.Resources.BarCodeHS
         Me.tsbLetrasVarias.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbLetrasVarias.Name = "tsbLetrasVarias"
         Me.tsbLetrasVarias.Size = New System.Drawing.Size(23, 22)
@@ -1020,7 +1023,7 @@ Partial Class frmbarraMenu
         'tsbRecibosCodigo
         '
         Me.tsbRecibosCodigo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbRecibosCodigo.Image = My.Resources.OrganizerHS
+        Me.tsbRecibosCodigo.Image = Global.Presentacion.My.Resources.Resources.OrganizerHS
         Me.tsbRecibosCodigo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbRecibosCodigo.Name = "tsbRecibosCodigo"
         Me.tsbRecibosCodigo.Size = New System.Drawing.Size(23, 22)
@@ -1030,7 +1033,7 @@ Partial Class frmbarraMenu
         'tsbRecibosNombre
         '
         Me.tsbRecibosNombre.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbRecibosNombre.Image = My.Resources.TaskHS
+        Me.tsbRecibosNombre.Image = Global.Presentacion.My.Resources.Resources.TaskHS
         Me.tsbRecibosNombre.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbRecibosNombre.Name = "tsbRecibosNombre"
         Me.tsbRecibosNombre.Size = New System.Drawing.Size(23, 22)
@@ -1045,7 +1048,7 @@ Partial Class frmbarraMenu
         'tsbDocsEmitidos
         '
         Me.tsbDocsEmitidos.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbDocsEmitidos.Image = My.Resources.List_NumberedHS
+        Me.tsbDocsEmitidos.Image = Global.Presentacion.My.Resources.Resources.List_NumberedHS
         Me.tsbDocsEmitidos.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbDocsEmitidos.Name = "tsbDocsEmitidos"
         Me.tsbDocsEmitidos.Size = New System.Drawing.Size(23, 22)
@@ -1055,7 +1058,7 @@ Partial Class frmbarraMenu
         'tsbSaldos
         '
         Me.tsbSaldos.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbSaldos.Image = My.Resources.Calendar_scheduleHS
+        Me.tsbSaldos.Image = Global.Presentacion.My.Resources.Resources.Calendar_scheduleHS
         Me.tsbSaldos.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbSaldos.Name = "tsbSaldos"
         Me.tsbSaldos.Size = New System.Drawing.Size(23, 22)
@@ -1070,7 +1073,7 @@ Partial Class frmbarraMenu
         'tsbCierreCaja
         '
         Me.tsbCierreCaja.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbCierreCaja.Image = My.Resources.Book_StackOfReportsHS
+        Me.tsbCierreCaja.Image = Global.Presentacion.My.Resources.Resources.Book_StackOfReportsHS
         Me.tsbCierreCaja.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbCierreCaja.Name = "tsbCierreCaja"
         Me.tsbCierreCaja.Size = New System.Drawing.Size(23, 22)
@@ -1080,7 +1083,7 @@ Partial Class frmbarraMenu
         'tsbCierreCajaRango
         '
         Me.tsbCierreCajaRango.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbCierreCajaRango.Image = My.Resources.CheckSpellingHS
+        Me.tsbCierreCajaRango.Image = Global.Presentacion.My.Resources.Resources.CheckSpellingHS
         Me.tsbCierreCajaRango.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbCierreCajaRango.Name = "tsbCierreCajaRango"
         Me.tsbCierreCajaRango.Size = New System.Drawing.Size(23, 22)
@@ -1265,7 +1268,7 @@ Partial Class frmbarraMenu
         '
         'mnuInventarios
         '
-        Me.mnuInventarios.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuInventarioEntrada, Me.mnuInventariosSalida, Me.ToolStripSeparator28, Me.mnuInventariosAjustarPrecios, Me.mnuInventariosSaldos, Me.ToolStripSeparator33, Me.mnuInventariosIniciarSaldos, Me.mnuInventariosAjustarStock, Me.ToolStripSeparator42, Me.mnuInventariosAnularDocumento, Me.mnuInventariosKardex, Me.ToolStripSeparator52, Me.mnuInventariosBalance, Me.mnuInventariosCierreDiario})
+        Me.mnuInventarios.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuInventarioEntrada, Me.mnuInventariosSalida, Me.ToolStripSeparator28, Me.mnuInventariosAjustarPrecios, Me.mnuInventariosSaldos, Me.ToolStripSeparator33, Me.SaldosXMovimientosToolStripMenuItem, Me.mnuInventariosIniciarSaldos, Me.mnuInventariosAjustarStock, Me.ToolStripSeparator42, Me.mnuInventariosAnularDocumento, Me.mnuInventariosKardex, Me.ToolStripSeparator52, Me.mnuInventariosBalance, Me.mnuInventariosCierreDiario})
         Me.mnuInventarios.Name = "mnuInventarios"
         Me.mnuInventarios.Size = New System.Drawing.Size(99, 25)
         Me.mnuInventarios.Text = "Inventarios"
@@ -1273,65 +1276,71 @@ Partial Class frmbarraMenu
         'mnuInventarioEntrada
         '
         Me.mnuInventarioEntrada.Name = "mnuInventarioEntrada"
-        Me.mnuInventarioEntrada.Size = New System.Drawing.Size(243, 26)
+        Me.mnuInventarioEntrada.Size = New System.Drawing.Size(285, 26)
         Me.mnuInventarioEntrada.Text = "Entrada Almacén"
         '
         'mnuInventariosSalida
         '
         Me.mnuInventariosSalida.Name = "mnuInventariosSalida"
-        Me.mnuInventariosSalida.Size = New System.Drawing.Size(243, 26)
+        Me.mnuInventariosSalida.Size = New System.Drawing.Size(285, 26)
         Me.mnuInventariosSalida.Text = "Salida Almacén"
         '
         'ToolStripSeparator28
         '
         Me.ToolStripSeparator28.Name = "ToolStripSeparator28"
-        Me.ToolStripSeparator28.Size = New System.Drawing.Size(240, 6)
+        Me.ToolStripSeparator28.Size = New System.Drawing.Size(282, 6)
         '
         'mnuInventariosAjustarPrecios
         '
         Me.mnuInventariosAjustarPrecios.Name = "mnuInventariosAjustarPrecios"
-        Me.mnuInventariosAjustarPrecios.Size = New System.Drawing.Size(243, 26)
+        Me.mnuInventariosAjustarPrecios.Size = New System.Drawing.Size(285, 26)
         Me.mnuInventariosAjustarPrecios.Text = "Ajustar Precio Producto"
         '
         'mnuInventariosSaldos
         '
         Me.mnuInventariosSaldos.Name = "mnuInventariosSaldos"
-        Me.mnuInventariosSaldos.Size = New System.Drawing.Size(243, 26)
+        Me.mnuInventariosSaldos.Size = New System.Drawing.Size(285, 26)
         Me.mnuInventariosSaldos.Text = "Saldos Almacén"
         '
         'ToolStripSeparator33
         '
         Me.ToolStripSeparator33.Name = "ToolStripSeparator33"
-        Me.ToolStripSeparator33.Size = New System.Drawing.Size(240, 6)
+        Me.ToolStripSeparator33.Size = New System.Drawing.Size(282, 6)
+        '
+        'SaldosXMovimientosToolStripMenuItem
+        '
+        Me.SaldosXMovimientosToolStripMenuItem.Name = "SaldosXMovimientosToolStripMenuItem"
+        Me.SaldosXMovimientosToolStripMenuItem.Size = New System.Drawing.Size(285, 26)
+        Me.SaldosXMovimientosToolStripMenuItem.Text = "Saldos X Movimientos Kardex"
         '
         'mnuInventariosIniciarSaldos
         '
         Me.mnuInventariosIniciarSaldos.Name = "mnuInventariosIniciarSaldos"
-        Me.mnuInventariosIniciarSaldos.Size = New System.Drawing.Size(243, 26)
+        Me.mnuInventariosIniciarSaldos.Size = New System.Drawing.Size(285, 26)
         Me.mnuInventariosIniciarSaldos.Text = "Iniciar Stock"
         '
         'mnuInventariosAjustarStock
         '
         Me.mnuInventariosAjustarStock.Name = "mnuInventariosAjustarStock"
-        Me.mnuInventariosAjustarStock.Size = New System.Drawing.Size(243, 26)
+        Me.mnuInventariosAjustarStock.Size = New System.Drawing.Size(285, 26)
         Me.mnuInventariosAjustarStock.Text = "Ajustar Stock"
         '
         'ToolStripSeparator42
         '
         Me.ToolStripSeparator42.Name = "ToolStripSeparator42"
-        Me.ToolStripSeparator42.Size = New System.Drawing.Size(240, 6)
+        Me.ToolStripSeparator42.Size = New System.Drawing.Size(282, 6)
         '
         'mnuInventariosAnularDocumento
         '
         Me.mnuInventariosAnularDocumento.Name = "mnuInventariosAnularDocumento"
-        Me.mnuInventariosAnularDocumento.Size = New System.Drawing.Size(243, 26)
+        Me.mnuInventariosAnularDocumento.Size = New System.Drawing.Size(285, 26)
         Me.mnuInventariosAnularDocumento.Text = "Anular Documento"
         '
         'mnuInventariosKardex
         '
         Me.mnuInventariosKardex.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuInventariosKardexProducto, Me.mnuInventariosKardexRango, Me.mnuInventariosKardexSimple})
         Me.mnuInventariosKardex.Name = "mnuInventariosKardex"
-        Me.mnuInventariosKardex.Size = New System.Drawing.Size(243, 26)
+        Me.mnuInventariosKardex.Size = New System.Drawing.Size(285, 26)
         Me.mnuInventariosKardex.Text = "Reporte Kardex"
         '
         'mnuInventariosKardexProducto
@@ -1355,23 +1364,23 @@ Partial Class frmbarraMenu
         'ToolStripSeparator52
         '
         Me.ToolStripSeparator52.Name = "ToolStripSeparator52"
-        Me.ToolStripSeparator52.Size = New System.Drawing.Size(240, 6)
+        Me.ToolStripSeparator52.Size = New System.Drawing.Size(282, 6)
         '
         'mnuInventariosBalance
         '
         Me.mnuInventariosBalance.Name = "mnuInventariosBalance"
-        Me.mnuInventariosBalance.Size = New System.Drawing.Size(243, 26)
+        Me.mnuInventariosBalance.Size = New System.Drawing.Size(285, 26)
         Me.mnuInventariosBalance.Text = "Balance Inventarios"
         '
         'mnuInventariosCierreDiario
         '
         Me.mnuInventariosCierreDiario.Name = "mnuInventariosCierreDiario"
-        Me.mnuInventariosCierreDiario.Size = New System.Drawing.Size(243, 26)
+        Me.mnuInventariosCierreDiario.Size = New System.Drawing.Size(285, 26)
         Me.mnuInventariosCierreDiario.Text = "Cierre Diario Almacén"
         '
         'mnuUtilitario
         '
-        Me.mnuUtilitario.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuUtilitarioClientes, Me.mnuUtilitarioGarantes, Me.mnuUtilitarioProductos, Me.ToolStripSeparator31, Me.mnuUtilitarioProveedores, Me.mnuUtilitarioVendedores, Me.ToolStripMenuItem34, Me.ToolStripSeparator29, Me.mnuUtilitarioUsuarios, Me.mnuUtilitarioPersonal, Me.mnuUtilitarioCuotas, Me.mnuUtilitarioCuotasNA})
+        Me.mnuUtilitario.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuUtilitarioClientes, Me.mnuUtilitarioGarantes, Me.mnuUtilitarioProductos, Me.ToolStripSeparator31, Me.mnuUtilitarioProveedores, Me.mnuUtilitarioVendedores, Me.ToolStripMenuItem34, Me.ToolStripSeparator29, Me.mnuUtilitarioUsuarios, Me.mnuUtilitarioPersonal, Me.mnuUtilitarioCuotas, Me.mnuUtilitarioCuotasNA, Me.ComisionVisaToolStripMenuItem})
         Me.mnuUtilitario.Name = "mnuUtilitario"
         Me.mnuUtilitario.Size = New System.Drawing.Size(89, 25)
         Me.mnuUtilitario.Text = "Utilitarios"
@@ -1592,6 +1601,12 @@ Partial Class frmbarraMenu
         Me.mnuUtilitarioCuotasNACancelar.Name = "mnuUtilitarioCuotasNACancelar"
         Me.mnuUtilitarioCuotasNACancelar.Size = New System.Drawing.Size(213, 26)
         Me.mnuUtilitarioCuotasNACancelar.Text = "Cancelar Cuotas"
+        '
+        'ComisionVisaToolStripMenuItem
+        '
+        Me.ComisionVisaToolStripMenuItem.Name = "ComisionVisaToolStripMenuItem"
+        Me.ComisionVisaToolStripMenuItem.Size = New System.Drawing.Size(227, 26)
+        Me.ComisionVisaToolStripMenuItem.Text = "Comision Visa"
         '
         'mnuSistema
         '
@@ -1877,7 +1892,7 @@ Partial Class frmbarraMenu
         '
         'mnuConfiguracion
         '
-        Me.mnuConfiguracion.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuConfiguracionTasaCredito, Me.mnuConfiguracionTipoCambio, Me.ToolStripSeparator34, Me.mnuComisionPagoAtrasado, Me.mnuConfiguracionTasasVendedor, Me.ToolStripSeparator56, Me.mnuConfiguracionNumerosDocumento, Me.mnuConfiguracionBackup, Me.ToolStripSeparator55, Me.mnuConfiguracionImportarDatosExcel, Me.mnuConfiguracionLimpiarInterfazSunat})
+        Me.mnuConfiguracion.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuConfiguracionTasaCredito, Me.mnuConfiguracionTipoCambio, Me.PlazosGarantiasToolStripMenuItem, Me.ToolStripSeparator34, Me.mnuComisionPagoAtrasado, Me.mnuConfiguracionTasasVendedor, Me.ToolStripSeparator56, Me.mnuConfiguracionNumerosDocumento, Me.mnuConfiguracionBackup, Me.ToolStripSeparator55, Me.mnuConfiguracionImportarDatosExcel, Me.mnuConfiguracionLimpiarInterfazSunat})
         Me.mnuConfiguracion.Name = "mnuConfiguracion"
         Me.mnuConfiguracion.Size = New System.Drawing.Size(120, 25)
         Me.mnuConfiguracion.Text = "Configuración"
@@ -1966,6 +1981,12 @@ Partial Class frmbarraMenu
         Me.ToolStripStatusLabel2.Size = New System.Drawing.Size(132, 17)
         Me.ToolStripStatusLabel2.Text = "CTang - Sistemas (2023)"
         '
+        'PlazosGarantiasToolStripMenuItem
+        '
+        Me.PlazosGarantiasToolStripMenuItem.Name = "PlazosGarantiasToolStripMenuItem"
+        Me.PlazosGarantiasToolStripMenuItem.Size = New System.Drawing.Size(280, 26)
+        Me.PlazosGarantiasToolStripMenuItem.Text = "Plazos Garantias"
+        '
         'frmbarraMenu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1977,7 +1998,7 @@ Partial Class frmbarraMenu
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
         Me.IsMdiContainer = True
         Me.Name = "frmbarraMenu"
-        Me.Text = "Sistema Gestión Comercial - Facturación Electrónica (Comercial Oriente Hnos. SAC)" &
+        Me.Text = "Sistema Gestión Comercial - Facturación Electrónica (Comercial Oriente Hnos. SAC)" & _
     ""
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.tsbBarra.ResumeLayout(False)
@@ -2261,4 +2282,7 @@ Partial Class frmbarraMenu
     Friend WithEvents mnuConfiguracionImportarDatosExcel As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuConfiguracionLimpiarInterfazSunat As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuCajaAnularReciboSalida As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ComisionVisaToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents SaldosXMovimientosToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents PlazosGarantiasToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 End Class

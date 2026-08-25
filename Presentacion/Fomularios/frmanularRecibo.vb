@@ -115,11 +115,13 @@ Public Class frmanularRecibo
             End If
             Me.txtNumDocumento = Me.oDataSet.Tables(0).Rows(0).Item(6)
             If (Me.cbxConcepto.SelectedIndex = 3 Or Me.cbxConcepto.SelectedIndex = 4 Or Me.cbxConcepto.SelectedIndex = 10) And Me.oDataSet.Tables(0).Rows(0).Item(6).ToString <> " " Then
-                Me.txtNumDocVenta.Text = VisualBasic.Mid(Me.oDataSet.Tables(0).Rows(0).Item(6).ToString, 3, Len(Me.oDataSet.Tables(0).Rows(0).Item(6).ToString) - 2)
+                If Me.oDataSet.Tables(0).Rows(0).Item(6).ToString.Trim.Length > 0 Then
+                    Me.txtNumDocVenta.Text = VisualBasic.Mid(Me.oDataSet.Tables(0).Rows(0).Item(6).ToString, 3, Len(Me.oDataSet.Tables(0).Rows(0).Item(6).ToString) - 2)
 
-                Dim vtaCabecera As SqlDataAdapter = New SqlDataAdapter("select * from vtaCabecera where tipDocumento='" & Me.cbxTipoDocVenta.Text & "' and numDocumento=" & txtNumDocVenta.Text & "", Connection)
-                vtaCabecera.Fill(oDataSet, "vtaCabecera")
-                statusNC = Me.oDataSet.Tables(3).Rows(0).Item(18).ToString.Trim
+                    Dim vtaCabecera As SqlDataAdapter = New SqlDataAdapter("select * from vtaCabecera where tipDocumento='" & Me.cbxTipoDocVenta.Text & "' and numDocumento=" & txtNumDocVenta.Text & "", Connection)
+                    vtaCabecera.Fill(oDataSet, "vtaCabecera")
+                    statusNC = Me.oDataSet.Tables(3).Rows(0).Item(18).ToString.Trim
+                End If
             End If
 
             'Desactivamos esta línea x una situación excepciónal.
@@ -135,7 +137,9 @@ Public Class frmanularRecibo
             Me.txtNumLetra.Text = Me.oDataSet.Tables(0).Rows(0).Item(2)
 
             If (Me.cbxConcepto.SelectedIndex = 3 Or Me.cbxConcepto.SelectedIndex = 4 Or Me.cbxConcepto.SelectedIndex = 10) And Me.oDataSet.Tables(0).Rows(0).Item(6).ToString <> " " Then
-                Me.numDocGenCI = VisualBasic.Mid(Me.oDataSet.Tables(0).Rows(0).Item(6).ToString, 3, Len(Me.oDataSet.Tables(0).Rows(0).Item(6).ToString) - 2)
+                If Me.oDataSet.Tables(0).Rows(0).Item(6).ToString.Trim.Length > 0 Then
+                    Me.numDocGenCI = VisualBasic.Mid(Me.oDataSet.Tables(0).Rows(0).Item(6).ToString, 3, Len(Me.oDataSet.Tables(0).Rows(0).Item(6).ToString) - 2)
+                End If
             End If
 
             Me.numDocGenACI = Trim(Me.oDataSet.Tables(0).Rows(0).Item(7).ToString)
@@ -230,7 +234,7 @@ Public Class frmanularRecibo
                     Exit Sub
                 End If
 
-                SqlString = "update recibosClientes set numLetra='',impDocumento=0,impDocumentoME=0,numCorrelativo=0,numDocGenCI=''," & _
+                SqlString = "update recibosClientes set numLetra='',numCorrelativo=0,numDocGenCI=''," & _
                             "numDocGenACI='',idCliente=" & CInt(Me.txtCodigoCliente.Text) & ",idVendedor=1,descuento=0,idMoneda=1,tipCambio=0,status='X'" & _
                             "where idRecibo=" & CInt(Me.txtNumRecibo.Text) & ""
                 listaSqlStrings.Add(SqlString)
@@ -325,124 +329,130 @@ Public Class frmanularRecibo
         Dim stringPago As String
 
         oDataSet = New DataSet()
-        Dim daCambio As SqlDataAdapter = New SqlDataAdapter("SELECT  *from tiposMonedas where idMoneda=" & Me.cbxTipoMoneda.SelectedIndex + 1 & "", Connection)
+        Dim daCambio As SqlDataAdapter = New SqlDataAdapter("select * from tiposMonedas where idMoneda=" & Me.cbxTipoMoneda.SelectedIndex + 1 & "", Connection)
         daCambio.Fill(oDataSet, "tipoCambio")
 
-        Dim daDatosCheques As SqlDataAdapter = New SqlDataAdapter("SELECT  *from datosCheques where numRecibo=" & CInt(Me.txtNumRecibo.Text) & "", Connection)
+        Dim daDatosCheques As SqlDataAdapter = New SqlDataAdapter("select * from datosCheques where numRecibo=" & CInt(Me.txtNumRecibo.Text) & "", Connection)
         daDatosCheques.Fill(oDataSet, "datosCheques")
 
-        Dim daGlosas As SqlDataAdapter = New SqlDataAdapter("SELECT  *from glosasFacturas where numDocumento=" & CInt(Me.txtNumRecibo.Text) & "", Connection)
+        Dim daGlosas As SqlDataAdapter = New SqlDataAdapter("select * from glosasFacturas where numDocumento=" & CInt(Me.txtNumRecibo.Text) & "", Connection)
         daGlosas.Fill(oDataSet, "glosasFacturas")
 
-        'Try
-        If Me.cbxConcepto.SelectedIndex = 5 Then
-            stringConcepto = VisualBasic.Left(Me.oDataSet.Tables(2).Rows(0).Item(2).ToString, 40) & Space(43 - Len(VisualBasic.Left(Me.oDataSet.Tables(2).Rows(0).Item(2).ToString, 40))) & "Concepto : " & VisualBasic.Left(Me.oDataSet.Tables(2).Rows(0).Item(2).ToString, 40)
-        Else
-            stringConcepto = Me.cbxConcepto.Text & Space(43 - Len(Me.cbxConcepto.Text)) & "Concepto : " & Me.cbxConcepto.Text
-        End If
-
-        If Me.oDataSet.Tables(1).Rows.Count <= 1 Then
-            stringPago = Me.cbxTipoPago.Text & Space(43 - Len(Me.cbxTipoPago.Text)) & "T. Pago  : " & Me.cbxTipoPago.Text
-        Else
-            stringPago = arrayTipoPago(6) & Space(43 - Len(arrayTipoPago(6))) & "T. Pago  : " & arrayTipoPago(6)
-        End If
-
-        Dim en, t As Keys
-        Dim enter, tab As Char
-        en = Keys.Enter
-        t = Keys.Tab
-        enter = Convert.ToChar(en)
-        tab = Convert.ToChar(t)
-
-        te.Text = "      " & _
-        Me.lblNombre.Text & "                          " & Me.lblNombre.Text & enter & enter & _
-        Me.lblDireccion.Text & "                             " & Me.lblDireccion.Text & enter & _
-        Me.lblRUC.Text & "                                      " & Me.lblRUC.Text & " " & enter & _
-        Me.lblTelefono.Text & "                                  " & Me.lblTelefono.Text & " " & enter & enter & _
-        "R E C I B O   D E  C A J A  N° " & Me.txtNumRecibo.Text & Space(53 - Len("R E C I B O   D E  C A J A  N° " & Me.txtNumRecibo.Text)) & " " & "R E C I B O   D E  C A J A  N° " & Me.txtNumRecibo.Text & enter & enter & _
-        "Fecha    : " & Me.dtmFecha.Text & Space(53 - Len("Fecha    : " & Me.dtmFecha.Text)) & " " & "Fecha    : " & Me.dtmFecha.Text & enter & _
-        "TCC      : " & Me.oDataSet.Tables(0).Rows(0).Item(2) & Space(53 - Len("TCC      : " & Me.oDataSet.Tables(0).Rows(0).Item(2))) & " " & "TCC      : " & Me.oDataSet.Tables(0).Rows(0).Item(2) & enter & _
-        "TCV      : " & Me.oDataSet.Tables(0).Rows(0).Item(3) & Space(53 - Len("TCV      : " & Me.oDataSet.Tables(0).Rows(0).Item(3))) & " " & "TCV      : " & Me.oDataSet.Tables(0).Rows(0).Item(3) & enter & _
-        "Nombres  : " & VisualBasic.Left(Me.txtNombres.Text, 35) & Space(43 - Len(VisualBasic.Left(Me.txtNombres.Text, 35))) & "Nombres  : " & VisualBasic.Left(Me.txtNombres.Text, 35) & enter & _
-        "           " & VisualBasic.Mid(Me.txtNombres.Text, 36, 35) & Space(43 - Len(VisualBasic.Left(Me.txtNombres.Text, 35))) & "           " & VisualBasic.Mid(Me.txtNombres.Text, 36, 35) & enter & _
-        "Documento: " & Me.txtDNI.Text & Space(43 - Len(Me.txtDNI.Text)) & "Documento: " & Me.txtDNI.Text & enter & _
-        "Concepto : " & stringConcepto & enter & _
-        "T. Pago  : " & stringPago & enter
-
-        If Me.oDataSet.Tables(1).Rows.Count > 1 Then
-            For i As Integer = 0 To Me.oDataSet.Tables(1).Rows.Count - 1
-                te.Text = te.Text & "Pago " & i + 1 & " : " & arrayTipoPago(Me.oDataSet.Tables(1).Rows(i).Item(2)) & " " & arrayMoneda(Me.oDataSet.Tables(1).Rows(i).Item(5) - 1) & " " & Me.oDataSet.Tables(1).Rows(i).Item(6) & " " & Me.oDataSet.Tables(1).Rows(i).Item(7) & " " & Me.oDataSet.Tables(1).Rows(i).Item(8) & Space(50 - Len(CStr("Pago " & i + 1 & " : " & arrayTipoPago(Me.oDataSet.Tables(1).Rows(i).Item(2)) & arrayMoneda(Me.oDataSet.Tables(1).Rows(i).Item(5) - 1) & Me.oDataSet.Tables(1).Rows(i).Item(6) & Me.oDataSet.Tables(1).Rows(i).Item(7) & Me.oDataSet.Tables(1).Rows(i).Item(8)))) & _
-                                    "Pago " & i + 1 & " : " & arrayTipoPago(Me.oDataSet.Tables(1).Rows(i).Item(2)) & " " & arrayMoneda(Me.oDataSet.Tables(1).Rows(i).Item(5) - 1) & " " & Me.oDataSet.Tables(1).Rows(i).Item(6) & " " & Me.oDataSet.Tables(1).Rows(i).Item(7) & " " & Me.oDataSet.Tables(1).Rows(i).Item(8) & enter
-            Next
-        End If
-
-        If Me.cbxConcepto.SelectedIndex = 1 Or Me.cbxConcepto.SelectedIndex = 2 Then
-            te.Text = te.Text & "--------------------------------------------------" & "    " & "--------------------------------------------------" & enter
-            te.Text = te.Text & "Letra      Num. F. Vcto. I.Original I.Pagar  Saldo" & "    " & "Letra      Num. F. Vcto. I.Original I.Pagar  Saldo" & enter
-            te.Text = te.Text & "--------------------------------------------------" & "    " & "--------------------------------------------------" & enter & enter
-            If Me.cbxTipoMoneda.SelectedIndex >= 1 Then
-                te.Text = te.Text & Me.txtNumLetra.Text & Space(12 - Len(Me.txtNumLetra.Text)) & " " & Me.numCorrelativo & " " & Me.dtpFechaVcmto.Text & " " & Me.importeLetraME & Space(9 - Len(Str(Me.importeLetraME))) & " " & Me.txtMontoME.Text & Space(8 - Len(Me.txtMontoME.Text)) & " " & Me.importeLetraME - Me.totalAmortizacion & Space(8 - Len(Str(Me.importeLetraME - Me.totalAmortizacion))) & "   " & _
-                                    Me.txtNumLetra.Text & " " & Me.numCorrelativo & "  " & Me.dtpFechaVcmto.Text & "  " & Me.importeLetraME & "    " & Me.txtMontoME.Text & "   " & Me.importeLetraME - Me.totalAmortizacion & enter & enter
+        Try
+            If Me.cbxConcepto.SelectedIndex = 5 Then
+                If Me.oDataSet.Tables(2).Rows.Count > 0 Then
+                    stringConcepto = VisualBasic.Left(Me.oDataSet.Tables(2).Rows(0).Item(2).ToString, 40) & Space(43 - Len(VisualBasic.Left(Me.oDataSet.Tables(2).Rows(0).Item(2).ToString, 40))) & "Concepto : " & VisualBasic.Left(Me.oDataSet.Tables(2).Rows(0).Item(2).ToString, 40)
+                Else
+                    stringConcepto = Me.cbxConcepto.Text & Space(43 - Len(Me.cbxConcepto.Text)) & "Concepto : " & Me.cbxConcepto.Text
+                End If
             Else
-                te.Text = te.Text & Me.txtNumLetra.Text & Space(12 - Len(Me.txtNumLetra.Text)) & " " & Me.numCorrelativo & " " & Me.dtpFechaVcmto.Text & " " & Me.importeLetraMN & Space(9 - Len(Str(Me.importeLetraMN))) & " " & Me.txtMonto.Text & Space(8 - Len(Me.txtMonto.Text)) & " " & Me.importeLetraMN - Me.totalAmortizacion & Space(8 - Len(Str(Me.importeLetraMN - Me.totalAmortizacion))) & "   " & _
-                                    Me.txtNumLetra.Text & " " & Me.numCorrelativo & "  " & Me.dtpFechaVcmto.Text & "  " & Me.importeLetraMN & "    " & Me.txtMonto.Text & "   " & Me.importeLetraMN - Me.totalAmortizacion & enter & enter
+                stringConcepto = Me.cbxConcepto.Text & Space(43 - Len(Me.cbxConcepto.Text)) & "Concepto : " & Me.cbxConcepto.Text
             End If
-            te.Text = te.Text & "--------------------------------------------------" & "    " & "--------------------------------------------------" & enter
-        Else
-            te.Text = te.Text & "--------------------------------------------------" & "    " & "--------------------------------------------------" & enter & enter
+
+
+            If Me.oDataSet.Tables(1).Rows.Count <= 1 Then
+                stringPago = Me.cbxTipoPago.Text & Space(43 - Len(Me.cbxTipoPago.Text)) & "T. Pago  : " & Me.cbxTipoPago.Text
+            Else
+                stringPago = arrayTipoPago(5) & Space(43 - Len(arrayTipoPago(5))) & "T. Pago  : " & arrayTipoPago(5)
+                'stringPago = arrayTipoPago(6) & Space(43 - Len(arrayTipoPago(6))) & "T. Pago  : " & arrayTipoPago(6)
+            End If
+
+            Dim en, t As Keys
+            Dim enter, tab As Char
+            en = Keys.Enter
+            t = Keys.Tab
+            enter = Convert.ToChar(en)
+            tab = Convert.ToChar(t)
+
+            te.Text = "      " & _
+            Me.lblNombre.Text & "                          " & Me.lblNombre.Text & enter & enter & _
+            Me.lblDireccion.Text & "                             " & Me.lblDireccion.Text & enter & _
+            Me.lblRUC.Text & "                                      " & Me.lblRUC.Text & " " & enter & _
+            Me.lblTelefono.Text & "                                  " & Me.lblTelefono.Text & " " & enter & enter & _
+            "R E C I B O   D E  C A J A  N° " & Me.txtNumRecibo.Text & Space(53 - Len("R E C I B O   D E  C A J A  N° " & Me.txtNumRecibo.Text)) & " " & "R E C I B O   D E  C A J A  N° " & Me.txtNumRecibo.Text & enter & enter & _
+            "Fecha    : " & Me.dtmFecha.Text & Space(53 - Len("Fecha    : " & Me.dtmFecha.Text)) & " " & "Fecha    : " & Me.dtmFecha.Text & enter & _
+            "TCC      : " & Me.oDataSet.Tables(0).Rows(0).Item(2) & Space(53 - Len("TCC      : " & Me.oDataSet.Tables(0).Rows(0).Item(2))) & " " & "TCC      : " & Me.oDataSet.Tables(0).Rows(0).Item(2) & enter & _
+            "TCV      : " & Me.oDataSet.Tables(0).Rows(0).Item(3) & Space(53 - Len("TCV      : " & Me.oDataSet.Tables(0).Rows(0).Item(3))) & " " & "TCV      : " & Me.oDataSet.Tables(0).Rows(0).Item(3) & enter & _
+            "Nombres  : " & VisualBasic.Left(Me.txtNombres.Text, 35) & Space(43 - Len(VisualBasic.Left(Me.txtNombres.Text, 35))) & "Nombres  : " & VisualBasic.Left(Me.txtNombres.Text, 35) & enter & _
+            "           " & VisualBasic.Mid(Me.txtNombres.Text, 36, 35) & Space(43 - Len(VisualBasic.Left(Me.txtNombres.Text, 35))) & "           " & VisualBasic.Mid(Me.txtNombres.Text, 36, 35) & enter & _
+            "Documento: " & Me.txtDNI.Text & Space(43 - Len(Me.txtDNI.Text)) & "Documento: " & Me.txtDNI.Text & enter & _
+            "Concepto : " & stringConcepto & enter & _
+            "T. Pago  : " & stringPago & enter
+
+            'If Me.oDataSet.Tables(1).Rows.Count > 1 Then
+            '    For i As Integer = 0 To Me.oDataSet.Tables(1).Rows.Count - 1
+            '        te.Text = te.Text & "Pago " & i + 1 & " : " & arrayTipoPago(Me.oDataSet.Tables(1).Rows(i).Item(2)) & " " & arrayMoneda(Me.oDataSet.Tables(1).Rows(i).Item(5) - 1) & " " & Me.oDataSet.Tables(1).Rows(i).Item(6) & " " & Me.oDataSet.Tables(1).Rows(i).Item(7) & " " & Me.oDataSet.Tables(1).Rows(i).Item(8) & Space(50 - Len(CStr("Pago " & i + 1 & " : " & arrayTipoPago(Me.oDataSet.Tables(1).Rows(i).Item(2)) & arrayMoneda(Me.oDataSet.Tables(1).Rows(i).Item(5) - 1) & Me.oDataSet.Tables(1).Rows(i).Item(6) & Me.oDataSet.Tables(1).Rows(i).Item(7) & Me.oDataSet.Tables(1).Rows(i).Item(8)))) & _
+            '                            "Pago " & i + 1 & " : " & arrayTipoPago(Me.oDataSet.Tables(1).Rows(i).Item(2)) & " " & arrayMoneda(Me.oDataSet.Tables(1).Rows(i).Item(5) - 1) & " " & Me.oDataSet.Tables(1).Rows(i).Item(6) & " " & Me.oDataSet.Tables(1).Rows(i).Item(7) & " " & Me.oDataSet.Tables(1).Rows(i).Item(8) & enter
+            '    Next
+            'End If
+
+            If Me.cbxConcepto.SelectedIndex = 1 Or Me.cbxConcepto.SelectedIndex = 2 Then
+                te.Text = te.Text & "--------------------------------------------------" & "    " & "--------------------------------------------------" & enter
+                te.Text = te.Text & "Letra      Num. F. Vcto. I.Original I.Pagar  Saldo" & "    " & "Letra      Num. F. Vcto. I.Original I.Pagar  Saldo" & enter
+                te.Text = te.Text & "--------------------------------------------------" & "    " & "--------------------------------------------------" & enter & enter
+                If Me.cbxTipoMoneda.SelectedIndex >= 1 Then
+                    te.Text = te.Text & Me.txtNumLetra.Text & Space(12 - Len(Me.txtNumLetra.Text)) & " " & Me.numCorrelativo & " " & Me.dtpFechaVcmto.Text & " " & Me.importeLetraME & Space(9 - Len(Str(Me.importeLetraME))) & " " & Me.txtMontoME.Text & Space(8 - Len(Me.txtMontoME.Text)) & " " & Me.importeLetraME - Me.totalAmortizacion & Space(8 - Len(Str(Me.importeLetraME - Me.totalAmortizacion))) & "   " & _
+                                        Me.txtNumLetra.Text & " " & Me.numCorrelativo & "  " & Me.dtpFechaVcmto.Text & "  " & Me.importeLetraME & "    " & Me.txtMontoME.Text & "   " & Me.importeLetraME - Me.totalAmortizacion & enter & enter
+                Else
+                    te.Text = te.Text & Me.txtNumLetra.Text & Space(12 - Len(Me.txtNumLetra.Text)) & " " & Me.numCorrelativo & " " & Me.dtpFechaVcmto.Text & " " & Me.importeLetraMN & Space(9 - Len(Str(Me.importeLetraMN))) & " " & Me.txtMonto.Text & Space(8 - Len(Me.txtMonto.Text)) & " " & Me.importeLetraMN - Me.totalAmortizacion & Space(8 - Len(Str(Me.importeLetraMN - Me.totalAmortizacion))) & "   " & _
+                                        Me.txtNumLetra.Text & " " & Me.numCorrelativo & "  " & Me.dtpFechaVcmto.Text & "  " & Me.importeLetraMN & "    " & Me.txtMonto.Text & "   " & Me.importeLetraMN - Me.totalAmortizacion & enter & enter
+                End If
+                te.Text = te.Text & "--------------------------------------------------" & "    " & "--------------------------------------------------" & enter
+            Else
+                te.Text = te.Text & "--------------------------------------------------" & "    " & "--------------------------------------------------" & enter & enter
+
+                If Me.cbxTipoMoneda.SelectedIndex >= 1 Then
+                    te.Text = te.Text & "Total a Pagar............." & arrayMoneda(Me.cbxTipoMoneda.SelectedIndex) & " " & Format(Decimal.Parse(Me.txtMontoME.Text), "##,##0.00") & Space(54 - (Len(arrayMoneda(Me.cbxTipoMoneda.SelectedIndex) & Str(Format(Decimal.Parse(Me.txtMontoME.Text), "##,##0.00"))) + Len("Total a Pagar............."))) & " " & _
+                                        "Total a Pagar............." & arrayMoneda(Me.cbxTipoMoneda.SelectedIndex) & " " & Format(Decimal.Parse(Me.txtMontoME.Text), "##,##0.00") & enter & enter
+                Else
+                    te.Text = te.Text & "Total a Pagar............." & arrayMoneda(Me.cbxTipoMoneda.SelectedIndex) & " " & Format(Decimal.Parse(Me.txtMonto.Text), "##,##0.00") & Space(54 - (Len(arrayMoneda(Me.cbxTipoMoneda.SelectedIndex) & Str(Format(Decimal.Parse(Me.txtMonto.Text), "##,##0.00"))) + Len("Total a Pagar............."))) & " " & _
+                                        "Total a Pagar............." & arrayMoneda(Me.cbxTipoMoneda.SelectedIndex) & " " & Format(Decimal.Parse(Me.txtMonto.Text), "##,##0.00") & enter & enter
+                End If
+                te.Text = te.Text & "--------------------------------------------------" & "    " & "--------------------------------------------------" & enter
+            End If
 
             If Me.cbxTipoMoneda.SelectedIndex >= 1 Then
-                te.Text = te.Text & "Total a Pagar............." & arrayMoneda(Me.cbxTipoMoneda.SelectedIndex) & " " & Format(Decimal.Parse(Me.txtMontoME.Text), "##,##0.00") & Space(54 - (Len(arrayMoneda(Me.cbxTipoMoneda.SelectedIndex) & Str(Format(Decimal.Parse(Me.txtMontoME.Text), "##,##0.00"))) + Len("Total a Pagar............."))) & " " & _
-                                    "Total a Pagar............." & arrayMoneda(Me.cbxTipoMoneda.SelectedIndex) & " " & Format(Decimal.Parse(Me.txtMontoME.Text), "##,##0.00") & enter & enter
+                te.Text = te.Text & "son: " & numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMontoME.Text), "#,###,##0.00"), Len(Format(Decimal.Parse(Me.txtMontoME.Text), "#,###,##0.00")) - 3)) & " " & Space(48 - Len(numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMontoME.Text), "#,###,##0.00"), Len(Format(Decimal.Parse(Me.txtMontoME.Text), "#,###,##0.00")) - 3)))) & _
+                "son: " & numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMontoME.Text), "#,###,##0.00"), Len(Format(Decimal.Parse(Me.txtMontoME.Text), "#,###,##0.00")) - 3)) & enter & _
+                "Y " & obtieneDecimales(Format(Decimal.Parse(Me.txtMontoME.Text), "###,###0.00")) & " /100 " & Me.cbxTipoMoneda.Text & "                                     " & _
+                "Y " & obtieneDecimales(Format(Decimal.Parse(Me.txtMontoME.Text), "###,###0.00")) & " /100 " & Me.cbxTipoMoneda.Text & enter
             Else
-                te.Text = te.Text & "Total a Pagar............." & arrayMoneda(Me.cbxTipoMoneda.SelectedIndex) & " " & Format(Decimal.Parse(Me.txtMonto.Text), "##,##0.00") & Space(54 - (Len(arrayMoneda(Me.cbxTipoMoneda.SelectedIndex) & Str(Format(Decimal.Parse(Me.txtMonto.Text), "##,##0.00"))) + Len("Total a Pagar............."))) & " " & _
-                                    "Total a Pagar............." & arrayMoneda(Me.cbxTipoMoneda.SelectedIndex) & " " & Format(Decimal.Parse(Me.txtMonto.Text), "##,##0.00") & enter & enter
+                te.Text = te.Text & "son: " & numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMonto.Text), "#,###,##0.00"), Len(Format(Decimal.Parse(Me.txtMonto.Text), "#,###,##0.00")) - 3)) & " " & Space(48 - Len(numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMonto.Text), "#,###,##0.00"), Len(Format(Decimal.Parse(Me.txtMonto.Text), "#,###,##0.00")) - 3)))) & _
+                "son: " & numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMonto.Text), "#,###,##0.00"), Len(Format(Decimal.Parse(Me.txtMonto.Text), "#,###,##0.00")) - 3)) & enter & _
+                "Y " & obtieneDecimales(Format(Decimal.Parse(Me.txtMonto.Text), "###,###0.00")) & "/100 SOLES" & "                                        " & _
+                "Y " & obtieneDecimales(Format(Decimal.Parse(Me.txtMonto.Text), "###,###0.00")) & "/100 SOLES" & enter
             End If
-            te.Text = te.Text & "--------------------------------------------------" & "    " & "--------------------------------------------------" & enter
-        End If
 
-        If Me.cbxTipoMoneda.SelectedIndex >= 1 Then
-            te.Text = te.Text & "son: " & numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMontoME.Text), "#,###,##0.00"), Len(Format(Decimal.Parse(Me.txtMontoME.Text), "#,###,##0.00")) - 3)) & " " & Space(48 - Len(numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMontoME.Text), "#,###,##0.00"), Len(Format(Decimal.Parse(Me.txtMontoME.Text), "#,###,##0.00")) - 3)))) & _
-            "son: " & numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMontoME.Text), "#,###,##0.00"), Len(Format(Decimal.Parse(Me.txtMontoME.Text), "#,###,##0.00")) - 3)) & enter & _
-            "Y " & obtieneDecimales(Format(Decimal.Parse(Me.txtMontoME.Text), "###,###0.00")) & " /100 " & Me.cbxTipoMoneda.Text & "                                     " & _
-            "Y " & obtieneDecimales(Format(Decimal.Parse(Me.txtMontoME.Text), "###,###0.00")) & " /100 " & Me.cbxTipoMoneda.Text & enter
-        Else
-            te.Text = te.Text & "son: " & numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMonto.Text), "#,###,##0.00"), Len(Format(Decimal.Parse(Me.txtMonto.Text), "#,###,##0.00")) - 3)) & " " & Space(48 - Len(numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMonto.Text), "#,###,##0.00"), Len(Format(Decimal.Parse(Me.txtMonto.Text), "#,###,##0.00")) - 3)))) & _
-            "son: " & numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMonto.Text), "#,###,##0.00"), Len(Format(Decimal.Parse(Me.txtMonto.Text), "#,###,##0.00")) - 3)) & enter & _
-            "Y " & obtieneDecimales(Format(Decimal.Parse(Me.txtMonto.Text), "###,###0.00")) & "/100 SOLES" & "                                        " & _
-            "Y " & obtieneDecimales(Format(Decimal.Parse(Me.txtMonto.Text), "###,###0.00")) & "/100 SOLES" & enter
-        End If
+            If Me.cbxConcepto.SelectedIndex = 3 Or Me.cbxConcepto.SelectedIndex = 4 Then
+                te.Text = te.Text & enter & "Nota:Proceso generó comprobante pago N°: " & Me.txtNumDocumento & Space(53 - Len("Nota:Proceso generó comprobante pago N°:" & Me.cbxTipoDocVenta.Text & " " & Me.txtNumDocumento)) & "   " & _
+                                            "Nota:Proceso generó comprobante pago N°: " & Me.txtNumDocumento & enter
+            End If
 
-        If Me.cbxConcepto.SelectedIndex = 3 Or Me.cbxConcepto.SelectedIndex = 4 Then
-            te.Text = te.Text & enter & "Nota:Proceso generó comprobante pago N°: " & Me.txtNumDocumento & Space(53 - Len("Nota:Proceso generó comprobante pago N°:" & Me.cbxTipoDocVenta.Text & " " & Me.txtNumDocumento)) & "   " & _
-                                        "Nota:Proceso generó comprobante pago N°: " & Me.txtNumDocumento & enter
-        End If
-
-        te.Text = te.Text & enter & "CARECE DE VALOR SIN EL SELLO DE CAJA." & "                 " & "CARECE DE VALOR SIN EL SELLO DE CAJA."
-        If Me.cbxConcepto.SelectedIndex = 0 Or Me.cbxConcepto.SelectedIndex = 3 Then
-            te.Text = te.Text & enter & "El precio del artículo es el que rige al momento " & "     " & "El precio del artículo es el que rige al momento"
-            te.Text = te.Text & enter & "de entrega del mismo. Las devoluciones por resci-" & "     " & "de entrega del mismo. Las devoluciones por resci-"
-            te.Text = te.Text & enter & "sión de contrato, se hará efectivo después de 48 " & "     " & "sión de contrato, se hará efectivo después de 48"
-            te.Text = te.Text & enter & "horas, previo trámite reglamentario.             " & "     " & "horas, previo trámite reglamentario."
-        End If
+            te.Text = te.Text & enter & "CARECE DE VALOR SIN EL SELLO DE CAJA." & "                 " & "CARECE DE VALOR SIN EL SELLO DE CAJA."
+            If Me.cbxConcepto.SelectedIndex = 0 Or Me.cbxConcepto.SelectedIndex = 3 Then
+                te.Text = te.Text & enter & "El precio del artículo es el que rige al momento " & "     " & "El precio del artículo es el que rige al momento"
+                te.Text = te.Text & enter & "de entrega del mismo. Las devoluciones por resci-" & "     " & "de entrega del mismo. Las devoluciones por resci-"
+                te.Text = te.Text & enter & "sión de contrato, se hará efectivo después de 48 " & "     " & "sión de contrato, se hará efectivo después de 48"
+                te.Text = te.Text & enter & "horas, previo trámite reglamentario.             " & "     " & "horas, previo trámite reglamentario."
+            End If
 
 
-        If MsgBox("Desea hacer una vista previa del documento?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            configurarImpresion()
-            PrintPreviewDialog1.Document = PrintDocument1
-            PrintPreviewDialog1.ShowDialog()
-        End If
+            If MsgBox("Desea hacer una vista previa del documento?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                configurarImpresion()
+                PrintPreviewDialog1.Document = PrintDocument1
+                PrintPreviewDialog1.ShowDialog()
+            End If
 
-        PrintDialog1.Document = PrintDocument1
-        If PrintDialog1.ShowDialog = Windows.Forms.DialogResult.OK Then
-            configurarImpresion()
-            PrintDocument1.Print()
-        End If
-        'Catch ex As Exception
-        '    MessageBox.Show(ex.Message)
-        'Finally
-        '    Connection.Close()
-        'End Try
+            PrintDialog1.Document = PrintDocument1
+            If PrintDialog1.ShowDialog = Windows.Forms.DialogResult.OK Then
+                configurarImpresion()
+                PrintDocument1.Print()
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        Finally
+            Connection.Close()
+        End Try
     End Sub
     Private Sub VistaPrevia(ByVal TipoFuente As String, ByVal TamañoFuente As Byte, ByVal TextoImpresion As String, ByVal e As System.Drawing.Printing.PrintPageEventArgs)
         Dim Fuente As New Font(TipoFuente, TamañoFuente)

@@ -2,7 +2,7 @@ Imports System.Data.SqlClient
 Public Class frmhistoricoRecibosNom
     Private oDataSet As DataSet
     Dim te As New RichTextBox
-    Dim arrayConceptos() As String = {"V.Cash", "A.Letra", "C.Letra", "C.Inicial", "A.Cuota", "O.Pagos", "V.Tarjeta"}
+    Dim arrayConceptos() As String = {"V.Cash", "A.Letra", "C.Letra", "C.Inicial", "A.Cuota", "O.Pagos", "V.Tarjeta", "", "", "", "", "", "", "", "", "", ""}
     Dim arrayMoneda() As String = {"S/.", "$", "€"}
     Private Sub frmconsultaLetrasNom_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.Controls.Add(te)
@@ -16,8 +16,13 @@ Public Class frmhistoricoRecibosNom
             Connection.Open()
             daCliente.Fill(oDataSet, "cliente")
 
+            If oDataSet.Tables(0).Rows.Count = 0 Then
+                Return
+            End If
+
             Dim daCTaCte As SqlDataAdapter = New SqlDataAdapter("SELECT  idRecibo,numLetra,numCorrelativo,impDocumento,impDocumentoME,fecEmision,status,idMoneda,concepto,idCliente" & _
            " FROM recibosClientes where idCliente Like '" & oDataSet.Tables(0).Rows(0).Item(0) & "' and concepto<>''", Connection)
+
             daCTaCte.Fill(oDataSet, "ctaCorriente")
             Connection.Close()
 

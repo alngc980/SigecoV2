@@ -40,7 +40,7 @@ Partial Class frmnumerosDocumentos
         'btnGrabar
         '
         Me.btnGrabar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnGrabar.Image = My.Resources.saveHS
+        Me.btnGrabar.Image = Global.Presentacion.My.Resources.Resources.saveHS
         Me.btnGrabar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnGrabar.Location = New System.Drawing.Point(93, 13)
         Me.btnGrabar.Name = "btnGrabar"
@@ -54,7 +54,7 @@ Partial Class frmnumerosDocumentos
         '
         Me.btnSalir.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnSalir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSalir.Image = My.Resources.FillRightHS
+        Me.btnSalir.Image = Global.Presentacion.My.Resources.Resources.FillRightHS
         Me.btnSalir.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnSalir.Location = New System.Drawing.Point(294, 13)
         Me.btnSalir.Name = "btnSalir"
@@ -74,7 +74,6 @@ Partial Class frmnumerosDocumentos
         Me.dgvTipoCambio.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvTipoCambio.Location = New System.Drawing.Point(12, 10)
         Me.dgvTipoCambio.Name = "dgvTipoCambio"
-        Me.dgvTipoCambio.ReadOnly = True
         Me.dgvTipoCambio.Size = New System.Drawing.Size(516, 291)
         Me.dgvTipoCambio.TabIndex = 9
         '

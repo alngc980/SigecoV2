@@ -20,24 +20,25 @@ Partial Class frmkardexProductoSimple
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmkardexProductoSimple))
-        Me.PrintPreviewDialog1 = New System.Windows.Forms.PrintPreviewDialog
-        Me.dtpFechaLimite = New System.Windows.Forms.DateTimePicker
-        Me.btnProcesar = New System.Windows.Forms.Button
-        Me.lblAvance = New System.Windows.Forms.Label
-        Me.PrintDocument1 = New System.Drawing.Printing.PrintDocument
-        Me.txtProducto = New System.Windows.Forms.TextBox
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox
-        Me.dtpFechaInicio = New System.Windows.Forms.DateTimePicker
-        Me.Label5 = New System.Windows.Forms.Label
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.Label3 = New System.Windows.Forms.Label
-        Me.Label4 = New System.Windows.Forms.Label
-        Me.btnImprimir = New System.Windows.Forms.Button
-        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox
-        Me.PrintDialog1 = New System.Windows.Forms.PrintDialog
-        Me.btnSalir = New System.Windows.Forms.Button
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox
+        Me.PrintPreviewDialog1 = New System.Windows.Forms.PrintPreviewDialog()
+        Me.dtpFechaLimite = New System.Windows.Forms.DateTimePicker()
+        Me.btnProcesar = New System.Windows.Forms.Button()
+        Me.lblAvance = New System.Windows.Forms.Label()
+        Me.PrintDocument1 = New System.Drawing.Printing.PrintDocument()
+        Me.txtProducto = New System.Windows.Forms.TextBox()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.dtpFechaInicio = New System.Windows.Forms.DateTimePicker()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.btnImprimir = New System.Windows.Forms.Button()
+        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.PrintDialog1 = New System.Windows.Forms.PrintDialog()
+        Me.btnSalir = New System.Windows.Forms.Button()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.ckEliminados = New System.Windows.Forms.CheckBox()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -64,7 +65,7 @@ Partial Class frmkardexProductoSimple
         'btnProcesar
         '
         Me.btnProcesar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnProcesar.Image = My.Resources.FormRunHS
+        Me.btnProcesar.Image = Global.Presentacion.My.Resources.Resources.FormRunHS
         Me.btnProcesar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnProcesar.Location = New System.Drawing.Point(10, 19)
         Me.btnProcesar.Name = "btnProcesar"
@@ -91,13 +92,13 @@ Partial Class frmkardexProductoSimple
         Me.txtProducto.Location = New System.Drawing.Point(297, 126)
         Me.txtProducto.Multiline = True
         Me.txtProducto.Name = "txtProducto"
-        Me.txtProducto.ReadOnly = True
         Me.txtProducto.Size = New System.Drawing.Size(85, 21)
         Me.txtProducto.TabIndex = 48
         Me.txtProducto.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'GroupBox3
         '
+        Me.GroupBox3.Controls.Add(Me.ckEliminados)
         Me.GroupBox3.Controls.Add(Me.txtProducto)
         Me.GroupBox3.Controls.Add(Me.dtpFechaLimite)
         Me.GroupBox3.Controls.Add(Me.dtpFechaInicio)
@@ -163,7 +164,7 @@ Partial Class frmkardexProductoSimple
         'btnImprimir
         '
         Me.btnImprimir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnImprimir.Image = My.Resources.PrintHS
+        Me.btnImprimir.Image = Global.Presentacion.My.Resources.Resources.PrintHS
         Me.btnImprimir.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnImprimir.Location = New System.Drawing.Point(151, 19)
         Me.btnImprimir.Name = "btnImprimir"
@@ -197,7 +198,7 @@ Partial Class frmkardexProductoSimple
         '
         Me.btnSalir.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnSalir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSalir.Image = My.Resources.FillRightHS
+        Me.btnSalir.Image = Global.Presentacion.My.Resources.Resources.FillRightHS
         Me.btnSalir.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnSalir.Location = New System.Drawing.Point(290, 19)
         Me.btnSalir.Name = "btnSalir"
@@ -217,6 +218,16 @@ Partial Class frmkardexProductoSimple
         Me.GroupBox1.Size = New System.Drawing.Size(390, 60)
         Me.GroupBox1.TabIndex = 29
         Me.GroupBox1.TabStop = False
+        '
+        'ckEliminados
+        '
+        Me.ckEliminados.AutoSize = True
+        Me.ckEliminados.Location = New System.Drawing.Point(45, 126)
+        Me.ckEliminados.Name = "ckEliminados"
+        Me.ckEliminados.Size = New System.Drawing.Size(95, 17)
+        Me.ckEliminados.TabIndex = 49
+        Me.ckEliminados.Text = "Ver Eliminados"
+        Me.ckEliminados.UseVisualStyleBackColor = True
         '
         'frmkardexProductoSimple
         '
@@ -260,4 +271,5 @@ Partial Class frmkardexProductoSimple
     Friend WithEvents PrintDialog1 As System.Windows.Forms.PrintDialog
     Friend WithEvents btnSalir As System.Windows.Forms.Button
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+    Friend WithEvents ckEliminados As System.Windows.Forms.CheckBox
 End Class

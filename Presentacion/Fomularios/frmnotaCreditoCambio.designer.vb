@@ -19,92 +19,95 @@ Partial Class frmnotaCreditoCambio
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmnotaCreditoCambio))
-        Me.Label14 = New System.Windows.Forms.Label
-        Me.dtmFecha = New System.Windows.Forms.DateTimePicker
-        Me.Label11 = New System.Windows.Forms.Label
-        Me.Label12 = New System.Windows.Forms.Label
-        Me.txtNombre = New System.Windows.Forms.TextBox
-        Me.txtDireccion = New System.Windows.Forms.TextBox
-        Me.btnNuevoCliente = New System.Windows.Forms.Button
-        Me.btnBuscarCliente = New System.Windows.Forms.Button
-        Me.Label23 = New System.Windows.Forms.Label
-        Me.txtDNI = New System.Windows.Forms.TextBox
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.dtpFechaVcmto = New System.Windows.Forms.DateTimePicker
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox
-        Me.subTotal = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.cantidad = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.precioUnitario = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.desProducto = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.codProducto = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.numItem = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.dgvProductos = New System.Windows.Forms.DataGridView
-        Me.btnBuscar = New System.Windows.Forms.Button
-        Me.btnImprimir = New System.Windows.Forms.Button
-        Me.btnProcesar = New System.Windows.Forms.Button
-        Me.btnAnular = New System.Windows.Forms.Button
-        Me.btnSalir = New System.Windows.Forms.Button
-        Me.btnLimpiar = New System.Windows.Forms.Button
-        Me.btnBuscaDocumento = New System.Windows.Forms.Button
-        Me.GroupBox5 = New System.Windows.Forms.GroupBox
-        Me.PrintPreviewDialog1 = New System.Windows.Forms.PrintPreviewDialog
-        Me.cbxTipoVenta = New System.Windows.Forms.ComboBox
-        Me.txtNumGuia = New System.Windows.Forms.TextBox
-        Me.Label19 = New System.Windows.Forms.Label
-        Me.cbxTipoCredito = New System.Windows.Forms.ComboBox
-        Me.Label13 = New System.Windows.Forms.Label
-        Me.cbxTipoMoneda = New System.Windows.Forms.ComboBox
-        Me.Label21 = New System.Windows.Forms.Label
-        Me.cbxCanCuotas = New System.Windows.Forms.ComboBox
-        Me.Label20 = New System.Windows.Forms.Label
-        Me.txtNumRecibo = New System.Windows.Forms.TextBox
-        Me.Label24 = New System.Windows.Forms.Label
-        Me.txtGlosa = New System.Windows.Forms.TextBox
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.Label34 = New System.Windows.Forms.Label
-        Me.txtCodigoVendedor = New System.Windows.Forms.TextBox
-        Me.cbxTipoDocumento = New System.Windows.Forms.ComboBox
-        Me.txtNumDocumento = New System.Windows.Forms.TextBox
-        Me.Label22 = New System.Windows.Forms.Label
-        Me.Label3 = New System.Windows.Forms.Label
-        Me.Label5 = New System.Windows.Forms.Label
-        Me.GroupBox7 = New System.Windows.Forms.GroupBox
-        Me.Label15 = New System.Windows.Forms.Label
-        Me.Label16 = New System.Windows.Forms.Label
-        Me.Label17 = New System.Windows.Forms.Label
-        Me.txtSubTotal = New System.Windows.Forms.TextBox
-        Me.txtInteres = New System.Windows.Forms.TextBox
-        Me.txtTotalPagar = New System.Windows.Forms.TextBox
-        Me.Label8 = New System.Windows.Forms.Label
-        Me.txtIGV = New System.Windows.Forms.TextBox
-        Me.Label26 = New System.Windows.Forms.Label
-        Me.txtTotalPagarME = New System.Windows.Forms.TextBox
-        Me.lbltotalME = New System.Windows.Forms.Label
-        Me.GroupBox4 = New System.Windows.Forms.GroupBox
-        Me.PrintDocument1 = New System.Drawing.Printing.PrintDocument
-        Me.lblRuc = New System.Windows.Forms.Label
-        Me.Label6 = New System.Windows.Forms.Label
-        Me.Label7 = New System.Windows.Forms.Label
-        Me.txtNumNotaCredito = New System.Windows.Forms.TextBox
-        Me.Label4 = New System.Windows.Forms.Label
-        Me.txtSerieDocumento = New System.Windows.Forms.TextBox
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox
-        Me.lblNombre = New System.Windows.Forms.Label
-        Me.lblDireccion = New System.Windows.Forms.Label
-        Me.lblTelefono = New System.Windows.Forms.Label
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox
-        Me.PrintDialog1 = New System.Windows.Forms.PrintDialog
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.dtmFecha = New System.Windows.Forms.DateTimePicker()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.txtNombres = New System.Windows.Forms.TextBox()
+        Me.txtDireccion = New System.Windows.Forms.TextBox()
+        Me.btnNuevoCliente = New System.Windows.Forms.Button()
+        Me.btnBuscarCliente = New System.Windows.Forms.Button()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.txtDNI = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.dtpFechaVcmto = New System.Windows.Forms.DateTimePicker()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.dgvDetalles = New System.Windows.Forms.DataGridView()
+        Me.numItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.codProducto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.desProducto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.precioUnitario = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cantidad = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.subTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.btnBuscar = New System.Windows.Forms.Button()
+        Me.btnImprimir = New System.Windows.Forms.Button()
+        Me.btnProcesar = New System.Windows.Forms.Button()
+        Me.btnAnular = New System.Windows.Forms.Button()
+        Me.btnSalir = New System.Windows.Forms.Button()
+        Me.btnLimpiar = New System.Windows.Forms.Button()
+        Me.btnBuscaDocumento = New System.Windows.Forms.Button()
+        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.PrintPreviewDialog1 = New System.Windows.Forms.PrintPreviewDialog()
+        Me.cbxTipoVenta = New System.Windows.Forms.ComboBox()
+        Me.txtNumGuia = New System.Windows.Forms.TextBox()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.cbxTipoCredito = New System.Windows.Forms.ComboBox()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.cbxTipoMoneda = New System.Windows.Forms.ComboBox()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.cbxCanCuotas = New System.Windows.Forms.ComboBox()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.txtNumRecibo = New System.Windows.Forms.TextBox()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.txtGlosa = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label34 = New System.Windows.Forms.Label()
+        Me.txtCodigoVendedor = New System.Windows.Forms.TextBox()
+        Me.cbxTipoDocumento = New System.Windows.Forms.ComboBox()
+        Me.txtNumDocumentoVenta = New System.Windows.Forms.TextBox()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.GroupBox7 = New System.Windows.Forms.GroupBox()
+        Me.txtMotivoNotaCredito = New System.Windows.Forms.TextBox()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.cbxTipoNotaCredito = New System.Windows.Forms.ComboBox()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.txtTotalDocumentoVenta = New System.Windows.Forms.TextBox()
+        Me.txtInteres = New System.Windows.Forms.TextBox()
+        Me.txtDescuento = New System.Windows.Forms.TextBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.txtIGV = New System.Windows.Forms.TextBox()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.txtTotalNotaCredito = New System.Windows.Forms.TextBox()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.PrintDocument1 = New System.Drawing.Printing.PrintDocument()
+        Me.lblRuc = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.txtNumNotaCredito = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.txtSerieDocumento = New System.Windows.Forms.TextBox()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.lblNombre = New System.Windows.Forms.Label()
+        Me.lblDireccion = New System.Windows.Forms.Label()
+        Me.lblTelefono = New System.Windows.Forms.Label()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.PrintDialog1 = New System.Windows.Forms.PrintDialog()
         Me.GroupBox3.SuspendLayout()
-        CType(Me.dgvProductos, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgvDetalles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox5.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
@@ -115,11 +118,11 @@ Partial Class frmnotaCreditoCambio
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(2, 100)
+        Me.Label14.Location = New System.Drawing.Point(2, 97)
         Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(58, 13)
+        Me.Label14.Size = New System.Drawing.Size(44, 13)
         Me.Label14.TabIndex = 19
-        Me.Label14.Text = "Fec. emis.:"
+        Me.Label14.Text = "F. Emis:"
         '
         'dtmFecha
         '
@@ -147,15 +150,15 @@ Partial Class frmnotaCreditoCambio
         Me.Label12.TabIndex = 17
         Me.Label12.Text = "Dirección:"
         '
-        'txtNombre
+        'txtNombres
         '
-        Me.txtNombre.BackColor = System.Drawing.SystemColors.Window
-        Me.txtNombre.Location = New System.Drawing.Point(56, 15)
-        Me.txtNombre.MaxLength = 80
-        Me.txtNombre.Name = "txtNombre"
-        Me.txtNombre.ReadOnly = True
-        Me.txtNombre.Size = New System.Drawing.Size(300, 20)
-        Me.txtNombre.TabIndex = 12
+        Me.txtNombres.BackColor = System.Drawing.SystemColors.Window
+        Me.txtNombres.Location = New System.Drawing.Point(56, 15)
+        Me.txtNombres.MaxLength = 80
+        Me.txtNombres.Name = "txtNombres"
+        Me.txtNombres.ReadOnly = True
+        Me.txtNombres.Size = New System.Drawing.Size(300, 20)
+        Me.txtNombres.TabIndex = 12
         '
         'txtDireccion
         '
@@ -209,11 +212,11 @@ Partial Class frmnotaCreditoCambio
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(182, 99)
+        Me.Label1.Location = New System.Drawing.Point(174, 97)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(57, 13)
+        Me.Label1.Size = New System.Drawing.Size(68, 13)
         Me.Label1.TabIndex = 21
-        Me.Label1.Text = "Fec. Doc.:"
+        Me.Label1.Text = "Fec. Docum:"
         '
         'dtpFechaVcmto
         '
@@ -232,7 +235,7 @@ Partial Class frmnotaCreditoCambio
         Me.GroupBox3.Controls.Add(Me.btnBuscarCliente)
         Me.GroupBox3.Controls.Add(Me.btnNuevoCliente)
         Me.GroupBox3.Controls.Add(Me.txtDireccion)
-        Me.GroupBox3.Controls.Add(Me.txtNombre)
+        Me.GroupBox3.Controls.Add(Me.txtNombres)
         Me.GroupBox3.Controls.Add(Me.Label12)
         Me.GroupBox3.Controls.Add(Me.Label11)
         Me.GroupBox3.Controls.Add(Me.dtmFecha)
@@ -245,41 +248,68 @@ Partial Class frmnotaCreditoCambio
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Datos Cliente"
         '
-        'subTotal
+        'dgvDetalles
         '
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle1.Format = "N2"
-        DataGridViewCellStyle1.NullValue = Nothing
-        Me.subTotal.DefaultCellStyle = DataGridViewCellStyle1
-        Me.subTotal.Frozen = True
-        Me.subTotal.HeaderText = "Total"
-        Me.subTotal.Name = "subTotal"
-        Me.subTotal.ReadOnly = True
-        Me.subTotal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.subTotal.Width = 120
+        Me.dgvDetalles.AllowUserToAddRows = False
+        Me.dgvDetalles.AllowUserToDeleteRows = False
+        Me.dgvDetalles.AllowUserToResizeColumns = False
+        Me.dgvDetalles.AllowUserToResizeRows = False
+        Me.dgvDetalles.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvDetalles.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle9
+        Me.dgvDetalles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvDetalles.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.numItem, Me.codProducto, Me.desProducto, Me.precioUnitario, Me.cantidad, Me.subTotal})
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDetalles.DefaultCellStyle = DataGridViewCellStyle15
+        Me.dgvDetalles.Location = New System.Drawing.Point(0, 219)
+        Me.dgvDetalles.Name = "dgvDetalles"
+        Me.dgvDetalles.ReadOnly = True
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvDetalles.RowHeadersDefaultCellStyle = DataGridViewCellStyle16
+        Me.dgvDetalles.RowHeadersVisible = False
+        Me.dgvDetalles.Size = New System.Drawing.Size(921, 211)
+        Me.dgvDetalles.TabIndex = 47
         '
-        'cantidad
+        'numItem
         '
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle2.NullValue = Nothing
-        Me.cantidad.DefaultCellStyle = DataGridViewCellStyle2
-        Me.cantidad.Frozen = True
-        Me.cantidad.HeaderText = "Cantidad"
-        Me.cantidad.Name = "cantidad"
-        Me.cantidad.ReadOnly = True
-        Me.cantidad.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle10.NullValue = Nothing
+        Me.numItem.DefaultCellStyle = DataGridViewCellStyle10
+        Me.numItem.Frozen = True
+        Me.numItem.HeaderText = "N° Item"
+        Me.numItem.Name = "numItem"
+        Me.numItem.ReadOnly = True
+        Me.numItem.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.numItem.Width = 50
         '
-        'precioUnitario
+        'codProducto
         '
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle3.Format = "N2"
-        DataGridViewCellStyle3.NullValue = Nothing
-        Me.precioUnitario.DefaultCellStyle = DataGridViewCellStyle3
-        Me.precioUnitario.Frozen = True
-        Me.precioUnitario.HeaderText = "Precio Unitario"
-        Me.precioUnitario.Name = "precioUnitario"
-        Me.precioUnitario.ReadOnly = True
-        Me.precioUnitario.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.codProducto.DefaultCellStyle = DataGridViewCellStyle11
+        Me.codProducto.Frozen = True
+        Me.codProducto.HeaderText = "Cod. Prod."
+        Me.codProducto.Name = "codProducto"
+        Me.codProducto.ReadOnly = True
+        Me.codProducto.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.codProducto.Width = 70
         '
         'desProducto
         '
@@ -288,69 +318,43 @@ Partial Class frmnotaCreditoCambio
         Me.desProducto.Name = "desProducto"
         Me.desProducto.ReadOnly = True
         Me.desProducto.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.desProducto.Width = 200
+        Me.desProducto.Width = 400
         '
-        'codProducto
+        'precioUnitario
         '
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.codProducto.DefaultCellStyle = DataGridViewCellStyle4
-        Me.codProducto.Frozen = True
-        Me.codProducto.HeaderText = "Cod. Prod."
-        Me.codProducto.Name = "codProducto"
-        Me.codProducto.ReadOnly = True
-        Me.codProducto.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.codProducto.Width = 70
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle12.Format = "N2"
+        DataGridViewCellStyle12.NullValue = Nothing
+        Me.precioUnitario.DefaultCellStyle = DataGridViewCellStyle12
+        Me.precioUnitario.Frozen = True
+        Me.precioUnitario.HeaderText = "Precio Unitario"
+        Me.precioUnitario.Name = "precioUnitario"
+        Me.precioUnitario.ReadOnly = True
+        Me.precioUnitario.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
-        'numItem
+        'cantidad
         '
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle5.NullValue = Nothing
-        Me.numItem.DefaultCellStyle = DataGridViewCellStyle5
-        Me.numItem.Frozen = True
-        Me.numItem.HeaderText = "N° Item"
-        Me.numItem.Name = "numItem"
-        Me.numItem.ReadOnly = True
-        Me.numItem.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.numItem.Width = 50
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle13.NullValue = Nothing
+        Me.cantidad.DefaultCellStyle = DataGridViewCellStyle13
+        Me.cantidad.Frozen = True
+        Me.cantidad.HeaderText = "Cantidad"
+        Me.cantidad.Name = "cantidad"
+        Me.cantidad.ReadOnly = True
+        Me.cantidad.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
-        'dgvProductos
+        'subTotal
         '
-        Me.dgvProductos.AllowUserToAddRows = False
-        Me.dgvProductos.AllowUserToDeleteRows = False
-        Me.dgvProductos.AllowUserToResizeColumns = False
-        Me.dgvProductos.AllowUserToResizeRows = False
-        Me.dgvProductos.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvProductos.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle6
-        Me.dgvProductos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvProductos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.numItem, Me.codProducto, Me.desProducto, Me.precioUnitario, Me.cantidad, Me.subTotal})
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvProductos.DefaultCellStyle = DataGridViewCellStyle7
-        Me.dgvProductos.Location = New System.Drawing.Point(0, 222)
-        Me.dgvProductos.Name = "dgvProductos"
-        Me.dgvProductos.ReadOnly = True
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvProductos.RowHeadersDefaultCellStyle = DataGridViewCellStyle8
-        Me.dgvProductos.Size = New System.Drawing.Size(921, 211)
-        Me.dgvProductos.TabIndex = 47
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle14.Format = "N2"
+        DataGridViewCellStyle14.NullValue = Nothing
+        Me.subTotal.DefaultCellStyle = DataGridViewCellStyle14
+        Me.subTotal.Frozen = True
+        Me.subTotal.HeaderText = "Total"
+        Me.subTotal.Name = "subTotal"
+        Me.subTotal.ReadOnly = True
+        Me.subTotal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.subTotal.Width = 120
         '
         'btnBuscar
         '
@@ -472,8 +476,8 @@ Partial Class frmnotaCreditoCambio
         '
         Me.cbxTipoVenta.ForeColor = System.Drawing.SystemColors.WindowText
         Me.cbxTipoVenta.FormattingEnabled = True
-        Me.cbxTipoVenta.Items.AddRange(New Object() {"Contado", "Crédito", "Tarjeta", "Inicial", "Anticipo", "Otros"})
-        Me.cbxTipoVenta.Location = New System.Drawing.Point(66, 17)
+        Me.cbxTipoVenta.Items.AddRange(New Object() {"Venta Contado", "Venta Credito", "Venta Credito", "Cuota Inicial", "Anticipo Cuota Inicial", "Venta Tarjeta", "Venta Tarjeta Oferta", "Venta Tarjeta Remate", "Venta Oferta", "Venta Remate"})
+        Me.cbxTipoVenta.Location = New System.Drawing.Point(66, 15)
         Me.cbxTipoVenta.Name = "cbxTipoVenta"
         Me.cbxTipoVenta.Size = New System.Drawing.Size(64, 21)
         Me.cbxTipoVenta.TabIndex = 7
@@ -492,7 +496,7 @@ Partial Class frmnotaCreditoCambio
         'Label19
         '
         Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(2, 21)
+        Me.Label19.Location = New System.Drawing.Point(2, 18)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(62, 13)
         Me.Label19.TabIndex = 35
@@ -502,7 +506,7 @@ Partial Class frmnotaCreditoCambio
         '
         Me.cbxTipoCredito.FormattingEnabled = True
         Me.cbxTipoCredito.Items.AddRange(New Object() {"Mensual", "Semanal"})
-        Me.cbxTipoCredito.Location = New System.Drawing.Point(66, 55)
+        Me.cbxTipoCredito.Location = New System.Drawing.Point(66, 41)
         Me.cbxTipoCredito.Name = "cbxTipoCredito"
         Me.cbxTipoCredito.Size = New System.Drawing.Size(64, 21)
         Me.cbxTipoCredito.TabIndex = 6
@@ -510,7 +514,7 @@ Partial Class frmnotaCreditoCambio
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(2, 61)
+        Me.Label13.Location = New System.Drawing.Point(2, 46)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(64, 13)
         Me.Label13.TabIndex = 37
@@ -520,7 +524,7 @@ Partial Class frmnotaCreditoCambio
         '
         Me.cbxTipoMoneda.FormattingEnabled = True
         Me.cbxTipoMoneda.Items.AddRange(New Object() {"Soles", "Dolares", "Euros"})
-        Me.cbxTipoMoneda.Location = New System.Drawing.Point(185, 17)
+        Me.cbxTipoMoneda.Location = New System.Drawing.Point(185, 15)
         Me.cbxTipoMoneda.Name = "cbxTipoMoneda"
         Me.cbxTipoMoneda.Size = New System.Drawing.Size(64, 21)
         Me.cbxTipoMoneda.TabIndex = 5
@@ -528,7 +532,7 @@ Partial Class frmnotaCreditoCambio
         'Label21
         '
         Me.Label21.AutoSize = True
-        Me.Label21.Location = New System.Drawing.Point(132, 21)
+        Me.Label21.Location = New System.Drawing.Point(132, 19)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(49, 13)
         Me.Label21.TabIndex = 39
@@ -538,7 +542,7 @@ Partial Class frmnotaCreditoCambio
         '
         Me.cbxCanCuotas.FormattingEnabled = True
         Me.cbxCanCuotas.Items.AddRange(New Object() {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"})
-        Me.cbxCanCuotas.Location = New System.Drawing.Point(185, 55)
+        Me.cbxCanCuotas.Location = New System.Drawing.Point(185, 41)
         Me.cbxCanCuotas.Name = "cbxCanCuotas"
         Me.cbxCanCuotas.Size = New System.Drawing.Size(64, 21)
         Me.cbxCanCuotas.TabIndex = 4
@@ -546,7 +550,7 @@ Partial Class frmnotaCreditoCambio
         'Label20
         '
         Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(130, 61)
+        Me.Label20.Location = New System.Drawing.Point(130, 45)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(55, 13)
         Me.Label20.TabIndex = 41
@@ -555,7 +559,7 @@ Partial Class frmnotaCreditoCambio
         'txtNumRecibo
         '
         Me.txtNumRecibo.BackColor = System.Drawing.SystemColors.Window
-        Me.txtNumRecibo.Location = New System.Drawing.Point(434, 54)
+        Me.txtNumRecibo.Location = New System.Drawing.Point(434, 41)
         Me.txtNumRecibo.MaxLength = 10
         Me.txtNumRecibo.Name = "txtNumRecibo"
         Me.txtNumRecibo.ReadOnly = True
@@ -575,16 +579,16 @@ Partial Class frmnotaCreditoCambio
         'txtGlosa
         '
         Me.txtGlosa.BackColor = System.Drawing.SystemColors.Window
-        Me.txtGlosa.Location = New System.Drawing.Point(64, 93)
+        Me.txtGlosa.Location = New System.Drawing.Point(66, 93)
         Me.txtGlosa.MaxLength = 50
         Me.txtGlosa.Name = "txtGlosa"
-        Me.txtGlosa.Size = New System.Drawing.Size(302, 20)
+        Me.txtGlosa.Size = New System.Drawing.Size(300, 20)
         Me.txtGlosa.TabIndex = 20
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(253, 22)
+        Me.Label2.Location = New System.Drawing.Point(253, 19)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(57, 13)
         Me.Label2.TabIndex = 54
@@ -593,7 +597,7 @@ Partial Class frmnotaCreditoCambio
         'Label34
         '
         Me.Label34.AutoSize = True
-        Me.Label34.Location = New System.Drawing.Point(255, 58)
+        Me.Label34.Location = New System.Drawing.Point(255, 45)
         Me.Label34.Name = "Label34"
         Me.Label34.Size = New System.Drawing.Size(56, 13)
         Me.Label34.TabIndex = 50
@@ -602,7 +606,7 @@ Partial Class frmnotaCreditoCambio
         'txtCodigoVendedor
         '
         Me.txtCodigoVendedor.BackColor = System.Drawing.SystemColors.Window
-        Me.txtCodigoVendedor.Location = New System.Drawing.Point(310, 55)
+        Me.txtCodigoVendedor.Location = New System.Drawing.Point(310, 41)
         Me.txtCodigoVendedor.MaxLength = 10
         Me.txtCodigoVendedor.Name = "txtCodigoVendedor"
         Me.txtCodigoVendedor.ReadOnly = True
@@ -613,25 +617,25 @@ Partial Class frmnotaCreditoCambio
         'cbxTipoDocumento
         '
         Me.cbxTipoDocumento.FormattingEnabled = True
-        Me.cbxTipoDocumento.Items.AddRange(New Object() {"BV", "BE", "FV", "FE"})
-        Me.cbxTipoDocumento.Location = New System.Drawing.Point(310, 17)
+        Me.cbxTipoDocumento.Items.AddRange(New Object() {"BV", "FV"})
+        Me.cbxTipoDocumento.Location = New System.Drawing.Point(310, 15)
         Me.cbxTipoDocumento.Name = "cbxTipoDocumento"
         Me.cbxTipoDocumento.Size = New System.Drawing.Size(56, 21)
         Me.cbxTipoDocumento.TabIndex = 55
         '
-        'txtNumDocumento
+        'txtNumDocumentoVenta
         '
-        Me.txtNumDocumento.Location = New System.Drawing.Point(434, 16)
-        Me.txtNumDocumento.MaxLength = 10
-        Me.txtNumDocumento.Name = "txtNumDocumento"
-        Me.txtNumDocumento.Size = New System.Drawing.Size(65, 20)
-        Me.txtNumDocumento.TabIndex = 56
-        Me.txtNumDocumento.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtNumDocumentoVenta.Location = New System.Drawing.Point(434, 15)
+        Me.txtNumDocumentoVenta.MaxLength = 10
+        Me.txtNumDocumentoVenta.Name = "txtNumDocumentoVenta"
+        Me.txtNumDocumentoVenta.Size = New System.Drawing.Size(65, 20)
+        Me.txtNumDocumentoVenta.TabIndex = 56
+        Me.txtNumDocumentoVenta.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label22
         '
         Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(367, 58)
+        Me.Label22.Location = New System.Drawing.Point(367, 46)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(59, 13)
         Me.Label22.TabIndex = 59
@@ -640,7 +644,7 @@ Partial Class frmnotaCreditoCambio
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(367, 22)
+        Me.Label3.Location = New System.Drawing.Point(367, 19)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(64, 13)
         Me.Label3.TabIndex = 60
@@ -657,10 +661,14 @@ Partial Class frmnotaCreditoCambio
         '
         'GroupBox7
         '
+        Me.GroupBox7.Controls.Add(Me.txtMotivoNotaCredito)
+        Me.GroupBox7.Controls.Add(Me.Label10)
+        Me.GroupBox7.Controls.Add(Me.Label9)
+        Me.GroupBox7.Controls.Add(Me.cbxTipoNotaCredito)
         Me.GroupBox7.Controls.Add(Me.Label5)
         Me.GroupBox7.Controls.Add(Me.Label3)
         Me.GroupBox7.Controls.Add(Me.Label22)
-        Me.GroupBox7.Controls.Add(Me.txtNumDocumento)
+        Me.GroupBox7.Controls.Add(Me.txtNumDocumentoVenta)
         Me.GroupBox7.Controls.Add(Me.cbxTipoDocumento)
         Me.GroupBox7.Controls.Add(Me.txtCodigoVendedor)
         Me.GroupBox7.Controls.Add(Me.Label34)
@@ -685,21 +693,61 @@ Partial Class frmnotaCreditoCambio
         Me.GroupBox7.TabStop = False
         Me.GroupBox7.Text = "Datos Venta"
         '
+        'txtMotivoNotaCredito
+        '
+        Me.txtMotivoNotaCredito.BackColor = System.Drawing.SystemColors.Window
+        Me.txtMotivoNotaCredito.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
+        Me.txtMotivoNotaCredito.Location = New System.Drawing.Point(185, 67)
+        Me.txtMotivoNotaCredito.MaxLength = 120
+        Me.txtMotivoNotaCredito.Multiline = True
+        Me.txtMotivoNotaCredito.Name = "txtMotivoNotaCredito"
+        Me.txtMotivoNotaCredito.ReadOnly = True
+        Me.txtMotivoNotaCredito.Size = New System.Drawing.Size(314, 21)
+        Me.txtMotivoNotaCredito.TabIndex = 65
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(130, 72)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(60, 13)
+        Me.Label10.TabIndex = 64
+        Me.Label10.Text = "Motivo NC:"
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(6, 72)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(49, 13)
+        Me.Label9.TabIndex = 63
+        Me.Label9.Text = "Tipo NC:"
+        '
+        'cbxTipoNotaCredito
+        '
+        Me.cbxTipoNotaCredito.FormattingEnabled = True
+        Me.cbxTipoNotaCredito.Items.AddRange(New Object() {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"})
+        Me.cbxTipoNotaCredito.Location = New System.Drawing.Point(66, 67)
+        Me.cbxTipoNotaCredito.Name = "cbxTipoNotaCredito"
+        Me.cbxTipoNotaCredito.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.cbxTipoNotaCredito.Size = New System.Drawing.Size(64, 21)
+        Me.cbxTipoNotaCredito.TabIndex = 62
+        '
         'Label15
         '
         Me.Label15.AutoSize = True
         Me.Label15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.Location = New System.Drawing.Point(4, 16)
+        Me.Label15.Location = New System.Drawing.Point(4, 12)
         Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(56, 13)
+        Me.Label15.Size = New System.Drawing.Size(123, 13)
         Me.Label15.TabIndex = 30
-        Me.Label15.Text = "Sub Total:"
+        Me.Label15.Text = "Total Documento Venta:"
         '
         'Label16
         '
         Me.Label16.AutoSize = True
         Me.Label16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label16.Location = New System.Drawing.Point(4, 60)
+        Me.Label16.Location = New System.Drawing.Point(4, 58)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(28, 13)
         Me.Label16.TabIndex = 31
@@ -708,48 +756,48 @@ Partial Class frmnotaCreditoCambio
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label17.Location = New System.Drawing.Point(4, 83)
+        Me.Label17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label17.Location = New System.Drawing.Point(4, 82)
         Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(112, 13)
+        Me.Label17.Size = New System.Drawing.Size(62, 13)
         Me.Label17.TabIndex = 33
-        Me.Label17.Text = "Total Pagar Soles:"
+        Me.Label17.Text = "Descuento:"
         '
-        'txtSubTotal
+        'txtTotalDocumentoVenta
         '
-        Me.txtSubTotal.BackColor = System.Drawing.SystemColors.Window
-        Me.txtSubTotal.Location = New System.Drawing.Point(160, 7)
-        Me.txtSubTotal.Name = "txtSubTotal"
-        Me.txtSubTotal.ReadOnly = True
-        Me.txtSubTotal.Size = New System.Drawing.Size(105, 20)
-        Me.txtSubTotal.TabIndex = 16
-        Me.txtSubTotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtTotalDocumentoVenta.BackColor = System.Drawing.SystemColors.Window
+        Me.txtTotalDocumentoVenta.Location = New System.Drawing.Point(160, 8)
+        Me.txtTotalDocumentoVenta.Name = "txtTotalDocumentoVenta"
+        Me.txtTotalDocumentoVenta.ReadOnly = True
+        Me.txtTotalDocumentoVenta.Size = New System.Drawing.Size(105, 20)
+        Me.txtTotalDocumentoVenta.TabIndex = 16
+        Me.txtTotalDocumentoVenta.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'txtInteres
         '
         Me.txtInteres.BackColor = System.Drawing.SystemColors.Window
-        Me.txtInteres.Location = New System.Drawing.Point(160, 30)
+        Me.txtInteres.Location = New System.Drawing.Point(160, 31)
         Me.txtInteres.Name = "txtInteres"
         Me.txtInteres.ReadOnly = True
         Me.txtInteres.Size = New System.Drawing.Size(105, 20)
         Me.txtInteres.TabIndex = 17
         Me.txtInteres.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txtTotalPagar
+        'txtDescuento
         '
-        Me.txtTotalPagar.BackColor = System.Drawing.SystemColors.Window
-        Me.txtTotalPagar.Location = New System.Drawing.Point(160, 75)
-        Me.txtTotalPagar.Name = "txtTotalPagar"
-        Me.txtTotalPagar.ReadOnly = True
-        Me.txtTotalPagar.Size = New System.Drawing.Size(105, 20)
-        Me.txtTotalPagar.TabIndex = 19
-        Me.txtTotalPagar.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtDescuento.BackColor = System.Drawing.SystemColors.Window
+        Me.txtDescuento.Location = New System.Drawing.Point(160, 77)
+        Me.txtDescuento.Name = "txtDescuento"
+        Me.txtDescuento.ReadOnly = True
+        Me.txtDescuento.Size = New System.Drawing.Size(105, 20)
+        Me.txtDescuento.TabIndex = 19
+        Me.txtDescuento.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label8
         '
         Me.Label8.AutoSize = True
         Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(4, 38)
+        Me.Label8.Location = New System.Drawing.Point(4, 34)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(42, 13)
         Me.Label8.TabIndex = 13
@@ -758,7 +806,7 @@ Partial Class frmnotaCreditoCambio
         'txtIGV
         '
         Me.txtIGV.BackColor = System.Drawing.SystemColors.Window
-        Me.txtIGV.Location = New System.Drawing.Point(160, 52)
+        Me.txtIGV.Location = New System.Drawing.Point(160, 54)
         Me.txtIGV.Name = "txtIGV"
         Me.txtIGV.ReadOnly = True
         Me.txtIGV.Size = New System.Drawing.Size(105, 20)
@@ -769,41 +817,31 @@ Partial Class frmnotaCreditoCambio
         '
         Me.Label26.AutoSize = True
         Me.Label26.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label26.Location = New System.Drawing.Point(4, 105)
+        Me.Label26.Location = New System.Drawing.Point(4, 104)
         Me.Label26.Name = "Label26"
-        Me.Label26.Size = New System.Drawing.Size(73, 13)
+        Me.Label26.Size = New System.Drawing.Size(115, 13)
         Me.Label26.TabIndex = 15
-        Me.Label26.Text = "Total Pagar"
+        Me.Label26.Text = "Total Nota Crédito:"
         '
-        'txtTotalPagarME
+        'txtTotalNotaCredito
         '
-        Me.txtTotalPagarME.BackColor = System.Drawing.SystemColors.Window
-        Me.txtTotalPagarME.Location = New System.Drawing.Point(160, 98)
-        Me.txtTotalPagarME.Name = "txtTotalPagarME"
-        Me.txtTotalPagarME.ReadOnly = True
-        Me.txtTotalPagarME.Size = New System.Drawing.Size(105, 20)
-        Me.txtTotalPagarME.TabIndex = 20
-        Me.txtTotalPagarME.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'lbltotalME
-        '
-        Me.lbltotalME.AutoSize = True
-        Me.lbltotalME.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbltotalME.Location = New System.Drawing.Point(80, 105)
-        Me.lbltotalME.Name = "lbltotalME"
-        Me.lbltotalME.Size = New System.Drawing.Size(0, 13)
-        Me.lbltotalME.TabIndex = 17
+        Me.txtTotalNotaCredito.BackColor = System.Drawing.SystemColors.Window
+        Me.txtTotalNotaCredito.Location = New System.Drawing.Point(160, 100)
+        Me.txtTotalNotaCredito.Name = "txtTotalNotaCredito"
+        Me.txtTotalNotaCredito.ReadOnly = True
+        Me.txtTotalNotaCredito.Size = New System.Drawing.Size(105, 20)
+        Me.txtTotalNotaCredito.TabIndex = 20
+        Me.txtTotalNotaCredito.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'GroupBox4
         '
-        Me.GroupBox4.Controls.Add(Me.lbltotalME)
-        Me.GroupBox4.Controls.Add(Me.txtTotalPagarME)
+        Me.GroupBox4.Controls.Add(Me.txtTotalNotaCredito)
         Me.GroupBox4.Controls.Add(Me.Label26)
         Me.GroupBox4.Controls.Add(Me.txtIGV)
         Me.GroupBox4.Controls.Add(Me.Label8)
-        Me.GroupBox4.Controls.Add(Me.txtTotalPagar)
+        Me.GroupBox4.Controls.Add(Me.txtDescuento)
         Me.GroupBox4.Controls.Add(Me.txtInteres)
-        Me.GroupBox4.Controls.Add(Me.txtSubTotal)
+        Me.GroupBox4.Controls.Add(Me.txtTotalDocumentoVenta)
         Me.GroupBox4.Controls.Add(Me.Label17)
         Me.GroupBox4.Controls.Add(Me.Label16)
         Me.GroupBox4.Controls.Add(Me.Label15)
@@ -829,7 +867,7 @@ Partial Class frmnotaCreditoCambio
         '
         Me.Label6.AutoSize = True
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(238, 66)
+        Me.Label6.Location = New System.Drawing.Point(255, 67)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(43, 16)
         Me.Label6.TabIndex = 3
@@ -839,7 +877,7 @@ Partial Class frmnotaCreditoCambio
         '
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(367, 66)
+        Me.Label7.Location = New System.Drawing.Point(367, 67)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(59, 16)
         Me.Label7.TabIndex = 4
@@ -860,19 +898,19 @@ Partial Class frmnotaCreditoCambio
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(22, 31)
+        Me.Label4.Location = New System.Drawing.Point(38, 31)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(448, 25)
+        Me.Label4.Size = New System.Drawing.Size(430, 25)
         Me.Label4.TabIndex = 6
-        Me.Label4.Text = "NOTA CREDITO CAMBIO DE PRODUCTO"
+        Me.Label4.Text = "NOTA CREDITO - PARA MOVIMIENTOS"
         '
         'txtSerieDocumento
         '
         Me.txtSerieDocumento.BackColor = System.Drawing.SystemColors.Window
-        Me.txtSerieDocumento.Location = New System.Drawing.Point(287, 65)
+        Me.txtSerieDocumento.Location = New System.Drawing.Point(310, 65)
         Me.txtSerieDocumento.MaxLength = 2
         Me.txtSerieDocumento.Name = "txtSerieDocumento"
-        Me.txtSerieDocumento.Size = New System.Drawing.Size(48, 20)
+        Me.txtSerieDocumento.Size = New System.Drawing.Size(56, 20)
         Me.txtSerieDocumento.TabIndex = 14
         Me.txtSerieDocumento.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
@@ -944,16 +982,16 @@ Partial Class frmnotaCreditoCambio
         Me.Controls.Add(Me.GroupBox4)
         Me.Controls.Add(Me.GroupBox7)
         Me.Controls.Add(Me.GroupBox5)
-        Me.Controls.Add(Me.dgvProductos)
+        Me.Controls.Add(Me.dgvDetalles)
         Me.Controls.Add(Me.GroupBox3)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
         Me.MaximizeBox = False
         Me.Name = "frmnotaCreditoCambio"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Módulo Nota Crédito Cambio x Mismo Producto"
+        Me.Text = "Módulo Nota Crédito Movimientos"
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
-        CType(Me.dgvProductos, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvDetalles, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox5.ResumeLayout(False)
         Me.GroupBox7.ResumeLayout(False)
         Me.GroupBox7.PerformLayout()
@@ -970,7 +1008,7 @@ Partial Class frmnotaCreditoCambio
     Friend WithEvents dtmFecha As System.Windows.Forms.DateTimePicker
     Friend WithEvents Label11 As System.Windows.Forms.Label
     Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents txtNombre As System.Windows.Forms.TextBox
+    Friend WithEvents txtNombres As System.Windows.Forms.TextBox
     Friend WithEvents txtDireccion As System.Windows.Forms.TextBox
     Friend WithEvents btnNuevoCliente As System.Windows.Forms.Button
     Friend WithEvents btnBuscarCliente As System.Windows.Forms.Button
@@ -979,13 +1017,7 @@ Partial Class frmnotaCreditoCambio
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents dtpFechaVcmto As System.Windows.Forms.DateTimePicker
     Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
-    Friend WithEvents subTotal As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cantidad As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents precioUnitario As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents desProducto As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents codProducto As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents numItem As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents dgvProductos As System.Windows.Forms.DataGridView
+    Friend WithEvents dgvDetalles As System.Windows.Forms.DataGridView
     Friend WithEvents btnBuscar As System.Windows.Forms.Button
     Friend WithEvents btnImprimir As System.Windows.Forms.Button
     Friend WithEvents btnProcesar As System.Windows.Forms.Button
@@ -1011,7 +1043,7 @@ Partial Class frmnotaCreditoCambio
     Friend WithEvents Label34 As System.Windows.Forms.Label
     Friend WithEvents txtCodigoVendedor As System.Windows.Forms.TextBox
     Friend WithEvents cbxTipoDocumento As System.Windows.Forms.ComboBox
-    Friend WithEvents txtNumDocumento As System.Windows.Forms.TextBox
+    Friend WithEvents txtNumDocumentoVenta As System.Windows.Forms.TextBox
     Friend WithEvents Label22 As System.Windows.Forms.Label
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents Label5 As System.Windows.Forms.Label
@@ -1019,14 +1051,13 @@ Partial Class frmnotaCreditoCambio
     Friend WithEvents Label15 As System.Windows.Forms.Label
     Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents Label17 As System.Windows.Forms.Label
-    Friend WithEvents txtSubTotal As System.Windows.Forms.TextBox
+    Friend WithEvents txtTotalDocumentoVenta As System.Windows.Forms.TextBox
     Friend WithEvents txtInteres As System.Windows.Forms.TextBox
-    Friend WithEvents txtTotalPagar As System.Windows.Forms.TextBox
+    Friend WithEvents txtDescuento As System.Windows.Forms.TextBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents txtIGV As System.Windows.Forms.TextBox
     Friend WithEvents Label26 As System.Windows.Forms.Label
-    Friend WithEvents txtTotalPagarME As System.Windows.Forms.TextBox
-    Friend WithEvents lbltotalME As System.Windows.Forms.Label
+    Friend WithEvents txtTotalNotaCredito As System.Windows.Forms.TextBox
     Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
     Friend WithEvents PrintDocument1 As System.Drawing.Printing.PrintDocument
     Friend WithEvents lblRuc As System.Windows.Forms.Label
@@ -1041,4 +1072,14 @@ Partial Class frmnotaCreditoCambio
     Friend WithEvents lblTelefono As System.Windows.Forms.Label
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents PrintDialog1 As System.Windows.Forms.PrintDialog
+    Friend WithEvents txtMotivoNotaCredito As System.Windows.Forms.TextBox
+    Friend WithEvents Label10 As System.Windows.Forms.Label
+    Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents cbxTipoNotaCredito As System.Windows.Forms.ComboBox
+    Friend WithEvents numItem As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents codProducto As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents desProducto As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents precioUnitario As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents cantidad As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents subTotal As System.Windows.Forms.DataGridViewTextBoxColumn
 End Class

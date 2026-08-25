@@ -201,7 +201,9 @@ Public Class frmnotaCreditoInicial
 
                 If transaccionLetras(listaSqlStrings) Then
                     MsgBox("'Nota Crédito' ha sido procesado correctamente  !  !  !", MsgBoxStyle.Information)
-                    'Me.generarDocumentoPlano()
+                    If bitProduccion Then
+                        Me.generarDocumentoPlano()
+                    End If
 
                     Try
                         Dim ms1 As New System.IO.MemoryStream
@@ -229,7 +231,7 @@ Public Class frmnotaCreditoInicial
                                                Dt.Rows(0)(10).ToString(), Dt.Rows(0)(11).ToString(),
                                                Dt.Rows(0)(12).ToString(), Dt.Rows(0)(13).ToString(),
                                                Dt.Rows(0)(14).ToString(), Dt.Rows(0)(15).ToString(),
-                                               Dt.Rows(0)(16).ToString())
+                                               Dt.Rows(0)(16).ToString(), Dt.Rows(0)(17).ToString(), Dt.Rows(0)(18).ToString())
                                 Next
                             End If
 

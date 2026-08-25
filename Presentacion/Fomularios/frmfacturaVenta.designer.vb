@@ -834,6 +834,7 @@ Partial Class frmfacturaVenta
         Me.txtTotalRecibos.Location = New System.Drawing.Point(435, 70)
         Me.txtTotalRecibos.MaxLength = 10
         Me.txtTotalRecibos.Name = "txtTotalRecibos"
+        Me.txtTotalRecibos.ReadOnly = True
         Me.txtTotalRecibos.Size = New System.Drawing.Size(65, 20)
         Me.txtTotalRecibos.TabIndex = 58
         Me.txtTotalRecibos.Text = "0"
@@ -850,6 +851,7 @@ Partial Class frmfacturaVenta
         '
         'cbxGarantia
         '
+        Me.cbxGarantia.Enabled = False
         Me.cbxGarantia.FormattingEnabled = True
         Me.cbxGarantia.Items.AddRange(New Object() {"3", "6", "9", "12"})
         Me.cbxGarantia.Location = New System.Drawing.Point(307, 42)

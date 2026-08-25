@@ -4,7 +4,10 @@ Public Class frminiciarSaldos
     Private txtIdGrupo As Integer
     Private Sub btnProducto_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnProducto.Click
         arrayDatos(0) = ""
+        iniciarSaldos = True
         frmbuscaProducto.ShowDialog()
+        iniciarSaldos = False
+
         If arrayDatos(0) <> "" Then
             Me.txtCodigoProducto.Text = arrayDatos(0)
             Me.txtIdGrupo = arrayDatos(1)
@@ -18,85 +21,81 @@ Public Class frminiciarSaldos
         End If
     End Sub
     Private Sub btnGrabar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnGrabar.Click
-        Dim SqlString As String
-        Dim ofrmnumerosSerie As New frmnumerosSerie()
+        Dim sqlString As String = ""
+        Dim listaSqlString As New ArrayList
+        Dim ofrmnumerosSerie As New frmingresarSeries()
         Dim fechaCierre As String
 
-        fechaCierre = devuelveFecha("SELECT * FROM cierreDiario")
+        fechaCierre = devuelveFecha("select * from cierreDiario")
+
+        If txtCodigoProducto.Text = "" Then
+            MsgBox("Por favor, tiene que indicar el producto a iniciar  ! ! !", MsgBoxStyle.Information)
+            Exit Sub
+        End If
+
+        'If CInt(Trim(txtStockInicial.Text)) <= 0 Then
+        '    MsgBox("Por favor, no puede iniciar producto en cero  ! ! !", MsgBoxStyle.Critical)
+        '    Exit Sub
+        'End If
 
         Try
-            If (Me.txtCodigoProducto.Text <> "" And Me.txtDescripcion.Text <> "" And Me.txtStockInicial.Text <> "") Then
+            sqlString = "UPDATE productos set stoInicial=1 where idProducto= " & CInt(txtCodigoProducto.Text) & ""
+            listaSqlString.Add(sqlString)
 
-                If Me.buscarCodigo(Trim(Me.txtCodigoProducto.Text)) >= 1 Then
-                    MsgBox("Producto ya fue inicializado.", MsgBoxStyle.Exclamation)
-                    Me.limpiar()
-                    Exit Sub
-                End If
+            sqlString = "INSERT INTO saldosAlmacenes (idProducto,stock,fechaSaldo) VALUES (" & Me.txtCodigoProducto.Text & " ,'" & _
+                        Me.txtStockInicial.Text + "' ,'" & CDate(fechaCierre) & "' )"
+            listaSqlString.Add(sqlString)
 
-                SqlString = "INSERT INTO saldosAlmacenes (idProducto,stock,fechaSaldo) VALUES (" & Me.txtCodigoProducto.Text & " ,'" & _
-                            Me.txtStockInicial.Text + "' ,'" & CDate(fechaCierre) & "' )"
+            'If MsgBox("Crear números de serie de este producto?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+            '    flagString = "IS"
+            '    codigoProducto = Me.txtCodigoProducto.Text
+            '    codigoGrupo = txtIdGrupo
+            '    canNumSeries = Me.txtStockInicial.Text
+            '    ofrmnumerosSerie.ShowDialog()
+            '    flagString = ""
+            '    codigoProducto = 0
+            '    codigoGrupo = 0
+            '    canNumSeries = 0
+            'End If
 
-                If MsgBox("Crear números de serie de este producto?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-                    flagString = "IS"
-                    codigoProducto = Me.txtCodigoProducto.Text
-                    codigoGrupo = txtIdGrupo
-                    canNumSeries = Me.txtStockInicial.Text
-                    ofrmnumerosSerie.ShowDialog()
-                    flagString = ""
-                    codigoProducto = 0
-                    codigoGrupo = 0
-                    canNumSeries = 0
-                End If
-
-                If flag = 1 Then
-                    If grabarSqlString(SqlString) Then
-                        MsgBox("Información guardada correctamente.", MsgBoxStyle.Information)
-                        actualizaNumItem()
-                        Me.limpiar()
-                    Else
-                        MsgBox("La Información no se guardó.", MsgBoxStyle.Information)
-                    End If
-                End If
-
+            'If flag = 1 Then
+            If transaccionProducto(listaSqlString) Then
+                MsgBox("Saldo producto iniciado correctamente  !  !  !", MsgBoxStyle.Information)
+                actualizaNumItem()
+                Me.limpiar()
             Else
-                MsgBox("Faltan Datos del Producto.", MsgBoxStyle.Critical)
+                MsgBox("Error, saldo producto no fue iniciado  !  !  !", MsgBoxStyle.Critical)
             End If
+            'End If
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
     End Sub
+    Private Sub txtStockInicial_Leave(sender As Object, e As System.EventArgs) Handles txtStockInicial.Leave
+        If String.IsNullOrEmpty(CStr(txtStockInicial.Text)) Then
+            txtStockInicial.Text = 0
+        End If
+    End Sub
     Private Sub txtStockInicial_KeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtStockInicial.KeyPress
         Dim letra As Short = CShort(Asc(e.KeyChar))
-        letra = CShort(Validar_Numeros(letra))
+        letra = CShort(Validar_SoloNumeros(letra))
         If letra = 0 Then
             e.Handled = True
         End If
     End Sub
     Private Sub txtStockMinimo_KeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtStockMinimo.KeyPress
         Dim letra As Short = CShort(Asc(e.KeyChar))
-        letra = CShort(Validar_Numeros(letra))
+        letra = CShort(Validar_SoloNumeros(letra))
         If letra = 0 Then
             e.Handled = True
         End If
     End Sub
-    Private Function buscarCodigo(ByVal codigo As String) As Byte
-        Dim daProductos As SqlDataAdapter = New SqlDataAdapter("SELECT * FROM saldosAlmacenes where idProducto Like '" & codigo & "'", Connection)
-        oDataSet = New DataSet()
-        Try
-            Connection.Open()
-            daProductos.Fill(oDataSet, "productos")
-            Connection.Close()
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        End Try
-        Return Me.oDataSet.Tables(0).Rows.Count()
-    End Function
     Private Sub limpiar()
         Me.txtCodigoProducto.Text = ""
         Me.txtDescripcion.Text = ""
         Me.txtMarca.Text = ""
         Me.txtModelo.Text = ""
-        Me.txtStockInicial.Text = ""
+        Me.txtStockInicial.Text = "0"
         'Me.txtStockMinimo.Text = ""
         Me.btnProducto.Focus()
     End Sub

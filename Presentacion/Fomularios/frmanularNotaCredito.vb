@@ -79,7 +79,7 @@ Public Class frmanularNotaCredito
             oDataSet = New DataSet()
             Connection.Open()
             Dim daNotaCreditoCa As SqlDataAdapter = New SqlDataAdapter("SELECT  *from notaCreditoCa where tipDocumento='" & Me.cbxTipoDocumento.Text & _
-            "' and numDocumento='" & Me.txtNumNotaCredito.Text & "' and status<>'A' ", Connection)
+            "' and numDocumento='" & Me.txtNumNotaCredito.Text & "' and status<>'A' and left(docReferencia,2) in ('BV','FV','FE','BE') ", Connection)
             daNotaCreditoCa.Fill(oDataSet, "notaCreditoCa")
 
             If Me.oDataSet.Tables(0).Rows.Count() <= 0 Then
@@ -95,8 +95,8 @@ Public Class frmanularNotaCredito
             "' and numDocumento='" & Me.txtNumNotaCredito.Text & "'", Connection)
             daGlosasFacturas.Fill(oDataSet, "glosasFacturas")
 
-            Dim daNotaCreditoDe As SqlDataAdapter = New SqlDataAdapter("SELECT  *from notaCreditoDe where tipDocumento='" & Me.cbxTipoDocumento.Text & _
-           "' and numDocumento='" & Me.txtNumNotaCredito.Text & "'", Connection)
+            Dim daNotaCreditoDe As SqlDataAdapter = New SqlDataAdapter("SELECT * from notaCreditoDe where tipDocumento='" & Me.cbxTipoDocumento.Text & _
+           "' and numDocumento='" & Me.txtNumNotaCredito.Text & "' and left(serDocumento,2) in ('BV','FV','FE','BE','FN','BN','01')", Connection)
             daNotaCreditoDe.Fill(oDataSet, "notaCreditoDe")
 
             For i As Integer = 0 To oDataSet.Tables(3).Rows.Count() - 1
@@ -108,7 +108,7 @@ Public Class frmanularNotaCredito
                 Dim daVtaCabecera As SqlDataAdapter = New SqlDataAdapter("SELECT  *from vtaCabecera where statusNC='NC" & Me.txtNumNotaCredito.Text & "'", Connection)
                 daVtaCabecera.Fill(oDataSet, "vtaCabecera")
 
-                Dim daLetrasClientes As SqlDataAdapter = New SqlDataAdapter("SELECT  *from letrasClientes where numLetra='" & Me.oDataSet.Tables(5).Rows(0).Item(5).ToString & "' and statusNC<>''", Connection)
+                Dim daLetrasClientes As SqlDataAdapter = New SqlDataAdapter("SELECT  *from letrasClientes where numLetra='" & Me.oDataSet.Tables("vtaCabecera").Rows(0).Item(5).ToString & "' and statusNC<>''", Connection)
                 daLetrasClientes.Fill(oDataSet, "letrasClientes")
             End If
             Connection.Close()
@@ -174,9 +174,9 @@ Public Class frmanularNotaCredito
             numGuia = Me.oDataSet.Tables(0).Rows(0).Item(3).ToString
             numRecibo = "NC" & Trim(Me.txtNumNotaCredito.Text)
             If Me.oDataSet.Tables(0).Rows(0).Item(4) <> 3 And Me.oDataSet.Tables(0).Rows(0).Item(4) <> 4 Then
-                numLetra = Me.oDataSet.Tables(5).Rows(0).Item(5).ToString
-                numGuiaOriginal = Me.oDataSet.Tables(5).Rows(0).Item(3).ToString
-                If Me.oDataSet.Tables(6).Rows.Count >= 1 Then numReciboAdelanto = VisualBasic.Mid(Me.oDataSet.Tables(6).Rows(0).Item(13).ToString, 2, Me.oDataSet.Tables(6).Rows(0).Item(13).ToString.Length - 1)
+                numLetra = Me.oDataSet.Tables("vtaCabecera").Rows(0).Item(5).ToString
+                numGuiaOriginal = Me.oDataSet.Tables("vtaCabecera").Rows(0).Item(3).ToString
+                If Me.oDataSet.Tables("letrasClientes").Rows.Count >= 1 Then numReciboAdelanto = VisualBasic.Mid(Me.oDataSet.Tables("letrasClientes").Rows(0).Item(13).ToString, 2, Me.oDataSet.Tables("letrasClientes").Rows(0).Item(13).ToString.Length - 1)
             End If
 
             Me.txtSubTotal.Text = Format(sumaSubTotales, "###,##0.00")
@@ -265,42 +265,43 @@ Public Class frmanularNotaCredito
             End If
 
             Dim imagePath As String = Application.StartupPath + "\QR\" & Serie & "-" & Correl & ".jpg"
-
+            Dim byt() As Byte
             ' Verifica si el archivo de imagen existe antes de intentar cargarlo
             If System.IO.File.Exists(imagePath) Then
                 PictureBox1.Image = Image.FromFile(imagePath)
                 PictureBox1.Image.Save(ms1, PictureBox1.Image.RawFormat)
-                Dim byt() As Byte = ms1.ToArray
-
-                Dim ds As New DataSet1
-                Dim Dt As New DataTable
-
-
-                Dt = RetornaDataTable("rpt_Comprobante 'NC','" & Serie & "','" & Correl & "'")
-                If Dt.Rows.Count > 0 Then
-                    For i = 0 To Dt.Rows.Count - 1
-                        ds.DataTable1.Rows.Add(byt,
-                                   Dt.Rows(0)(0).ToString(), Dt.Rows(0)(1).ToString(),
-                                   Dt.Rows(0)(2).ToString(), Dt.Rows(0)(3).ToString(),
-                                   Dt.Rows(0)(4).ToString(), Dt.Rows(0)(5).ToString(),
-                                   Dt.Rows(0)(6).ToString(), Dt.Rows(0)(7).ToString(),
-                                   Dt.Rows(0)(8).ToString(), Dt.Rows(0)(9).ToString(),
-                                   Dt.Rows(0)(10).ToString(), Dt.Rows(0)(11).ToString(),
-                                   Dt.Rows(0)(12).ToString(), Dt.Rows(0)(13).ToString(),
-                                   Dt.Rows(0)(14).ToString(), Dt.Rows(0)(15).ToString(),
-                                   Dt.Rows(0)(16).ToString())
-                    Next
-                End If
-
-                Dim rpt As New rptNotaCred
-                rpt.SetDataSource(ds.Tables("DataTable1"))
-
-                Dim frm As New frmReporte
-                frm.CrystalReportViewer1.ReportSource = rpt
-                frm.ShowDialog()
+                byt = ms1.ToArray
             Else
+                byt = ms1.ToArray
                 MessageBox.Show("No se encontró el archivo de imagen: " & imagePath)
             End If
+
+            Dim ds As New DataSet1
+            Dim Dt As New DataTable
+
+
+            Dt = RetornaDataTable("rpt_Comprobante 'NC','" & Serie & "','" & Correl & "'")
+            If Dt.Rows.Count > 0 Then
+                For i = 0 To Dt.Rows.Count - 1
+                    ds.DataTable1.Rows.Add(byt,
+                               Dt.Rows(0)(0).ToString(), Dt.Rows(0)(1).ToString(),
+                               Dt.Rows(0)(2).ToString(), Dt.Rows(0)(3).ToString(),
+                               Dt.Rows(0)(4).ToString(), Dt.Rows(0)(5).ToString(),
+                               Dt.Rows(0)(6).ToString(), Dt.Rows(0)(7).ToString(),
+                               Dt.Rows(0)(8).ToString(), Dt.Rows(0)(9).ToString(),
+                               Dt.Rows(0)(10).ToString(), Dt.Rows(0)(11).ToString(),
+                               Dt.Rows(0)(12).ToString(), Dt.Rows(0)(13).ToString(),
+                               Dt.Rows(0)(14).ToString(), Dt.Rows(0)(15).ToString(),
+                               Dt.Rows(0)(16).ToString(), Dt.Rows(0)(17).ToString(), Dt.Rows(0)(18).ToString())
+                Next
+            End If
+
+            Dim rpt As New rptNotaCred
+            rpt.SetDataSource(ds.Tables("DataTable1"))
+
+            Dim frm As New frmReporte
+            frm.CrystalReportViewer1.ReportSource = rpt
+            frm.ShowDialog()
 
         Catch ex As Exception
             MessageBox.Show(ex.Message)

@@ -9,8 +9,8 @@ Public Class conexion
     Dim conexion As SqlConnection
 
     'CADENAS DE CONEXION DE LA APLICACION
-    Public ServerName As String = "SERVER" '"SERVER" SERVIDOR  '192.168.8.100, 1433
-    Public DataBaseName As String = "SIGECO_PRUEBAS"
+    Public ServerName As String = "SERVIDOR" '"SERVER" SERVIDOR  '192.168.8.100, 1433
+    Public DataBaseName As String = IIf(bitProduccion, "SIGECO", "SIGECO")
     Public UserID As String = "sa"
     Public Password As String = "123456"
     Public IntSec As Boolean = False
@@ -30,10 +30,13 @@ Public Class conexion
         'Else
         '    Cadena = Cadena + "Integrated Security=false"
         'End If
+        If bitProduccion Then
+            Cadena = "Data Source=Servidor;Initial Catalog=SIGECO;User ID=sa;Password=123"
+        Else
+            Cadena = "Data Source=Server;Initial Catalog=SIGECO;User ID=sa;Password=123456"
+        End If
 
-        'Cadena = "Data Source=Servidor;Initial Catalog=SIGECO_PRUEBAS;User ID=sa;Password=123"
-        Cadena = "Data Source=SERVER;Initial Catalog=SIGECO_PRUEBAS;User ID=sa;Password=123456"
-        Return Cadena '= "Data Source=192.168.8.101;Initial Catalog=Sis_FerrTy;Persist Security Info=True;User ID=sa;Password=123456"
+        Return Cadena
     End Function
 
     Public Function conectar() As SqlConnection

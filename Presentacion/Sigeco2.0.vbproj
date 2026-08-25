@@ -55,6 +55,24 @@
     <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.Windows.Forms, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="FlashControlV71, Version=1.0.3187.32366, Culture=neutral, PublicKeyToken=692fbea5521e1304" />
+    <Reference Include="itextsharp">
+      <HintPath>..\..\..\..\COMERORI\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\COMERORI\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Vbe.Interop, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\COMERORI\Microsoft.Vbe.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\COMERORI\office.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -469,6 +487,12 @@
     <Compile Include="Fomularios\frmExcelToSqlServer.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Fomularios\frmFactorComisionVisa.Designer.vb">
+      <DependentUpon>frmFactorComisionVisa.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Fomularios\frmFactorComisionVisa.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Fomularios\frmfacturaVenta.designer.vb">
       <DependentUpon>frmfacturaVenta.vb</DependentUpon>
     </Compile>
@@ -557,6 +581,12 @@
       <DependentUpon>frmmodificaPrecios.vb</DependentUpon>
     </Compile>
     <Compile Include="Fomularios\frmmodificaPrecios.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Fomularios\frmModificarGarantia.Designer.vb">
+      <DependentUpon>frmModificarGarantia.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Fomularios\frmModificarGarantia.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Fomularios\frmmostrarSeries.designer.vb">
@@ -667,6 +697,12 @@
     <Compile Include="Fomularios\frmnumerosSerie.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Fomularios\frmPlazosGarantia.Designer.vb">
+      <DependentUpon>frmPlazosGarantia.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Fomularios\frmPlazosGarantia.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Fomularios\frmreciboPago.designer.vb">
       <DependentUpon>frmreciboPago.vb</DependentUpon>
     </Compile>
@@ -707,6 +743,12 @@
       <DependentUpon>frmsaldoAlmacenMarca.vb</DependentUpon>
     </Compile>
     <Compile Include="Fomularios\frmsaldoAlmacenMarca.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Fomularios\frmsaldoXMovimiento.Designer.vb">
+      <DependentUpon>frmsaldoXMovimiento.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Fomularios\frmsaldoXMovimiento.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Fomularios\frmtasasCredito.designer.vb">
@@ -751,6 +793,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Reportes\rptGuiaDevolucion.vb">
+      <DependentUpon>rptGuiaDevolucion.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Reportes\DataSet\DataSet1.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -780,12 +828,12 @@
     <Compile Include="Reportes\DataSet\dsNotaCred.vb">
       <DependentUpon>dsNotaCred.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reportes\DataSet\dsRepVenta.Designer.vb">
+    <Compile Include="Reportes\dsRepVenta.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>dsRepVenta.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reportes\DataSet\dsRepVenta.vb">
+    <Compile Include="Reportes\dsRepVenta.vb">
       <DependentUpon>dsRepVenta.xsd</DependentUpon>
     </Compile>
     <Compile Include="Reportes\frmReporte.Designer.vb">
@@ -1019,6 +1067,9 @@
     <EmbeddedResource Include="Fomularios\frmExcelToSqlServer.resx">
       <DependentUpon>frmExcelToSqlServer.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Fomularios\frmFactorComisionVisa.resx">
+      <DependentUpon>frmFactorComisionVisa.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Fomularios\frmfacturaVenta.resx">
       <DependentUpon>frmfacturaVenta.vb</DependentUpon>
     </EmbeddedResource>
@@ -1063,6 +1114,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Fomularios\frmmodificaPrecios.resx">
       <DependentUpon>frmmodificaPrecios.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fomularios\frmModificarGarantia.resx">
+      <DependentUpon>frmModificarGarantia.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Fomularios\frmmostrarSeries.resx">
       <DependentUpon>frmmostrarSeries.vb</DependentUpon>
@@ -1118,6 +1172,9 @@
     <EmbeddedResource Include="Fomularios\frmnumerosSerie.resx">
       <DependentUpon>frmnumerosSerie.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Fomularios\frmPlazosGarantia.resx">
+      <DependentUpon>frmPlazosGarantia.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Fomularios\frmreciboPago.resx">
       <DependentUpon>frmreciboPago.vb</DependentUpon>
     </EmbeddedResource>
@@ -1139,6 +1196,9 @@
     <EmbeddedResource Include="Fomularios\frmsaldoAlmacenMarca.resx">
       <DependentUpon>frmsaldoAlmacenMarca.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Fomularios\frmsaldoXMovimiento.resx">
+      <DependentUpon>frmsaldoXMovimiento.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Fomularios\frmtasasCredito.resx">
       <DependentUpon>frmtasasCredito.vb</DependentUpon>
     </EmbeddedResource>
@@ -1156,6 +1216,10 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reportes\rptGuiaDevolucion.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptGuiaDevolucion.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\frmReporte.resx">
       <DependentUpon>frmReporte.vb</DependentUpon>
@@ -1238,15 +1302,15 @@
     <None Include="Reportes\DataSet\dsNotaCred.xss">
       <DependentUpon>dsNotaCred.xsd</DependentUpon>
     </None>
-    <None Include="Reportes\DataSet\dsRepVenta.xsc">
+    <None Include="Reportes\dsRepVenta.xsc">
       <DependentUpon>dsRepVenta.xsd</DependentUpon>
     </None>
-    <None Include="Reportes\DataSet\dsRepVenta.xsd">
+    <None Include="Reportes\dsRepVenta.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>dsRepVenta.Designer.vb</LastGenOutput>
     </None>
-    <None Include="Reportes\DataSet\dsRepVenta.xss">
+    <None Include="Reportes\dsRepVenta.xss">
       <DependentUpon>dsRepVenta.xsd</DependentUpon>
     </None>
     <None Include="Resources\accessories-text-editor.png" />

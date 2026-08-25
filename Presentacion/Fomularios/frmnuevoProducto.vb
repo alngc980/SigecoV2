@@ -22,8 +22,16 @@ Public Class frmnuevoProducto
         Me.cbxAfectoIGV.SelectedIndex = 1
     End Sub
     Private Sub btnGrabar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnGrabar.Click
-        Dim SqlString As String
 
+        Dim Datos As DataTable = RetornaDataTable("select count(1) from productos where marca = '" & txtMarca.Text.Trim() & "' and modelo = '" & txtModelo.Text.Trim() & "'")
+        If Datos.Rows.Count > 0 Then
+            If CInt(Datos.Rows(0)(0).ToString) > 0 Then
+                MsgBox("Existen " & Datos.Rows(0)(0).ToString() & " coincidencias en la marca y modelo", MsgBoxStyle.Information, Title:="El producto ya existe")
+                Return
+            End If
+        End If
+
+        Dim SqlString As String
         Try
             Me.txtDescripcion.Text = EliminarSaltosLinea(Me.txtDescripcion.Text, " ")
 

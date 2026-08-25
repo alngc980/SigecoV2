@@ -7,8 +7,14 @@ Public Class frmeditarSeries
         Me.te.Multiline = True
         Me.te.Visible = False
         Me.KeyPreview = True
+
+        'dgvSeries.ContextMenuStrip = null;
     End Sub
     Private Sub txtCodigo_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtCodigo.DoubleClick
+        BuscarProducto()
+    End Sub
+
+    Private Sub BuscarProducto()
         Try
             arrayDatos(0) = ""
             frmbuscaProducto.ShowDialog()
@@ -23,114 +29,171 @@ Public Class frmeditarSeries
         End Try
     End Sub
     Private Sub txtCodigo_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtCodigo.TextChanged
+        If Trim(Me.txtCodigo.Text) = "" Then Exit Sub
+        If Not IsNumeric(Me.txtCodigo.Text) Then Exit Sub
+
+        CargarSeriesProducto()
+    End Sub
+
+    Private Sub CargarSeriesProducto()
         oDataSet = New DataSet()
 
         Try
+            Dim daNumerosSerie As SqlDataAdapter = New SqlDataAdapter("SELECT * FROM numerosSerie WHERE idProducto=" & CInt(txtCodigo.Text) & " ORDER BY numItem", Connection)
             Connection.Open()
-            Dim daNumerosSerie As SqlDataAdapter = New SqlDataAdapter("SELECT * FROM  numerosSerie where idProducto='" & CInt(txtCodigo.Text) & "'", Connection)
             daNumerosSerie.Fill(oDataSet, "numerosSerie")
-            Connection.Close()
 
             If oDataSet.Tables(0).Rows.Count() <= 0 Then
                 MsgBox("No existen datos de este producto.", MsgBoxStyle.Information)
+                Me.dgvSeries.DataSource = Nothing
                 Me.txtCodigo.Text = ""
+                Me.txtProducto.Text = ""
                 Me.txtCodigo.Focus()
-                Connection.Close()
                 Exit Sub
             End If
 
             Me.dgvSeries.DataSource = oDataSet
             Me.dgvSeries.DataMember = "numerosSerie"
-            With Me.dgvSeries
-                .Columns(0).ReadOnly = True
-                .Columns(0).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-                .Columns(4).ReadOnly = True
-                .Columns(5).ReadOnly = True
-            End With
+            ConfigurarGrillaSeries()
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         Finally
-            Connection.Close()
+            If Connection.State <> ConnectionState.Closed Then Connection.Close()
         End Try
     End Sub
+
+    Private Sub ConfigurarGrillaSeries()
+        With Me.dgvSeries
+            .Columns(0).ReadOnly = True
+            .Columns(0).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            .Columns(4).ReadOnly = True
+            .Columns(5).ReadOnly = True
+            If .Columns.Count > 8 Then .Columns(8).ReadOnly = True
+        End With
+    End Sub
     Private Sub btnAceptar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAceptar.Click
-        'Este procedimiento sólo tiene la finalidad de adjudicarle un valor incremental unitario, empezando del uno, 
-        'a la tabla "numerosSerie", campo "numItem". Esto, con la finalidad de hacer único los registros y poder hacer
-        'modificaciones en los campos. Por lo tanto, sólo debe usarse una vez.
-
-        Try
-            Dim SqlString As String = ""
-            Dim ListSqlStrings As New ArrayList
-            Dim grupo As Integer
-
-            oDataSet = New DataSet()
-            Connection.Open()
-            Dim daProductos As SqlDataAdapter = New SqlDataAdapter("SELECT * FROM  productos where idProducto>=6", Connection)
-            daProductos.Fill(oDataSet, "productos")
-
-            For i As Integer = 0 To Me.oDataSet.Tables(0).Rows.Count - 1
-                grupo = Me.oDataSet.Tables(0).Rows(i).Item(1)
-                Dim daNumerosSerie As SqlDataAdapter = New SqlDataAdapter("SELECT * FROM  numerosSerie where idProducto='" & CInt(Me.oDataSet.Tables(0).Rows(i).Item(0)) & "'", Connection)
-                daNumerosSerie.Fill(oDataSet, "numerosSerie")
-                Connection.Close()
-
-                For x As Integer = 0 To Me.oDataSet.Tables(1).Rows.Count - 1
-                    If grupo <> 6 Then
-                        SqlString = "UPDATE numerosSerie Set numItem='" & CInt(x + 1) & "'  where idProducto='" & _
-                        CInt(Me.oDataSet.Tables(0).Rows(i).Item(0)) & "' and numSerie='" & Me.oDataSet.Tables(1).Rows(x).Item(1) & "'"
-                    Else
-                        SqlString = "UPDATE numerosSerie Set numItem='" & CInt(x + 1) & "'  where idProducto='" & _
-                        CInt(Me.oDataSet.Tables(0).Rows(i).Item(0)) & "' and numMotor='" & Me.oDataSet.Tables(1).Rows(x).Item(2) & "'"
-                    End If
-                    ListSqlStrings.Add(SqlString)
-                Next
-                If transaccionProducto(ListSqlStrings) Then
-                    'MsgBox("Información modificada correctamente.", MsgBoxStyle.Information)
-                    ListSqlStrings.Clear()
-                    Me.oDataSet.Tables(1).Clear()
-                Else
-                    MsgBox("La Información no se procesó correctamente.", MsgBoxStyle.Critical)
-                    Me.Close()
-                End If
-            Next
-            Me.Close()
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        Finally
-            Connection.Close()
-        End Try
+        BuscarProducto()
     End Sub
     Private Sub btnGrabar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnGrabar.Click
         Try
             Dim SqlString As String = ""
             Dim ListSqlStrings As New ArrayList
 
-            If dgvSeries.Rows.Count > 0 Then
-                If MsgBox("Está seguro de modificar datos de los productos?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-                    For i As Integer = 0 To dgvSeries.Rows.Count - 1
-                        SqlString = "UPDATE numerosSerie Set numSerie='" & Me.dgvSeries.Rows(i).Cells(1).Value & "',numMotor='" & _
-                        dgvSeries.Rows(i).Cells(2).Value & "',numChasis='" & Me.dgvSeries.Rows(i).Cells(3).Value & "',color='" & _
-                        Me.dgvSeries.Rows(i).Cells(6).Value & "',anoFab='" & Me.dgvSeries.Rows(i).Cells(7).Value & "'" & _
-                        " where idProducto='" & Me.dgvSeries.Rows(i).Cells(0).Value & "' and numItem='" & Me.dgvSeries.Rows(i).Cells(8).Value & "'"
-
-                        ListSqlStrings.Add(SqlString)
-                    Next
-                    If transaccionProducto(ListSqlStrings) Then
-                        MsgBox("Información modificada correctamente.", MsgBoxStyle.Information)
-                        Me.Close()
-                    Else
-                        MsgBox("La Información no se procesó correctamente.", MsgBoxStyle.Critical)
-                        Me.Close()
-                    End If
-                End If
-            Else
+            If dgvSeries.Rows.Count <= 0 Then
                 MsgBox("No hay información procesada para grabar.", MsgBoxStyle.Critical)
-                'Me.txtBuscaCliente.Focus()
+                Exit Sub
+            End If
+
+            If Me.dgvSeries.IsCurrentCellInEditMode Then Me.dgvSeries.EndEdit()
+
+            Dim mensajeValidacion As String = ""
+            If Not ValidarDatosSeries(mensajeValidacion) Then
+                MsgBox(mensajeValidacion, MsgBoxStyle.Critical)
+                Exit Sub
+            End If
+
+            If MsgBox("Está seguro de modificar datos de los productos?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                For i As Integer = 0 To dgvSeries.Rows.Count - 1
+                    Dim idProducto As String = ValorCelda(i, 0)
+                    Dim numItem As String = ValorCelda(i, 8)
+
+                    SqlString = "UPDATE numerosSerie Set numSerie='" & SqlTexto(ValorCelda(i, 1)) & "',numMotor='" & _
+                    SqlTexto(ValorCelda(i, 2)) & "',numChasis='" & SqlTexto(ValorCelda(i, 3)) & "',color='" & _
+                    SqlTexto(ValorCelda(i, 6)) & "',anoFab='" & SqlTexto(ValorCelda(i, 7)) & "'" & _
+                    " where idProducto=" & CInt(idProducto) & " and numItem=" & CInt(numItem)
+
+                    ListSqlStrings.Add(SqlString)
+                Next
+
+                If transaccionProducto(ListSqlStrings) Then
+                    MsgBox("Información modificada correctamente.", MsgBoxStyle.Information)
+                    CargarSeriesProducto()
+                Else
+                    MsgBox("La Información no se procesó correctamente.", MsgBoxStyle.Critical)
+                End If
             End If
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
     End Sub
+
+    Private Function ValidarDatosSeries(ByRef mensaje As String) As Boolean
+        For fila As Integer = 0 To Me.dgvSeries.Rows.Count - 1
+            If ValorCelda(fila, 0) = "" Or ValorCelda(fila, 8) = "" Then
+                mensaje = "Hay registros sin idProducto o numItem. Vuelva a cargar el producto antes de grabar."
+                Return False
+            End If
+
+            If ValorCelda(fila, 1).IndexOf("'") >= 0 Or ValorCelda(fila, 2).IndexOf("'") >= 0 Or ValorCelda(fila, 3).IndexOf("'") >= 0 Then
+                mensaje = "Los campos Serie, Motor y Chásis no pueden contener comillas simples."
+                Me.dgvSeries.CurrentCell = Me.dgvSeries.Rows(fila).Cells(1)
+                Return False
+            End If
+
+            If Not ValidarDuplicadoCampo(fila, 1, "serie", mensaje) Then Return False
+            If Not ValidarDuplicadoCampo(fila, 2, "motor", mensaje) Then Return False
+            If Not ValidarDuplicadoCampo(fila, 3, "chásis", mensaje) Then Return False
+        Next fila
+
+        Return True
+    End Function
+
+    Private Function ValidarDuplicadoCampo(ByVal filaActual As Integer, ByVal columna As Integer, ByVal nombreCampo As String, ByRef mensaje As String) As Boolean
+        Dim valor As String = ValorCelda(filaActual, columna)
+        If valor = "" Then Return True
+
+        For fila As Integer = 0 To Me.dgvSeries.Rows.Count - 1
+            If fila <> filaActual Then
+                If columna = 1 Then
+                    If ValorCelda(fila, 1) = valor Then
+                        mensaje = "Ya existe la " & nombreCampo & " '" & valor & "' en la pantalla para este producto."
+                        Me.dgvSeries.CurrentCell = Me.dgvSeries.Rows(filaActual).Cells(columna)
+                        Return False
+                    End If
+                Else
+                    If ValorCelda(fila, 2) = valor Or ValorCelda(fila, 3) = valor Then
+                        mensaje = "Ya existe el número de " & nombreCampo & " '" & valor & "' en la pantalla para este producto."
+                        Me.dgvSeries.CurrentCell = Me.dgvSeries.Rows(filaActual).Cells(columna)
+                        Return False
+                    End If
+                End If
+            End If
+        Next fila
+
+        If ExisteDuplicadoEnBD(filaActual, columna, valor) Then
+            mensaje = "Ya existe la " & nombreCampo & " '" & valor & "' registrada en BD para este mismo producto."
+            Me.dgvSeries.CurrentCell = Me.dgvSeries.Rows(filaActual).Cells(columna)
+            Return False
+        End If
+
+        Return True
+    End Function
+
+    Private Function ExisteDuplicadoEnBD(ByVal filaActual As Integer, ByVal columna As Integer, ByVal valor As String) As Boolean
+        Dim idProducto As Integer = CInt(ValorCelda(filaActual, 0))
+        Dim numItem As Integer = CInt(ValorCelda(filaActual, 8))
+        Dim dato As String = SqlTexto(valor)
+        Dim sqlString As String
+
+        If columna = 1 Then
+            sqlString = "SELECT * FROM numerosSerie WHERE idProducto=" & idProducto & " AND numItem<>" & numItem & " AND LTRIM(RTRIM(ISNULL(numSerie,'')))='" & dato & "'"
+        Else
+            sqlString = "SELECT * FROM numerosSerie WHERE idProducto=" & idProducto & " AND numItem<>" & numItem & " AND (LTRIM(RTRIM(ISNULL(numMotor,'')))='" & dato & "' OR LTRIM(RTRIM(ISNULL(numChasis,'')))='" & dato & "')"
+        End If
+
+        Return verificarDocumento(sqlString) > 0
+    End Function
+
+    Private Function ValorCelda(ByVal fila As Integer, ByVal columna As Integer) As String
+        Dim valor As Object = Me.dgvSeries.Rows(fila).Cells(columna).Value
+        If valor Is Nothing OrElse valor Is DBNull.Value Then Return ""
+        Return valor.ToString().Trim().ToUpper()
+    End Function
+
+    Private Function SqlTexto(ByVal valor As String) As String
+        If valor Is Nothing Then Return ""
+        Return valor.Trim().Replace("'", "''")
+    End Function
     Private Sub dgvSeries_EditingControlShowing(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DataGridViewEditingControlShowingEventArgs) Handles dgvSeries.EditingControlShowing
         Dim validar As TextBox = CType(e.Control, TextBox)
         AddHandler validar.KeyPress, AddressOf validar_Keypress
@@ -191,5 +254,19 @@ Public Class frmeditarSeries
     End Sub
     Private Sub btnSalir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSalir.Click
         Me.Close()
+    End Sub
+
+    Private Sub dgvSeries_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvSeries.KeyDown
+        Clipboard.Clear() ' Limpia el portapapeles
+        If e.Control AndAlso e.KeyCode = Keys.C Then
+            Dim oFrmAcceso As New frmaccesoAdministrador()
+            oFrmAcceso.ShowDialog()
+            If flag <> 1 Then
+                e.SuppressKeyPress = True ' Bloquea la acción de copiar
+                Exit Sub
+            End If
+            e.SuppressKeyPress = False ' Bloquea la acción de copiar
+            'MessageBox.Show("Copiar datos está deshabilitado.")
+        End If
     End Sub
 End Class

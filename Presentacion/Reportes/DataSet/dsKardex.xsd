@@ -12,7 +12,7 @@
   <xs:element name="DataSet2" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DataSet2" msprop:Generator_UserDSName="DataSet2">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="dsKardex" msprop:Generator_TableClassName="dsKardexDataTable" msprop:Generator_TableVarName="tabledsKardex" msprop:Generator_RowChangedName="dsKardexRowChanged" msprop:Generator_TablePropName="dsKardex" msprop:Generator_RowDeletingName="dsKardexRowDeleting" msprop:Generator_RowChangingName="dsKardexRowChanging" msprop:Generator_RowEvHandlerName="dsKardexRowChangeEventHandler" msprop:Generator_RowDeletedName="dsKardexRowDeleted" msprop:Generator_RowClassName="dsKardexRow" msprop:Generator_UserTableName="dsKardex" msprop:Generator_RowEvArgName="dsKardexRowChangeEvent">
+        <xs:element name="dsKardex" msprop:Generator_TableClassName="dsKardexDataTable" msprop:Generator_TableVarName="tabledsKardex" msprop:Generator_TablePropName="dsKardex" msprop:Generator_RowDeletingName="dsKardexRowDeleting" msprop:Generator_RowChangingName="dsKardexRowChanging" msprop:Generator_RowEvHandlerName="dsKardexRowChangeEventHandler" msprop:Generator_RowDeletedName="dsKardexRowDeleted" msprop:Generator_UserTableName="dsKardex" msprop:Generator_RowChangedName="dsKardexRowChanged" msprop:Generator_RowEvArgName="dsKardexRowChangeEvent" msprop:Generator_RowClassName="dsKardexRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="idProducto" msprop:Generator_ColumnVarNameInTable="columnidProducto" msprop:Generator_ColumnPropNameInRow="idProducto" msprop:Generator_ColumnPropNameInTable="idProductoColumn" msprop:Generator_UserColumnName="idProducto" type="xs:string" minOccurs="0" />
@@ -27,6 +27,7 @@
               <xs:element name="CantEntradas" msprop:Generator_ColumnVarNameInTable="columnCantEntradas" msprop:Generator_ColumnPropNameInRow="CantEntradas" msprop:Generator_ColumnPropNameInTable="CantEntradasColumn" msprop:Generator_UserColumnName="CantEntradas" type="xs:int" minOccurs="0" />
               <xs:element name="CantSalidas" msprop:Generator_ColumnVarNameInTable="columnCantSalidas" msprop:Generator_ColumnPropNameInRow="CantSalidas" msprop:Generator_ColumnPropNameInTable="CantSalidasColumn" msprop:Generator_UserColumnName="CantSalidas" type="xs:int" minOccurs="0" />
               <xs:element name="CantSaldo" msprop:Generator_ColumnVarNameInTable="columnCantSaldo" msprop:Generator_ColumnPropNameInRow="CantSaldo" msprop:Generator_ColumnPropNameInTable="CantSaldoColumn" msprop:Generator_UserColumnName="CantSaldo" type="xs:int" minOccurs="0" />
+              <xs:element name="cGuia" msprop:Generator_ColumnVarNameInTable="columncGuia" msprop:Generator_ColumnPropNameInRow="cGuia" msprop:Generator_ColumnPropNameInTable="cGuiaColumn" msprop:Generator_UserColumnName="cGuia" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

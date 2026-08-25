@@ -11,22 +11,34 @@ Public Class frmcierreCajaRangos
     Dim cancelarLetraSoles, cancelarLetraDolares, cancelarLetraEuros As Decimal
     Dim cuotaInicialSoles, cuotaInicialDolares, cuotaInicialEuros As Decimal
     Dim anticipoCuotaSoles, anticipoCuotaDolares, anticipoCuotaEuros As Decimal
+    Dim ventaTarjetaSoles, ventaTarjetaDolares As Decimal
+    Dim ventaTarjetaOfertaSoles, ventaTarjetaOfertaDolares As Decimal
+    Dim ventaTarjetaRemateSoles, ventaTarjetaRemateDolares As Decimal
+    Dim ventaOfertaSoles, ventaOfertaDolares As Decimal
+    Dim ventaRemateSoles, ventaRemateDolares As Decimal
     Dim otrosPagosSoles, otrosPagosDolares, otrosPagosEuros As Decimal
-    Dim ventaTarjetaSoles, ventaTarjetaDolares, ventaTarjetaEuros As Decimal
+    Dim cobroInteresSoles, cobroInteresDolares As Decimal
+    Dim cargoOperacionSoles, cargoOperacionDolares As Decimal
 
     Dim totalSoles, totalDolares, totalEuros As Decimal
-    Dim totalChequesMN, totalChequesME As Decimal
-    Dim prestamoSoles, prestamoDolares, prestamoEuros As Decimal
+    Dim totalSalidasSoles, totalSalidasDolares, totalSalidasEuros As Decimal
 
-    Dim arrayConceptos() As String = {"V.Contado", "A.Letra", "C.Letra", "C.Inicial", "A.Cuota", "O.Pagos", "V.Tarjeta"}
-    Dim arrayConceptos1() As String = {"Préstam", "A.Letra", "C.Letra", "C.Inicial", "A.Cuota", "O.Pagos", "V.Tarjeta"}
+    Dim totalChequesMN, totalChequesME As Decimal
+    Dim prestamoPersonalSoles, prestamoPersonalDolares, prestamoPersonalEuros As Decimal
+    Dim prestamoClientesSoles, prestamoClientesDolares, prestamoClientesEuros As Decimal
+    Dim pagosDiversosSoles, pagosDiversosDolares, pagosDiversosEuros As Decimal
+
+    Dim arrayConceptos() As String = {"Venta Contado", "Amortización Letra", "Cancelación Letra", "Cuota Inicial", "A.Cuota Inicial", "Venta Tarjeta", "V.Tarjeta Oferta", "V.Tarjeta Remate", "Venta Oferta", "Venta Remate", "Otros Pagos", "Cobro Interés", "Cargo Operación"}
+    Dim arrayConceptos1() As String = {"Préstamo a Personal", "Préstamo a Clientes", "Pagos Diversos"}
+
+    Dim arrayTiposPago() As String = {"Cheque MN", "Cheque ME", "Efectivo MN", "Efectivo ME", "Pago Tarjeta", "Transf/Abono Cta"}
     Dim arrayMonedas() As String = {"S/", "$", "€"}
+
+    Dim arrayRecibos(250, 17) As Object
+    Dim arrayRecibos1(250, 17) As Object
 
     Dim totalCaja, totalCajaDia, totalCajaMes As Single
     Dim dia, mes, ctaFilas, cantidadDias, cantidadMeses As Integer
-
-    Dim arrayRecibos(1000, 17) As Object
-    Dim arrayRecibos1(250, 17) As Object
     Private Sub frmLiquidacion_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.Controls.Add(te)
         te.Multiline = True
@@ -58,18 +70,18 @@ Public Class frmcierreCajaRangos
         cantidadDias = DateDiff(DateInterval.Day, CDate(Me.dtpFechaLiquidacionI.Text), CDate(Me.dtpFechaLiquidacionF.Text)) + 1
         cantidadMeses = DateDiff(DateInterval.Month, CDate(Me.dtpFechaLiquidacionI.Text), CDate(Me.dtpFechaLiquidacionF.Text)) + 1
         totalCaja = 0 : totalCajaDia = 0 : totalCajaMes = 0 : mes = 0 : dia = 0
-     
+
         Try
-            Dim daRecibosClientes As New SqlDataAdapter("SELECT *FROM recibosClientes where fecEmision>='" & CDate(dtpFechaLiquidacionI.Text) & "' and fecEmision<='" & CDate(dtpFechaLiquidacionF.Text) & "' and status<>'X'", Connection)
+            Dim daRecibosClientes As New SqlDataAdapter("select * from recibosClientes where fecEmision>='" & CDate(dtpFechaLiquidacionI.Text) & "' and fecEmision<='" & CDate(dtpFechaLiquidacionF.Text) & "'", Connection)
             daRecibosClientes.Fill(oDataSet, "recibosClientes")
 
-            Dim daRecibosSalidas As New SqlDataAdapter("SELECT *FROM recibosSalidas where fecEmision>='" & CDate(dtpFechaLiquidacionI.Text) & "' and fecEmision<='" & CDate(dtpFechaLiquidacionF.Text) & "' and status<>'X'", Connection)
+            Dim daRecibosSalidas As New SqlDataAdapter("select * from recibosSalidas where fecEmision>='" & CDate(dtpFechaLiquidacionI.Text) & "' and fecEmision<='" & CDate(dtpFechaLiquidacionF.Text) & "'", Connection)
             daRecibosSalidas.Fill(oDataSet, "recibosSalidas")
 
-            Dim daCliente As SqlDataAdapter = New SqlDataAdapter("SELECT * FROM clientes", Connection)
+            Dim daCliente As SqlDataAdapter = New SqlDataAdapter("select * from clientes", Connection)
             daCliente.Fill(oDataSet, "clientes")
 
-            Dim daCheques As New SqlDataAdapter("SELECT *FROM datosCheques", Connection)
+            Dim daCheques As New SqlDataAdapter("select * from datosCheques", Connection)
             daCheques.Fill(oDataSet, "datosCheques")
 
             If Me.oDataSet.Tables(0).Rows.Count <= 0 And Me.oDataSet.Tables(1).Rows.Count <= 0 Then
@@ -100,6 +112,12 @@ Public Class frmcierreCajaRangos
                 colMontoChequeME.ColumnName = "montoChequeME"
                 Me.oDataSet.Tables(0).Columns.Add(colMontoChequeME)
 
+                Dim colTipoPago As DataColumn = New DataColumn()
+                colTipoPago.AllowDBNull = True
+                colTipoPago.Caption = "Tipo Pago"
+                colTipoPago.ColumnName = "tipoPago"
+                Me.oDataSet.Tables(0).Columns.Add(colTipoPago)
+
                 Dim oDataRow As DataRow
                 For i As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
                     For x As Integer = 0 To oDataSet.Tables(2).Rows.Count() - 1
@@ -119,14 +137,26 @@ Public Class frmcierreCajaRangos
                             oDataRow1 = Me.oDataSet.Tables(0).Rows(i)
                             oDataRow2 = Me.oDataSet.Tables(0).Rows(i)
                             If Me.oDataSet.Tables(3).Rows.Item(x).Item(2) = 0 Then
-                                oDataRow1(18) = Me.oDataSet.Tables(3).Rows.Item(x).Item(6)
+                                'oDataRow1(18) = Me.oDataSet.Tables(3).Rows.Item(x).Item(6)
+                                oDataRow1(18) = ""
                                 totalChequesMN += Me.oDataSet.Tables(3).Rows.Item(x).Item(6)
-                                Me.oDataSet.Tables(0).Rows(i).Item(3) = 0.0
+                                'Me.oDataSet.Tables(0).Rows(i).Item(3) = 0.0
                             Else
-                                oDataRow2(19) = Me.oDataSet.Tables(3).Rows.Item(x).Item(6)
+                                'oDataRow2(19) = Me.oDataSet.Tables(3).Rows.Item(x).Item(6)
+                                oDataRow1(19) = ""
                                 totalChequesME += Me.oDataSet.Tables(3).Rows.Item(x).Item(6)
-                                Me.oDataSet.Tables(0).Rows(i).Item(4) = 0.0
+                                'Me.oDataSet.Tables(0).Rows(i).Item(4) = 0.0
                             End If
+                        End If
+                    Next x
+                Next i
+
+                Dim oDataRow3 As DataRow
+                For i As Integer = 0 To oDataSet.Tables(0).Rows.Count() - 1
+                    For x As Integer = 0 To oDataSet.Tables(3).Rows.Count() - 1
+                        oDataRow3 = Me.oDataSet.Tables(0).Rows(i)
+                        If Me.oDataSet.Tables(3).Rows.Item(x).Item(1) = Me.oDataSet.Tables(0).Rows.Item(i).Item(0) Then
+                            oDataRow3(20) = Me.oDataSet.Tables(3).Rows.Item(x).Item(2)
                         End If
                     Next x
                 Next i
@@ -188,6 +218,36 @@ Public Class frmcierreCajaRangos
                             End If
                         Case 5
                             If Me.oDataSet.Tables(0).Rows(i).Item(14) = 1 Then
+                                ventaTarjetaSoles += Me.oDataSet.Tables(0).Rows(i).Item(3)
+                            Else
+                                ventaTarjetaDolares += Me.oDataSet.Tables(0).Rows(i).Item(4)
+                            End If
+                        Case 6
+                            If Me.oDataSet.Tables(0).Rows(i).Item(14) = 1 Then
+                                ventaTarjetaOfertaSoles += Me.oDataSet.Tables(0).Rows(i).Item(3)
+                            Else
+                                ventaTarjetaOfertaDolares += Me.oDataSet.Tables(0).Rows(i).Item(4)
+                            End If
+                        Case 7
+                            If Me.oDataSet.Tables(0).Rows(i).Item(14) = 1 Then
+                                ventaTarjetaRemateSoles += Me.oDataSet.Tables(0).Rows(i).Item(3)
+                            Else
+                                ventaTarjetaRemateDolares += Me.oDataSet.Tables(0).Rows(i).Item(4)
+                            End If
+                        Case 8
+                            If Me.oDataSet.Tables(0).Rows(i).Item(14) = 1 Then
+                                ventaOfertaSoles += Me.oDataSet.Tables(0).Rows(i).Item(3)
+                            Else
+                                ventaOfertaDolares += Me.oDataSet.Tables(0).Rows(i).Item(4)
+                            End If
+                        Case 9
+                            If Me.oDataSet.Tables(0).Rows(i).Item(14) = 1 Then
+                                ventaRemateSoles += Me.oDataSet.Tables(0).Rows(i).Item(3)
+                            Else
+                                ventaRemateDolares += Me.oDataSet.Tables(0).Rows(i).Item(4)
+                            End If
+                        Case 10
+                            If Me.oDataSet.Tables(0).Rows(i).Item(14) = 1 Then
                                 otrosPagosSoles += Me.oDataSet.Tables(0).Rows(i).Item(3)
                             Else
                                 If Me.oDataSet.Tables(0).Rows(i).Item(14) = 2 Then
@@ -196,15 +256,17 @@ Public Class frmcierreCajaRangos
                                     otrosPagosEuros += Me.oDataSet.Tables(0).Rows(i).Item(4)
                                 End If
                             End If
-                        Case 6
+                        Case 11
                             If Me.oDataSet.Tables(0).Rows(i).Item(14) = 1 Then
-                                ventaTarjetaSoles += Me.oDataSet.Tables(0).Rows(i).Item(3)
+                                cobroInteresSoles += Me.oDataSet.Tables(0).Rows(i).Item(3)
                             Else
-                                If Me.oDataSet.Tables(0).Rows(i).Item(14) = 2 Then
-                                    ventaTarjetaDolares += Me.oDataSet.Tables(0).Rows(i).Item(4)
-                                Else
-                                    ventaTarjetaEuros += Me.oDataSet.Tables(0).Rows(i).Item(4)
-                                End If
+                                cobroInteresDolares += Me.oDataSet.Tables(0).Rows(i).Item(4)
+                            End If
+                        Case 12
+                            If Me.oDataSet.Tables(0).Rows(i).Item(14) = 1 Then
+                                cargoOperacionSoles += Me.oDataSet.Tables(0).Rows(i).Item(3)
+                            Else
+                                cargoOperacionDolares += Me.oDataSet.Tables(0).Rows(i).Item(4)
                             End If
                     End Select
                     arrayRecibos(i, 3) = Me.oDataSet.Tables(0).Rows(i).Item(2)
@@ -224,15 +286,16 @@ Public Class frmcierreCajaRangos
                         arrayRecibos(i, 9) = Me.oDataSet.Tables(0).Rows(i).Item(4)
                         arrayRecibos(i, 8) = 0
                     End If
-                    arrayRecibos(i, 10) = Me.oDataSet.Tables(0).Rows(i).Item(13)
+                    arrayRecibos(i, 10) = Me.oDataSet.Tables(0).Rows(i).Item(13) 'Descuento
                     arrayRecibos(i, 11) = 0
-                    arrayRecibos(i, 12) = Me.oDataSet.Tables(0).Rows(i).Item(15)
-                    arrayRecibos(i, 13) = Me.oDataSet.Tables(0).Rows(i).Item(18)
-                    arrayRecibos(i, 14) = Me.oDataSet.Tables(0).Rows(i).Item(19)
+                    arrayRecibos(i, 12) = Me.oDataSet.Tables(0).Rows(i).Item(15) 'Tipo Cambio
+                    arrayRecibos(i, 13) = Me.oDataSet.Tables(0).Rows(i).Item(18) 'Monto CH MN
+                    arrayRecibos(i, 14) = Me.oDataSet.Tables(0).Rows(i).Item(19) 'Monto CH ME
+                    arrayRecibos(i, 15) = Me.oDataSet.Tables(0).Rows(i).Item(20) 'Tipo Pago
                 Next
-                totalSoles += ventaContadoSoles + amortizarLetraSoles + cancelarLetraSoles + cuotaInicialSoles + anticipoCuotaSoles + otrosPagosSoles + ventaTarjetaSoles
-                totalDolares += ventaContadoDolares + amortizarLetraDolares + cancelarLetraDolares + cuotaInicialDolares + anticipoCuotaDolares + otrosPagosDolares + ventaTarjetaDolares
-                totalEuros += ventaContadoEuros + amortizarLetraEuros + cancelarLetraEuros + cuotaInicialEuros + anticipoCuotaEuros + otrosPagosEuros + ventaTarjetaEuros
+                totalSoles += ventaContadoSoles + amortizarLetraSoles + cancelarLetraSoles + cuotaInicialSoles + anticipoCuotaSoles + ventaTarjetaSoles + ventaTarjetaOfertaSoles + ventaTarjetaRemateSoles + ventaOfertaSoles + ventaRemateSoles + otrosPagosSoles + cobroInteresSoles + cargoOperacionSoles
+                totalDolares += ventaContadoDolares + amortizarLetraDolares + cancelarLetraDolares + cuotaInicialDolares + anticipoCuotaDolares + ventaTarjetaDolares + ventaTarjetaOfertaDolares + ventaTarjetaRemateDolares + ventaOfertaDolares + ventaTarjetaDolares + otrosPagosDolares + cobroInteresDolares + cargoOperacionDolares
+                totalEuros += ventaContadoEuros + amortizarLetraEuros + cancelarLetraEuros + cuotaInicialEuros + anticipoCuotaEuros + otrosPagosEuros
             Else
                 MsgBox("No hay información 'recibos de entrada' para procesar en esta fecha.", MsgBoxStyle.Critical)
             End If
@@ -261,13 +324,21 @@ Public Class frmcierreCajaRangos
                     Select Case Me.oDataSet.Tables(1).Rows(i).Item(1)
                         Case 0
                             If Me.oDataSet.Tables(1).Rows(i).Item(14) = 1 Then
-                                prestamoSoles += Me.oDataSet.Tables(1).Rows(i).Item(3)
+                                prestamoPersonalSoles += Me.oDataSet.Tables(1).Rows(i).Item(3)
                             Else
-                                If Me.oDataSet.Tables(1).Rows(i).Item(14) = 2 Then
-                                    prestamoDolares += Me.oDataSet.Tables(1).Rows(i).Item(4)
-                                Else
-                                    prestamoEuros += Me.oDataSet.Tables(1).Rows(i).Item(4)
-                                End If
+                                prestamoPersonalDolares += Me.oDataSet.Tables(1).Rows(i).Item(4)
+                            End If
+                        Case 1
+                            If Me.oDataSet.Tables(1).Rows(i).Item(14) = 1 Then
+                                prestamoClientesSoles += Me.oDataSet.Tables(1).Rows(i).Item(3)
+                            Else
+                                prestamoClientesDolares += Me.oDataSet.Tables(1).Rows(i).Item(4)
+                            End If
+                        Case 2
+                            If Me.oDataSet.Tables(1).Rows(i).Item(14) = 1 Then
+                                pagosDiversosSoles += Me.oDataSet.Tables(1).Rows(i).Item(3)
+                            Else
+                                pagosDiversosDolares += Me.oDataSet.Tables(1).Rows(i).Item(4)
                             End If
                     End Select
                     arrayRecibos1(i, 3) = Me.oDataSet.Tables(1).Rows(i).Item(2)
@@ -290,6 +361,9 @@ Public Class frmcierreCajaRangos
                     arrayRecibos1(i, 12) = Me.oDataSet.Tables(1).Rows(i).Item(15)
                     arrayRecibos1(i, 13) = Me.oDataSet.Tables(1).Rows(i).Item(6)
                 Next
+                totalSalidasSoles += prestamoPersonalSoles + prestamoClientesSoles + pagosDiversosSoles
+                totalSalidasDolares += prestamoPersonalDolares + prestamoClientesDolares + pagosDiversosDolares
+                totalSalidasEuros += prestamoPersonalEuros + prestamoClientesEuros + pagosDiversosEuros
             Else
                 MsgBox("No hay información de 'recibos de salida' para procesar en esta fecha.", MsgBoxStyle.Critical)
             End If
@@ -314,16 +388,12 @@ Public Class frmcierreCajaRangos
                 NroPaginasImpresas = 0
                 enter = Convert.ToChar(en)
                 tab = Convert.ToChar(t)
-
-                te.Text = enter & _
-                txtNombreEmpresa & enter & enter & _
-                txtRUCEmpresa & "                                                                 Fecha :" & DateTime.Today & enter & enter & enter
-
+                te.Text = "                                    " & txtNombreEmpresa & enter & _
+                txtRUCEmpresa & "                                                                                 Fecha :" & DateTime.Today & enter & enter
                 te.Text = te.Text & "                            REPORTE DIARIO DE CAJA DEL " & Me.dtpFechaLiquidacionI.Text & " AL " & Me.dtpFechaLiquidacionF.Text & enter & enter
                 te.Text = te.Text & "------------------------------------------------------------------------------------------------------------------" & enter
-                te.Text = te.Text & "N°Rec.  Cliente         Concep.    N°  F.Emis.   EFE.MN. EFE.ME.  Dscto. T.Pagado   T.C.     CH.MN.    CH.ME.     " & enter
+                te.Text = te.Text & "N°Rec.  Cliente         Concep.       T.Pago          F.Emisión   EFE. MN.   EFE. ME.  CH.MN. CH.ME.  N° C u o t a" & enter
                 te.Text = te.Text & "------------------------------------------------------------------------------------------------------------------" & enter
-
                 If ctaTablas > 0 Then te.Text = te.Text & "Entradas" & enter
                 Dim entra As Boolean
                 For Meses As Int16 = 1 To cantidadMeses
@@ -335,22 +405,19 @@ Public Class frmcierreCajaRangos
                                    CDate(Me.dtpFechaLiquidacionI.Text).Month = CDate(VisualBasic.Left(arrayRecibos(i, 5), 10)).Month Then
                                     te.Text = te.Text & arrayRecibos(i, 0).ToString.PadRight(8)
                                     te.Text = te.Text & VisualBasic.Left(CStr(arrayRecibos(i, 1)), 15).PadRight(16)
-                                    If CStr(Trim(arrayRecibos(i, 2))) = "A.Letra" Or CStr(Trim(arrayRecibos(i, 2))) = "C.Letra" Then
-                                        te.Text = te.Text & arrayRecibos(i, 3).ToString.PadRight(12)
-                                    Else
-                                        te.Text = te.Text & arrayRecibos(i, 2).ToString.PadRight(12)
-                                    End If
-                                    te.Text = te.Text & arrayRecibos(i, 4).ToString.PadRight(3)
+                                    te.Text = te.Text & VisualBasic.Left(arrayRecibos(i, 2), 12).ToString.PadRight(13)
+                                    te.Text = te.Text & VisualBasic.Left(arrayTiposPago(IIf(IsDBNull(arrayRecibos(i, 15)), 2, arrayRecibos(i, 15))), 15).ToString.PadRight(17)
                                     te.Text = te.Text & VisualBasic.Left(CStr(arrayRecibos(i, 5)), 6) & VisualBasic.Right(CStr(arrayRecibos(i, 5)), 2).PadRight(3)
-                                    'te.Text = te.Text & VisualBasic.Left(CStr(arrayRecibos(i, 6)), 6) & VisualBasic.Right(CStr(arrayRecibos(i, 6)), 2).PadRight(3)
-                                    'te.Text = te.Text & arrayRecibos(i, 7).ToString.PadRight(3)
-                                    te.Text = te.Text & arrayRecibos(i, 8).ToString.PadLeft(8)
-                                    te.Text = te.Text & arrayRecibos(i, 9).ToString.PadLeft(8)
-                                    te.Text = te.Text & arrayRecibos(i, 10).ToString.PadLeft(9)
-                                    te.Text = te.Text & arrayRecibos(i, 11).ToString.PadLeft(5)
-                                    te.Text = te.Text & arrayRecibos(i, 12).ToString.PadLeft(12)
-                                    te.Text = te.Text & arrayRecibos(i, 13).ToString.PadLeft(10)
-                                    te.Text = te.Text & arrayRecibos(i, 14).ToString.PadLeft(10)
+                                    te.Text = te.Text & Format(arrayRecibos(i, 8), "#####0.00").PadLeft(10) 'efectivo MN
+                                    te.Text = te.Text & Format(arrayRecibos(i, 9), "#####0.00").PadLeft(10) 'efectivo ME
+                                    'te.Text = te.Text & Format(arrayRecibos(i, 10), "#####0.00").PadLeft(10) 'Descuento
+                                    'te.Text = te.Text & Format(arrayRecibos(i, 12), "##0.00").PadLeft(7) 'Tipo Cambio
+                                    te.Text = te.Text & arrayRecibos(i, 13).ToString.PadLeft(10) 'CH MN
+                                    te.Text = te.Text & arrayRecibos(i, 14).ToString.PadLeft(10) 'CH ME
+                                    If CStr(Trim(arrayRecibos(i, 2))) = "Amortización Letra" Or CStr(Trim(arrayRecibos(i, 2))) = "Cancelación Letra" Then
+                                        te.Text = te.Text & arrayRecibos(i, 4).ToString.PadRight(2)
+                                        te.Text = te.Text & VisualBasic.Left(arrayRecibos(i, 3), 12).ToString.Trim 'N° Cuota
+                                    End If
                                     te.Text = te.Text & enter
                                     totalCajaDia += CSng(arrayRecibos(i, 8))
                                     entra = True
@@ -359,7 +426,7 @@ Public Class frmcierreCajaRangos
                         Next i
                         If entra = True Then
                             te.Text = te.Text & "------------------------------------------------------------------------------------------------------------------" & enter
-                            te.Text = te.Text & ("Total Caja del Dia:S/. " & Format(totalCajaDia, "###,##0.00").ToString.PadLeft(33))
+                            te.Text = te.Text & ("Total Caja del Dia:S/. " & Format(totalCajaDia, "###,##0.00").ToString.PadLeft(50))
                             te.Text = te.Text & enter & enter
                         End If
                         dia += 1
@@ -374,39 +441,48 @@ Public Class frmcierreCajaRangos
                     If CStr(arrayRecibos1(i, 0)) <> "" Then
                         te.Text = te.Text & arrayRecibos1(i, 0).ToString.PadRight(8)
                         te.Text = te.Text & VisualBasic.Left(CStr(arrayRecibos1(i, 1)), 15).PadRight(16)
-                        te.Text = te.Text & arrayRecibos1(i, 2).ToString.PadRight(12)
-                        'te.Text = te.Text & arrayRecibos1(i, 3).ToString.PadRight(12)
-                        te.Text = te.Text & arrayRecibos1(i, 4).ToString.PadRight(2)
-                        'te.Text = te.Text & VisualBasic.Left(CStr(arrayRecibos1(i, 5)), 6) & VisualBasic.Right(CStr(arrayRecibos(i, 5)), 2).PadRight(3)
-                        te.Text = te.Text & VisualBasic.Left(CStr(arrayRecibos1(i, 6)), 6) & VisualBasic.Right(CStr(arrayRecibos(i, 6)), 2).PadRight(3)
+                        te.Text = te.Text & arrayRecibos1(i, 2).ToString.PadRight(20)
+                        'te.Text = te.Text & arrayRecibos1(i, 3).ToString.PadRight(20)
+                        te.Text = te.Text & arrayRecibos1(i, 4).ToString.PadRight(3)
+                        te.Text = te.Text & (VisualBasic.Left(CStr(arrayRecibos1(i, 5)), 6) & VisualBasic.Right(CStr(arrayRecibos1(i, 5)), 2)).PadLeft(15)
+                        'te.Text = te.Text & VisualBasic.Left(CStr(arrayRecibos1(i, 6)), 6) & VisualBasic.Right(CStr(arrayRecibos1(i, 6)), 2).PadRight(3)
                         'te.Text = te.Text & arrayRecibos1(i, 7).ToString.PadRight(3)
-                        te.Text = te.Text & arrayRecibos1(i, 8).ToString.PadLeft(8)
-                        te.Text = te.Text & arrayRecibos1(i, 9).ToString.PadLeft(7)
-                        te.Text = te.Text & arrayRecibos1(i, 10).ToString.PadLeft(9)
-                        te.Text = te.Text & arrayRecibos1(i, 11).ToString.PadLeft(5)
-                        te.Text = te.Text & VisualBasic.Left(CStr(arrayRecibos1(i, 12)), 4).PadLeft(14)
-                        te.Text = te.Text & arrayRecibos1(i, 13).ToString.PadLeft(15)
+                        te.Text = te.Text & Format(arrayRecibos1(i, 8), "#####0.00").PadLeft(11)
+                        'te.Text = te.Text & Format(arrayRecibos1(i, 9), "#####0.00").PadLeft(10)
+                        'te.Text = te.Text & Format(arrayRecibos1(i, 10), "#####0.00").PadLeft(10)
+                        'te.Text = te.Text & Format(arrayRecibos1(i, 11), "#####0.00").PadLeft(10)
+                        'te.Text = te.Text & Format(arrayRecibos1(i, 12), "#####0.00").PadLeft(6)
+                        'te.Text = te.Text & arrayRecibos(i, 13).ToString.PadLeft(10)
                         te.Text = te.Text & enter
-
                     End If
                 Next i
                 te.Text = te.Text & "------------------------------------------------------------------------------------------------------------------" & enter
                 te.Text = te.Text & "Resumen Total Entradas" & enter
-                te.Text = te.Text & Space(28) & "Soles        Dolares          Euros" & enter
+                te.Text = te.Text & Space(33) & "Soles        Dolares          " & enter
                 te.Text = te.Text & Space(20) & "-------------------------------------------" & enter
-                te.Text = te.Text & "Venta     Contado:".PadRight(15) & CStr(ventaContadoSoles).PadLeft(15) & CStr(ventaContadoDolares).PadLeft(15) & CStr(ventaContadoEuros).PadLeft(15) & enter
-                te.Text = te.Text & "Amort.     Letras:".PadRight(15) & CStr(amortizarLetraSoles).PadLeft(15) & CStr(amortizarLetraDolares).PadLeft(15) & CStr(amortizarLetraEuros).PadLeft(15) & enter
-                te.Text = te.Text & "Canc.      Letras:".PadRight(15) & CStr(cancelarLetraSoles).PadLeft(15) & CStr(cancelarLetraDolares).PadLeft(15) & CStr(cancelarLetraEuros).PadLeft(15) & enter
-                te.Text = te.Text & "Cuota     Inicial:".PadRight(15) & CStr(cuotaInicialSoles).PadLeft(15) & CStr(cuotaInicialDolares).PadLeft(15) & CStr(cuotaInicialEuros).PadLeft(15) & enter
-                te.Text = te.Text & "Anticipo    Cuota:".PadRight(15) & CStr(anticipoCuotaSoles).PadLeft(15) & CStr(anticipoCuotaDolares).PadLeft(15) & CStr(anticipoCuotaEuros).PadLeft(15) & enter
-                te.Text = te.Text & "Otros       Pagos:".PadRight(15) & CStr(otrosPagosSoles).PadLeft(15) & CStr(otrosPagosDolares).PadLeft(15) & CStr(otrosPagosEuros).PadLeft(15) & enter
-                te.Text = te.Text & "Venta     Tarjeta:".PadRight(15) & CStr(ventaTarjetaSoles).PadLeft(15) & CStr(ventaTarjetaDolares).PadLeft(15) & CStr(ventaTarjetaEuros).PadLeft(15) & enter
+                te.Text = te.Text & "Venta Contado         :" & Format(ventaContadoSoles, "###,##0.00").PadLeft(15) & Format(ventaContadoDolares, "###,##0.00").PadLeft(15) & enter
+                te.Text = te.Text & "Amortización Letras   :" & Format(amortizarLetraSoles, "###,##0.00").PadLeft(15) & Format(amortizarLetraDolares, "###,##0.00").PadLeft(15) & enter
+                te.Text = te.Text & "Cancelación Letras    :" & Format(cancelarLetraSoles, "###,##0.00").PadLeft(15) & Format(cancelarLetraDolares, "###,##0.00").PadLeft(15) & enter
+                te.Text = te.Text & "Cuota Inicial         :" & Format(cuotaInicialSoles, "###,##0.00").PadLeft(15) & Format(cuotaInicialDolares, "###,##0.00").PadLeft(15) & enter
+                te.Text = te.Text & "Anticipo Cuota Inicial:" & Format(anticipoCuotaSoles, "###,##0.00").PadLeft(15) & Format(anticipoCuotaDolares, "###,##0.00").PadLeft(15) & enter
+
+                te.Text = te.Text & "Venta Tarjeta         :" & Format(ventaTarjetaSoles, "###,##0.00").PadLeft(15) & Format(ventaTarjetaDolares, "###,##0.00").PadLeft(15) & enter
+                te.Text = te.Text & "Venta Tarjeta Oferta  :" & Format(ventaTarjetaOfertaSoles, "###,##0.00").PadLeft(15) & Format(ventaTarjetaOfertaDolares, "###,##0.00").PadLeft(15) & enter
+                te.Text = te.Text & "Venta Tarjeta Remate  :" & Format(ventaTarjetaRemateSoles, "###,##0.00").PadLeft(15) & Format(ventaTarjetaRemateDolares, "###,##0.00").PadLeft(15) & enter
+                te.Text = te.Text & "Venta Oferta          :" & Format(ventaOfertaSoles, "###,##0.00").PadLeft(15) & Format(ventaOfertaDolares, "###,##0.00").PadLeft(15) & enter
+                te.Text = te.Text & "Venta Remate          :" & Format(ventaRemateSoles, "###,##0.00").PadLeft(15) & Format(ventaRemateDolares, "###,##0.00").PadLeft(15) & enter
+                te.Text = te.Text & "Cobro Interés         :" & Format(cobroInteresSoles, "###,##0.00").PadLeft(15) & Format(cobroInteresDolares, "###,##0.00").PadLeft(15) & enter
+                te.Text = te.Text & "Cargo Operación       :" & Format(cargoOperacionSoles, "###,##0.00").PadLeft(15) & Format(cargoOperacionDolares, "###,##0.00").PadLeft(15) & enter
+                te.Text = te.Text & "Otros Pagos           :" & Format(otrosPagosSoles, "###,##0.00").PadLeft(15) & Format(otrosPagosDolares, "###,##0.00").PadLeft(15) & enter
                 te.Text = te.Text & Space(20) & "-------------------------------------------" & enter
-                te.Text = te.Text & "Total Caja       :" & CStr(Format(totalSoles, "###,##0.00")).PadLeft(15) & CStr(Format(totalDolares, "###,##0.00")).PadLeft(15) & CStr(Format(totalEuros, "###,##0.00")).PadLeft(15) & enter
-                te.Text = te.Text & "Total Cheques    :" & CStr(Format(totalChequesMN, "###,##0.00")).PadLeft(15) & CStr(Format(totalChequesME, "###,##0.00")).PadLeft(15) & enter & enter
+                te.Text = te.Text & "Total Caja            :" & Format(totalSoles, "###,##0.00").PadLeft(15) & Format(totalDolares, "###,##0.00").PadLeft(15) & enter
+                te.Text = te.Text & "Total Cheques         :" & Format(totalChequesMN, "###,##0.00").PadLeft(15) & Format(totalChequesME, "###,##0.00").PadLeft(15) & enter & enter
                 te.Text = te.Text & "Resumen Total Salidas" & enter
-                te.Text = te.Text & "Préstamo Personal:".PadRight(15) & CStr(prestamoSoles).PadLeft(15) & CStr(prestamoDolares).PadLeft(15) & CStr(prestamoEuros).PadLeft(15) & enter
+                te.Text = te.Text & "Préstamo a Personal   :" & Format(prestamoPersonalSoles, "###,##0.00").PadLeft(15) & Format(prestamoPersonalDolares, "###,##0.00").PadLeft(15) & enter
+                te.Text = te.Text & "Préstamo a Clientes   :" & Format(prestamoClientesSoles, "###,##0.00").PadLeft(15) & Format(prestamoClientesDolares, "###,##0.00").PadLeft(15) & enter
+                te.Text = te.Text & "Pagos Diversos        :" & Format(pagosDiversosSoles, "###,##0.00").PadLeft(15) & Format(pagosDiversosDolares, "###,##0.00").PadLeft(15) & enter
                 te.Text = te.Text & Space(20) & "-------------------------------------------" & enter
+                te.Text = te.Text & "Total Salida Caja     :" & Format(totalSalidasSoles, "###,##0.00").PadLeft(15) & Format(totalSalidasDolares, "###,##0.00").PadLeft(15)
 
                 If MsgBox("Desea hacer una vista previa del documento?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
                     configurarImpresion()
@@ -416,7 +492,7 @@ Public Class frmcierreCajaRangos
                 End If
 
                 PrintDialog1.Document = PrintDocument1
-                If PrintDialog1.ShowDialog = DialogResult.OK Then
+                If PrintDialog1.ShowDialog = Windows.Forms.DialogResult.OK Then
                     configurarImpresion()
                     'PrintDocument1.DefaultPageSettings.Landscape = True
                     PrintDocument1.Print()
@@ -523,11 +599,22 @@ Public Class frmcierreCajaRangos
         cancelarLetraSoles = 0 : cancelarLetraDolares = 0 : cancelarLetraEuros = 0
         cuotaInicialSoles = 0 : cuotaInicialDolares = 0 : cuotaInicialEuros = 0
         anticipoCuotaSoles = 0 : anticipoCuotaDolares = 0 : anticipoCuotaEuros = 0
+        ventaTarjetaSoles = 0 : ventaTarjetaDolares = 0
+        ventaTarjetaOfertaSoles = 0 : ventaTarjetaOfertaDolares = 0
+        ventaTarjetaRemateSoles = 0 : ventaTarjetaRemateDolares = 0
+        ventaOfertaSoles = 0 : ventaOfertaDolares = 0
+        ventaRemateSoles = 0 : ventaRemateDolares = 0
         otrosPagosSoles = 0 : otrosPagosDolares = 0 : otrosPagosEuros = 0
-        ventaTarjetaSoles = 0 : ventaTarjetaDolares = 0 : ventaTarjetaEuros = 0
+        cobroInteresSoles = 0 : cobroInteresDolares = 0
+        cargoOperacionSoles = 0 : cargoOperacionDolares = 0
+
         totalSoles = 0 : totalDolares = 0 : totalEuros = 0
         totalChequesMN = 0 : totalChequesME = 0
-        prestamoSoles = 0 : prestamoDolares = 0 : prestamoEuros = 0
+        totalSalidasSoles = 0 : totalSalidasDolares = 0 : totalSalidasEuros = 0
+
+        prestamoPersonalSoles = 0 : prestamoPersonalDolares = 0 : prestamoPersonalEuros = 0
+        prestamoClientesSoles = 0 : prestamoClientesDolares = 0 : prestamoClientesEuros = 0
+        pagosDiversosSoles = 0 : pagosDiversosDolares = 0 : pagosDiversosEuros = 0
     End Sub
     Private Sub btnSalir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSalir.Click
         Me.Close()

@@ -25,6 +25,7 @@ Partial Class frmbackupBD
         Me.cbxBaseDatos = New System.Windows.Forms.ComboBox()
         Me.cbxServidor = New System.Windows.Forms.ComboBox()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.rbArchivos = New System.Windows.Forms.RadioButton()
         Me.rbScript = New System.Windows.Forms.RadioButton()
         Me.rbBak = New System.Windows.Forms.RadioButton()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
@@ -89,6 +90,7 @@ Partial Class frmbackupBD
         '
         'GroupBox3
         '
+        Me.GroupBox3.Controls.Add(Me.rbArchivos)
         Me.GroupBox3.Controls.Add(Me.rbScript)
         Me.GroupBox3.Controls.Add(Me.rbBak)
         Me.GroupBox3.Location = New System.Drawing.Point(12, 93)
@@ -98,21 +100,31 @@ Partial Class frmbackupBD
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Tipo de archivo"
         '
+        'rbArchivos
+        '
+        Me.rbArchivos.AutoSize = True
+        Me.rbArchivos.Location = New System.Drawing.Point(365, 22)
+        Me.rbArchivos.Name = "rbArchivos"
+        Me.rbArchivos.Size = New System.Drawing.Size(112, 17)
+        Me.rbArchivos.TabIndex = 2
+        Me.rbArchivos.Text = "Copiar MDF/LDF"
+        Me.rbArchivos.UseVisualStyleBackColor = True
+        '
         'rbScript
         '
         Me.rbScript.AutoSize = True
-        Me.rbScript.Location = New System.Drawing.Point(279, 22)
+        Me.rbScript.Location = New System.Drawing.Point(199, 22)
         Me.rbScript.Name = "rbScript"
-        Me.rbScript.Size = New System.Drawing.Size(188, 17)
+        Me.rbScript.Size = New System.Drawing.Size(160, 17)
         Me.rbScript.TabIndex = 1
-        Me.rbScript.Text = "Script SQL completo con datos"
+        Me.rbScript.Text = "Script SQL con datos"
         Me.rbScript.UseVisualStyleBackColor = True
         '
         'rbBak
         '
         Me.rbBak.AutoSize = True
         Me.rbBak.Checked = True
-        Me.rbBak.Location = New System.Drawing.Point(109, 22)
+        Me.rbBak.Location = New System.Drawing.Point(60, 22)
         Me.rbBak.Name = "rbBak"
         Me.rbBak.Size = New System.Drawing.Size(86, 17)
         Me.rbBak.TabIndex = 0
@@ -185,4 +197,5 @@ Partial Class frmbackupBD
     Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
     Friend WithEvents rbScript As System.Windows.Forms.RadioButton
     Friend WithEvents rbBak As System.Windows.Forms.RadioButton
+    Friend WithEvents rbArchivos As System.Windows.Forms.RadioButton
 End Class

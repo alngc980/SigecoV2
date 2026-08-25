@@ -16,8 +16,10 @@ Public Class frmbackupBD
 
         If Me.rbBak.Checked Then
             GenerarBackupBak()
-        Else
+        ElseIf Me.rbScript.Checked Then
             GenerarScriptSql()
+        Else
+            GenerarCopiaArchivosBD()
         End If
     End Sub
 
@@ -101,16 +103,173 @@ Public Class frmbackupBD
         End Try
     End Sub
 
+    Private Sub GenerarCopiaArchivosBD()
+        Dim baseDatos As String = Me.cbxBaseDatos.Text
+        Dim mensaje As String = "Para copiar los archivos MDF/LDF se pondra la base de datos fuera de linea temporalmente." & vbCrLf & _
+                                "Esto desconectara usuarios activos de la base seleccionada." & vbCrLf & vbCrLf & _
+                                "Desea continuar?"
+
+        If MessageBox.Show(mensaje, "Confirmar copia de archivos", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> Windows.Forms.DialogResult.Yes Then Exit Sub
+
+        Dim carpetaDestino As String = ObtenerCarpetaDestino()
+        If carpetaDestino = "" Then Exit Sub
+
+        Dim baseSingleUser As Boolean = False
+        Dim baseOffline As Boolean = False
+        Dim showAdvancedOriginal As Integer = -1
+        Dim xpCmdShellOriginal As Integer = -1
+
+        Try
+            Dim archivos As DataTable = ObtenerArchivosBaseDatos(baseDatos)
+            If archivos.Rows.Count = 0 Then Throw New Exception("No se encontraron archivos MDF/LDF para la base seleccionada.")
+
+            PermitirEscrituraSqlServer(carpetaDestino)
+
+            Using cn As SqlConnection = CrearConexion("master")
+                cn.Open()
+                showAdvancedOriginal = ObtenerValorConfiguracion(cn, "show advanced options")
+                xpCmdShellOriginal = ObtenerValorConfiguracion(cn, "xp_cmdshell")
+                If xpCmdShellOriginal = 0 Then HabilitarXpCmdShell(cn)
+
+                EjecutarSqlMaster(cn, "ALTER DATABASE " & Q(baseDatos) & " SET SINGLE_USER WITH ROLLBACK IMMEDIATE")
+                baseSingleUser = True
+                EjecutarSqlMaster(cn, "ALTER DATABASE " & Q(baseDatos) & " SET OFFLINE WITH ROLLBACK IMMEDIATE")
+                baseOffline = True
+
+                For Each row As DataRow In archivos.Rows
+                    Dim origen As String = row("physical_name").ToString()
+                    Dim destino As String = Path.Combine(carpetaDestino, Path.GetFileName(origen))
+
+                    If String.Compare(Path.GetFullPath(origen), Path.GetFullPath(destino), True) = 0 Then
+                        Throw New Exception("La carpeta destino no puede ser la misma ubicacion del archivo original: " & origen)
+                    End If
+
+                    Dim salida As String = EjecutarComandoSqlServer(cn, "cmd /c copy /Y " & RutaCmd(origen) & " " & RutaCmd(destino))
+                    If Not File.Exists(destino) Then
+                        Throw New Exception("SQL Server no pudo copiar el archivo:" & vbCrLf & origen & vbCrLf & vbCrLf & _
+                                            "Seleccione una carpeta donde la cuenta del servicio SQL Server tenga permisos de escritura." & vbCrLf & vbCrLf & salida)
+                    End If
+                Next
+            End Using
+
+            MessageBox.Show("Archivos MDF/LDF copiados correctamente en:" & vbCrLf & carpetaDestino, "OK", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            Try
+                Using cn As SqlConnection = CrearConexion("master")
+                    cn.Open()
+                    If baseOffline Then EjecutarSqlMaster(cn, "ALTER DATABASE " & Q(baseDatos) & " SET ONLINE")
+                    If baseOffline OrElse baseSingleUser Then EjecutarSqlMaster(cn, "ALTER DATABASE " & Q(baseDatos) & " SET MULTI_USER")
+                    RestaurarXpCmdShell(cn, showAdvancedOriginal, xpCmdShellOriginal)
+                End Using
+            Catch exOnline As Exception
+                MessageBox.Show("No se pudo completar la restauracion posterior a la copia." & vbCrLf & _
+                                "Revise manualmente la base: " & baseDatos & vbCrLf & vbCrLf & exOnline.Message, _
+                                "Error critico", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        End Try
+    End Sub
+
     Private Function ObtenerRutaDestino(ByVal filtro As String, ByVal nombreArchivo As String) As String
         Using dialogo As New SaveFileDialog()
             dialogo.Filter = filtro
             dialogo.FileName = nombreArchivo
-            dialogo.Title = "Seleccione ubicación para guardar"
+            dialogo.Title = "Seleccione ubicaciï¿½n para guardar"
             dialogo.OverwritePrompt = True
             If dialogo.ShowDialog() = Windows.Forms.DialogResult.OK Then Return dialogo.FileName
         End Using
 
         Return ""
+    End Function
+
+    Private Function ObtenerCarpetaDestino() As String
+        Using dialogo As New FolderBrowserDialog()
+            dialogo.Description = "Seleccione la carpeta donde se copiaran los archivos MDF/LDF"
+            dialogo.ShowNewFolderButton = True
+            If dialogo.ShowDialog() = Windows.Forms.DialogResult.OK Then Return dialogo.SelectedPath
+        End Using
+
+        Return ""
+    End Function
+
+    Private Function ObtenerArchivosBaseDatos(ByVal baseDatos As String) As DataTable
+        Dim dt As New DataTable()
+        Using cn As SqlConnection = CrearConexion("master")
+            cn.Open()
+            Dim sql As String = "SELECT name, physical_name, type_desc FROM sys.master_files WHERE database_id = DB_ID(@baseDatos) AND type IN (0, 1) ORDER BY type, file_id"
+            Using da As New SqlDataAdapter(sql, cn)
+                da.SelectCommand.Parameters.AddWithValue("@baseDatos", baseDatos)
+                da.Fill(dt)
+            End Using
+        End Using
+        Return dt
+    End Function
+    Private Sub PermitirEscrituraSqlServer(ByVal carpeta As String)
+        Try
+            Dim seguridad As System.Security.AccessControl.DirectorySecurity = Directory.GetAccessControl(carpeta)
+            Dim todos As New System.Security.Principal.SecurityIdentifier(System.Security.Principal.WellKnownSidType.WorldSid, Nothing)
+            Dim regla As New System.Security.AccessControl.FileSystemAccessRule(todos, _
+                                                                                System.Security.AccessControl.FileSystemRights.Modify, _
+                                                                                System.Security.AccessControl.InheritanceFlags.ContainerInherit Or System.Security.AccessControl.InheritanceFlags.ObjectInherit, _
+                                                                                System.Security.AccessControl.PropagationFlags.None, _
+                                                                                System.Security.AccessControl.AccessControlType.Allow)
+            seguridad.AddAccessRule(regla)
+            Directory.SetAccessControl(carpeta, seguridad)
+        Catch
+        End Try
+    End Sub
+
+    Private Sub EjecutarSqlMaster(ByVal cn As SqlConnection, ByVal sql As String)
+        Using cmd As New SqlCommand(sql, cn)
+            cmd.CommandTimeout = 0
+            cmd.ExecuteNonQuery()
+        End Using
+    End Sub
+    Private Function ObtenerValorConfiguracion(ByVal cn As SqlConnection, ByVal nombre As String) As Integer
+        Using cmd As New SqlCommand("SELECT CAST(value_in_use AS int) FROM sys.configurations WHERE name = @nombre", cn)
+            cmd.Parameters.AddWithValue("@nombre", nombre)
+            Dim valor As Object = cmd.ExecuteScalar()
+            If valor Is Nothing OrElse IsDBNull(valor) Then Return -1
+            Return CInt(valor)
+        End Using
+    End Function
+
+    Private Sub HabilitarXpCmdShell(ByVal cn As SqlConnection)
+        EjecutarSqlMaster(cn, "EXEC sp_configure 'show advanced options', 1")
+        EjecutarSqlMaster(cn, "RECONFIGURE")
+        EjecutarSqlMaster(cn, "EXEC sp_configure 'xp_cmdshell', 1")
+        EjecutarSqlMaster(cn, "RECONFIGURE")
+    End Sub
+
+    Private Sub RestaurarXpCmdShell(ByVal cn As SqlConnection, ByVal showAdvancedOriginal As Integer, ByVal xpCmdShellOriginal As Integer)
+        If xpCmdShellOriginal = 0 Then
+            EjecutarSqlMaster(cn, "EXEC sp_configure 'xp_cmdshell', 0")
+            EjecutarSqlMaster(cn, "RECONFIGURE")
+        End If
+
+        If showAdvancedOriginal = 0 Then
+            EjecutarSqlMaster(cn, "EXEC sp_configure 'show advanced options', 0")
+            EjecutarSqlMaster(cn, "RECONFIGURE")
+        End If
+    End Sub
+
+    Private Function EjecutarComandoSqlServer(ByVal cn As SqlConnection, ByVal comando As String) As String
+        Dim salida As New StringBuilder()
+        Using cmd As New SqlCommand("EXEC master..xp_cmdshell @comando", cn)
+            cmd.CommandTimeout = 0
+            cmd.Parameters.Add("@comando", System.Data.SqlDbType.VarChar, 8000).Value = comando
+            Using dr As SqlDataReader = cmd.ExecuteReader()
+                While dr.Read()
+                    If Not IsDBNull(dr(0)) Then salida.AppendLine(dr(0).ToString())
+                End While
+            End Using
+        End Using
+        Return salida.ToString()
+    End Function
+
+    Private Function RutaCmd(ByVal ruta As String) As String
+        Return """" & ruta.Replace("""", "") & """"
     End Function
 
     Private Sub EscribirEncabezado(ByVal sw As StreamWriter, ByVal baseDatos As String)

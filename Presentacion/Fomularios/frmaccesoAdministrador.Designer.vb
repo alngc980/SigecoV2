@@ -85,9 +85,8 @@ Partial Class frmaccesoAdministrador
         Me.txtUsuario.Location = New System.Drawing.Point(156, 26)
         Me.txtUsuario.MaxLength = 12
         Me.txtUsuario.Name = "txtUsuario"
-        Me.txtUsuario.ReadOnly = True
         Me.txtUsuario.Size = New System.Drawing.Size(97, 20)
-        Me.txtUsuario.TabIndex = 10
+        Me.txtUsuario.TabIndex = 0
         '
         'GroupBox2
         '
@@ -133,6 +132,8 @@ Partial Class frmaccesoAdministrador
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AcceptButton = Me.btnAceptar
+        Me.CancelButton = Me.btnSalir
         Me.ClientSize = New System.Drawing.Size(365, 237)
         Me.Controls.Add(Me.grbDatosUsuario)
         Me.Controls.Add(Me.GroupBox2)

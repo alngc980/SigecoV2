@@ -192,12 +192,12 @@ Public Class frmbarraMenu
         ofrmcierreDiario.Show()
     End Sub
     Private Sub mnuUtilitarioClientesNuevos_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuUtilitarioClientesNuevos.Click
-        Dim ofrmnuevoCliente As New frmnuevoCliente()
+        Dim ofrmnuevoCliente As New frmNuevoCliente()
         ofrmnuevoCliente.MdiParent = Me
         ofrmnuevoCliente.Show()
     End Sub
     Private Sub mnuUtilitarioClientesEditar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuUtilitarioClientesEditar.Click
-        Dim ofrmeditarClientes As New frmEditarClientes()
+        Dim ofrmeditarClientes As New frmeditarClientes()
         ofrmeditarClientes.MdiParent = Me
         ofrmeditarClientes.Show()
     End Sub
@@ -367,6 +367,13 @@ Public Class frmbarraMenu
         ofrmreporteVentasTodoMes.Show()
     End Sub
     Private Sub mnuReporteVentasRango_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuReporteVentasRango.Click
+        flag = 0
+        Dim oFrmAcceso As New frmaccesoAdministrador()
+        oFrmAcceso.ShowDialog()
+        If flag <> 1 Then
+            Exit Sub
+        End If
+
         Dim ofrmreporteVentasRango As New frmreporteVentasRango()
         ofrmreporteVentasRango.MdiParent = Me
         ofrmreporteVentasRango.Show()
@@ -437,6 +444,13 @@ Public Class frmbarraMenu
     End Sub
 
     Private Sub SaldosXMovimientosToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SaldosXMovimientosToolStripMenuItem.Click
+        flag = 0
+        Dim oFrmAcceso As New frmaccesoAdministrador()
+        oFrmAcceso.ShowDialog()
+        If flag <> 1 Then
+            Exit Sub
+        End If
+
         Dim ofrmsaldosAlmacen As New frmsaldoXMovimiento()
         ofrmsaldosAlmacen.MdiParent = Me
         ofrmsaldosAlmacen.Show()

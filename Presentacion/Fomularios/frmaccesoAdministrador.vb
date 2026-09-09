@@ -1,44 +1,69 @@
 ﻿Imports System.Data.SqlClient
 Public Class frmaccesoAdministrador
-    Private oDataSet As DataSet
+    Private intentos As Integer = 0
+
     Private Sub frmAccesoAdministrador_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Try
-            Dim daUsuarios As New SqlDataAdapter("SELECT *FROM usuariosSistema", Connection)
-            oDataSet = New DataSet()
-            Connection.Open()
-            daUsuarios.Fill(oDataSet, "usuariosSistema")
-            Connection.Close()
-
-            Me.txtUsuario.Text = "Admin"
+            flag = 0
+            Me.txtUsuario.Clear()
+            Me.txtPassword.Clear()
+            Me.txtUsuario.Focus()
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            MessageBox.Show(ex.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
     Private Sub btnAceptar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAceptar.Click
         Try
-            Static cuenta As Integer
-            Dim objDataView As New DataView()
-            objDataView.Table = oDataSet.Tables(0)
-            objDataView.RowFilter = "usuario='" & Trim(Me.txtUsuario.Text) & "' and clave='" & Me.txtPassword.Text & "'"
+            If Trim(Me.txtUsuario.Text) = "" Then
+                MessageBox.Show("Ingrese el usuario.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Me.txtUsuario.Focus()
+                Exit Sub
+            End If
 
-            If objDataView.Count > 0 Then
+            If Trim(Me.txtPassword.Text) = "" Then
+                MessageBox.Show("Ingrese la clave.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Me.txtPassword.Focus()
+                Exit Sub
+            End If
+
+            If ValidarAdministrador(Trim(Me.txtUsuario.Text), Me.txtPassword.Text) Then
                 flag = 1
-                Connection.Close()
                 Me.Close()
             Else
-                cuenta = cuenta + 1
-                If cuenta = 3 Then
+                intentos = intentos + 1
+                If intentos >= 3 Then
                     MsgBox("Inténtelo en otro momento con una clave existente.", MsgBoxStyle.Critical)
                     Me.Close()
+                    Exit Sub
                 End If
-                MsgBox("Clave incorrecta!!! Te queda: " + Str(3 - cuenta) + " oportunidad(es).", MsgBoxStyle.Critical)
+                MsgBox("Credenciales incorrectas. Te queda: " + Str(3 - intentos) + " oportunidad(es).", MsgBoxStyle.Critical)
                 Me.txtPassword.Clear()
                 Me.txtPassword.Focus()
             End If
         Catch ex As Exception
-            MessageBox.Show(e.ToString, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(ex.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            If Connection.State <> ConnectionState.Closed Then
+                Connection.Close()
+            End If
         End Try
     End Sub
+
+    Private Function ValidarAdministrador(ByVal usuario As String, ByVal clave As String) As Boolean
+        Dim sql As String = "SELECT COUNT(1) FROM usuariosSistema WHERE usuario = @usuario AND clave = @clave AND usuario = 'Admin'"
+
+        Using cmd As New SqlCommand(sql, Connection)
+            cmd.Parameters.AddWithValue("@usuario", usuario)
+            cmd.Parameters.AddWithValue("@clave", clave)
+
+            If Connection.State <> ConnectionState.Closed Then
+                Connection.Close()
+            End If
+            Connection.Open()
+            Return CInt(cmd.ExecuteScalar()) > 0
+        End Using
+    End Function
     Private Sub grbDatosUsuario_MouseEnter(ByVal sender As Object, ByVal e As System.EventArgs) Handles grbDatosUsuario.MouseEnter
         Me.lblMensaje.Text = "Ingrese clave de Administrador para grabar las modificaciones."
     End Sub

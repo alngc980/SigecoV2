@@ -31,9 +31,9 @@ Public Class conexion
         '    Cadena = Cadena + "Integrated Security=false"
         'End If
         If bitProduccion Then
-            Cadena = "Data Source=Servidor;Initial Catalog=SIGECO;User ID=sa;Password=123"
+            Cadena = "Data Source=Servidor; Initial Catalog=SIGECO; User ID=sa; Password=123"
         Else
-            Cadena = "Data Source=Server;Initial Catalog=SIGECO;User ID=sa;Password=123456"
+            Cadena = "Data Source=Server; Initial Catalog=SIGECO; User ID=sa; Password=123456"
         End If
 
         Return Cadena

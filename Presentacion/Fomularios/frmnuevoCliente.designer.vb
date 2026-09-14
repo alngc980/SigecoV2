@@ -27,6 +27,7 @@ Partial Class frmNuevoCliente
         Me.Label3 = New System.Windows.Forms.Label()
         Me.txtDireccion = New System.Windows.Forms.TextBox()
         Me.btnSalir = New System.Windows.Forms.Button()
+        Me.btnLimpiar = New System.Windows.Forms.Button()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.txtCodigoCliente = New System.Windows.Forms.TextBox()
@@ -134,7 +135,7 @@ Partial Class frmNuevoCliente
         Me.btnSalir.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnSalir.Image = My.Resources.FillRightHS
         Me.btnSalir.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnSalir.Location = New System.Drawing.Point(288, 19)
+        Me.btnSalir.Location = New System.Drawing.Point(343, 19)
         Me.btnSalir.Name = "btnSalir"
         Me.btnSalir.Size = New System.Drawing.Size(90, 30)
         Me.btnSalir.TabIndex = 18
@@ -177,6 +178,7 @@ Partial Class frmNuevoCliente
         'GroupBox2
         '
         Me.GroupBox2.Controls.Add(Me.btnSalir)
+        Me.GroupBox2.Controls.Add(Me.btnLimpiar)
         Me.GroupBox2.Controls.Add(Me.btnGrabar)
         Me.GroupBox2.Location = New System.Drawing.Point(1, 446)
         Me.GroupBox2.Name = "GroupBox2"
@@ -184,12 +186,22 @@ Partial Class frmNuevoCliente
         Me.GroupBox2.TabIndex = 16
         Me.GroupBox2.TabStop = False
         '
+        '
+        'btnLimpiar
+        '
+        Me.btnLimpiar.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnLimpiar.Location = New System.Drawing.Point(201, 19)
+        Me.btnLimpiar.Name = "btnLimpiar"
+        Me.btnLimpiar.Size = New System.Drawing.Size(90, 30)
+        Me.btnLimpiar.TabIndex = 19
+        Me.btnLimpiar.Text = "Limpiar"
+        Me.btnLimpiar.UseVisualStyleBackColor = True
         'btnGrabar
         '
         Me.btnGrabar.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnGrabar.Image = My.Resources.saveHS
         Me.btnGrabar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnGrabar.Location = New System.Drawing.Point(101, 19)
+        Me.btnGrabar.Location = New System.Drawing.Point(58, 19)
         Me.btnGrabar.Name = "btnGrabar"
         Me.btnGrabar.Size = New System.Drawing.Size(90, 30)
         Me.btnGrabar.TabIndex = 17
@@ -490,6 +502,7 @@ Partial Class frmNuevoCliente
     Friend WithEvents txtCodigoCliente As System.Windows.Forms.TextBox
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
     Friend WithEvents btnGrabar As System.Windows.Forms.Button
+    Friend WithEvents btnLimpiar As System.Windows.Forms.Button
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents txtFijo As System.Windows.Forms.TextBox

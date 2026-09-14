@@ -293,9 +293,14 @@ Public Class frmNuevoCliente
         Me.txtDNIPareja.Text = ""
         Me.txtCelPareja.Text = ""
         Me.txtDirTraPareja.Text = ""
+        Me.txtZona.Text = 3
+        Me.dtpFecha.Value = Date.Today
 
         Me.txtCodigoCliente.Text = devuelveCodigo(SqlString1) + 1
         Me.txtNombres.Focus()
+    End Sub
+    Private Sub btnLimpiar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnLimpiar.Click
+        Me.limpiar()
     End Sub
     Private Sub btnSalir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSalir.Click
         Me.Close()

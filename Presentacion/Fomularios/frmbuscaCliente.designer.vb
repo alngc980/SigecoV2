@@ -22,6 +22,7 @@ Partial Class frmbuscaCliente
         Me.dgvClientes = New System.Windows.Forms.DataGridView()
         Me.txtBuscaCliente = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.btnNuevoCliente = New System.Windows.Forms.Button()
         CType(Me.dgvClientes, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -45,9 +46,9 @@ Partial Class frmbuscaCliente
         Me.txtBuscaCliente.BackColor = System.Drawing.Color.White
         Me.txtBuscaCliente.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
         Me.txtBuscaCliente.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtBuscaCliente.Location = New System.Drawing.Point(168, 3)
+        Me.txtBuscaCliente.Location = New System.Drawing.Point(126, 3)
         Me.txtBuscaCliente.Name = "txtBuscaCliente"
-        Me.txtBuscaCliente.Size = New System.Drawing.Size(623, 22)
+        Me.txtBuscaCliente.Size = New System.Drawing.Size(475, 22)
         Me.txtBuscaCliente.TabIndex = 2
         '
         'Label1
@@ -56,15 +57,26 @@ Partial Class frmbuscaCliente
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(1, 5)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(161, 16)
+        Me.Label1.Size = New System.Drawing.Size(119, 16)
         Me.Label1.TabIndex = 1
-        Me.Label1.Text = "Nombres o Razón Social:"
+        Me.Label1.Text = "Nombre/RUC/DNI:"
         '
+        '
+        'btnNuevoCliente
+        '
+        Me.btnNuevoCliente.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnNuevoCliente.Location = New System.Drawing.Point(615, 1)
+        Me.btnNuevoCliente.Name = "btnNuevoCliente"
+        Me.btnNuevoCliente.Size = New System.Drawing.Size(130, 26)
+        Me.btnNuevoCliente.TabIndex = 4
+        Me.btnNuevoCliente.Text = "Nuevo Cliente"
+        Me.btnNuevoCliente.UseVisualStyleBackColor = True
         'frmbuscaCliente
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(790, 367)
+        Me.Controls.Add(Me.btnNuevoCliente)
         Me.Controls.Add(Me.dgvClientes)
         Me.Controls.Add(Me.txtBuscaCliente)
         Me.Controls.Add(Me.Label1)
@@ -80,4 +92,5 @@ Partial Class frmbuscaCliente
     Friend WithEvents dgvClientes As System.Windows.Forms.DataGridView
     Friend WithEvents txtBuscaCliente As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents btnNuevoCliente As System.Windows.Forms.Button
 End Class

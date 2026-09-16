@@ -33,6 +33,7 @@ Partial Class frmeditarClientes
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.btnSalir = New System.Windows.Forms.Button()
         Me.dgvClientes = New System.Windows.Forms.DataGridView()
+        Me.btnNuevo = New System.Windows.Forms.Button()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         CType(Me.dgvClientes, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -59,14 +60,15 @@ Partial Class frmeditarClientes
         '
         Me.txtCliente.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
         Me.txtCliente.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtCliente.Location = New System.Drawing.Point(173, 15)
+        Me.txtCliente.Location = New System.Drawing.Point(132, 15)
         Me.txtCliente.MaxLength = 40
         Me.txtCliente.Name = "txtCliente"
-        Me.txtCliente.Size = New System.Drawing.Size(809, 22)
+        Me.txtCliente.Size = New System.Drawing.Size(624, 22)
         Me.txtCliente.TabIndex = 3
         '
         'GroupBox2
         '
+        Me.GroupBox2.Controls.Add(Me.btnNuevo)
         Me.GroupBox2.Controls.Add(Me.txtCliente)
         Me.GroupBox2.Controls.Add(Me.Label1)
         Me.GroupBox2.Location = New System.Drawing.Point(2, -5)
@@ -81,9 +83,9 @@ Partial Class frmeditarClientes
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(6, 18)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(161, 16)
+        Me.Label1.Size = New System.Drawing.Size(119, 16)
         Me.Label1.TabIndex = 2
-        Me.Label1.Text = "Nombres o Razón Social:"
+        Me.Label1.Text = "Nombre/RUC/DNI:"
         '
         'btnEliminar
         '
@@ -173,6 +175,19 @@ Partial Class frmeditarClientes
         Me.dgvClientes.Size = New System.Drawing.Size(988, 349)
         Me.dgvClientes.TabIndex = 24
         '
+        'btnNuevo
+        '
+        Me.btnNuevo.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnNuevo.Image = Global.Presentacion.My.Resources.Resources.saveHS
+        Me.btnNuevo.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnNuevo.Location = New System.Drawing.Point(800, 9)
+        Me.btnNuevo.Name = "btnNuevo"
+        Me.btnNuevo.Size = New System.Drawing.Size(135, 30)
+        Me.btnNuevo.TabIndex = 56
+        Me.btnNuevo.Text = "Nuevo Cliente"
+        Me.btnNuevo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnNuevo.UseVisualStyleBackColor = True
+        '
         'frmeditarClientes
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -208,4 +223,5 @@ Partial Class frmeditarClientes
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents btnSalir As System.Windows.Forms.Button
     Friend WithEvents dgvClientes As System.Windows.Forms.DataGridView
+    Friend WithEvents btnNuevo As Button
 End Class

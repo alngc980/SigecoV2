@@ -29,18 +29,14 @@ Public Class frmNuevoCliente
                 Exit Sub
             End If
 
-            If Me.txtRUC.Text <> "" And Len(Trim(Me.txtRUC.Text)) = 11 Then
-                If Me.buscarDocumento(Trim(Me.txtRUC.Text), 1) >= 1 Then
-                    MsgBox("Ya existe un cliente registrado con N° RUC: " & Trim(Me.txtRUC.Text), MsgBoxStyle.Critical)
-                    Exit Sub
-                End If
+            If Not ValidarDocumentoCliente(Trim(Me.txtRUC.Text), 1, True) Then
+                Me.txtRUC.Focus()
+                Exit Sub
             End If
 
-            If Me.txtDNI.Text <> "" And Len(Trim(Me.txtDNI.Text)) = 8 Then
-                If Me.buscarDocumento(Trim(Me.txtDNI.Text), 2) >= 1 Then
-                    MsgBox("Ya existe un cliente registrado con N° DNI: " & Trim(Me.txtDNI.Text), MsgBoxStyle.Critical)
-                    Exit Sub
-                End If
+            If Not ValidarDocumentoCliente(Trim(Me.txtDNI.Text), 2, True) Then
+                Me.txtDNI.Focus()
+                Exit Sub
             End If
 
             Me.txtNombres.Text = EliminarSaltosLinea(Me.txtNombres.Text, " ")
@@ -77,25 +73,70 @@ Public Class frmNuevoCliente
             MessageBox.Show(ex.Message)
         End Try
     End Sub
-    Private Function buscarDocumento(ByVal Documento As String, ByRef tipo As Byte) As Byte
-        Dim daClientes As SqlDataAdapter
+    Private Function buscarDocumento(ByVal Documento As String, ByRef tipo As Byte) As Integer
+        Dim campo As String
+        Dim sql As String
 
-        oDataSet = New DataSet()
+        If Trim(Documento) = "" Then Return 0
+
         If tipo = 1 Then
-            daClientes = New SqlDataAdapter("SELECT * FROM clientes where ruc Like '" & Documento & "'", Connection)
+            campo = "ruc"
         Else
-            daClientes = New SqlDataAdapter("SELECT * FROM clientes where dni Like '" & Documento & "'", Connection)
+            campo = "dni"
         End If
 
+        sql = "SELECT COUNT(1) FROM clientes WHERE " & campo & " = @documento"
+
         Try
-            daClientes.Fill(oDataSet, "clientes")
+            Using cmd As New SqlCommand(sql, Connection)
+                cmd.Parameters.AddWithValue("@documento", Trim(Documento))
+
+                If Connection.State <> ConnectionState.Closed Then
+                    Connection.Close()
+                End If
+                Connection.Open()
+                Return CInt(cmd.ExecuteScalar())
+            End Using
         Catch ex As Exception
             MessageBox.Show(ex.Message)
+            Return 0
         Finally
-            Connection.Close()
+            If Connection.State <> ConnectionState.Closed Then
+                Connection.Close()
+            End If
         End Try
+    End Function
 
-        Return Me.oDataSet.Tables(0).Rows.Count()
+    Private Function ValidarDocumentoCliente(ByVal Documento As String, ByVal tipo As Byte, ByVal mostrarMensaje As Boolean) As Boolean
+        Dim nombreDocumento As String
+        Dim longitudEsperada As Integer
+
+        Documento = Trim(Documento)
+        If Documento = "" Then Return True
+
+        If tipo = 1 Then
+            nombreDocumento = "RUC"
+            longitudEsperada = 11
+        Else
+            nombreDocumento = "DNI"
+            longitudEsperada = 8
+        End If
+
+        If Len(Documento) <> longitudEsperada Then
+            If mostrarMensaje Then
+                MsgBox("Ingrese un " & nombreDocumento & " valido de " & longitudEsperada & " digitos.", MsgBoxStyle.Exclamation)
+            End If
+            Return False
+        End If
+
+        If buscarDocumento(Documento, tipo) >= 1 Then
+            If mostrarMensaje Then
+                MsgBox("Ya existe un cliente registrado con " & nombreDocumento & ": " & Documento, MsgBoxStyle.Critical)
+            End If
+            Return False
+        End If
+
+        Return True
     End Function
     Private Sub txtRUC_KeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtRUC.KeyPress
         Dim letra As Short = CShort(Asc(e.KeyChar))
@@ -113,6 +154,18 @@ Public Class frmNuevoCliente
             e.Handled = True
         End If
     End Sub
+    Private Sub txtRUC_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtRUC.Leave
+        If Trim(Me.txtRUC.Text) <> "" AndAlso Not ValidarDocumentoCliente(Trim(Me.txtRUC.Text), 1, True) Then
+            Me.txtRUC.SelectAll()
+        End If
+    End Sub
+
+    Private Sub txtDNI_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtDNI.Leave
+        If Trim(Me.txtDNI.Text) <> "" AndAlso Not ValidarDocumentoCliente(Trim(Me.txtDNI.Text), 2, True) Then
+            Me.txtDNI.SelectAll()
+        End If
+    End Sub
+
     Private Sub btnConsultarDocumento_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnConsultarDocumento.Click
         ConsultarDocumentoFactiliza()
     End Sub
@@ -146,6 +199,18 @@ Public Class frmNuevoCliente
             MsgBox("Ingrese un DNI válido de 8 dígitos.", MsgBoxStyle.Exclamation)
             Me.txtDNI.Focus()
             Exit Sub
+        End If
+
+        If tipoDocumento = "ruc" Then
+            If Not ValidarDocumentoCliente(documento, 1, True) Then
+                Me.txtRUC.Focus()
+                Exit Sub
+            End If
+        Else
+            If Not ValidarDocumentoCliente(documento, 2, True) Then
+                Me.txtDNI.Focus()
+                Exit Sub
+            End If
         End If
 
         Try

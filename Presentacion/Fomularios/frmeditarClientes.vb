@@ -6,44 +6,49 @@ Public Class frmeditarClientes
         Me.Controls.Add(te)
         te.Multiline = True
         te.Visible = False
+        CargarClientes("")
+    End Sub
+
+    Private Sub CargarClientes(ByVal filtro As String)
         oDataSet = New DataSet()
 
         Try
-            Dim daCTaCte As SqlDataAdapter = New SqlDataAdapter("SELECT  * from clientes where zona <> -1", Connection)
-            daCTaCte.Fill(oDataSet, "clientes")
+            Dim sql As String = "SELECT * FROM clientes WHERE zona <> -1"
+            Dim daClientes As SqlDataAdapter
 
+            If Trim(filtro) <> "" Then
+                sql &= " AND (nombres LIKE @filtro OR ruc LIKE @filtro OR dni LIKE @filtro)"
+            End If
+
+            daClientes = New SqlDataAdapter(sql, Connection)
+            If Trim(filtro) <> "" Then
+                daClientes.SelectCommand.Parameters.AddWithValue("@filtro", "%" & Trim(filtro) & "%")
+            End If
+
+            daClientes.Fill(oDataSet, "clientes")
             Me.dgvClientes.DataSource = oDataSet
             Me.dgvClientes.DataMember = "clientes"
-            With Me.dgvClientes
-                .Columns(0).ReadOnly = True
-                .Columns(0).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-                .Columns(13).ReadOnly = True
-            End With
+            ConfigurarGrillaClientes()
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         Finally
             Connection.Close()
         End Try
     End Sub
-    Private Sub txtBuscaCliente_KeyUp(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtCliente.KeyUp
-        oDataSet = New DataSet()
 
-        Try
-            Dim daClientes As SqlDataAdapter = New SqlDataAdapter("SELECT * FROM clientes where zona <> -1 and nombres Like '" & "%" & Me.txtCliente.Text & "%" & "'", Connection)
-            daClientes.Fill(oDataSet, "clientes")
+    Private Sub ConfigurarGrillaClientes()
+        If Me.dgvClientes.Columns.Count = 0 Then Exit Sub
 
-            Me.dgvClientes.DataSource = oDataSet
-            Me.dgvClientes.DataMember = "clientes"
-            With Me.dgvClientes
-                .Columns(0).ReadOnly = True
-                .Columns(0).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+        With Me.dgvClientes
+            .Columns(0).ReadOnly = True
+            .Columns(0).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            If .Columns.Count > 13 Then
                 .Columns(13).ReadOnly = True
-            End With
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        Finally
-            Connection.Close()
-        End Try
+            End If
+        End With
+    End Sub
+    Private Sub txtBuscaCliente_KeyUp(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtCliente.KeyUp
+        CargarClientes(Me.txtCliente.Text)
     End Sub
     Private Sub btnGrabar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnGrabar.Click
         Dim SqlString As String = ""
@@ -215,6 +220,14 @@ Public Class frmeditarClientes
     Private Sub GroupBox2_MouseLeave(ByVal sender As Object, ByVal e As System.EventArgs) Handles GroupBox2.MouseLeave
         Me.lblMensaje.Text = ""
     End Sub
+
+    Private Sub btnNuevo_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnNuevo.Click
+        Dim oFrmNuevoCliente As New frmNuevoCliente()
+        oFrmNuevoCliente.ShowDialog()
+        Me.txtCliente.Clear()
+        CargarClientes("")
+    End Sub
+
     Private Sub btnSalir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSalir.Click
         Me.Close()
     End Sub

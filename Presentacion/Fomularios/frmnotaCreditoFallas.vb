@@ -322,7 +322,7 @@ Public Class frmnotaCreditoFallas
                     'Retornando Producto(s) a almacén con Parte Diario (PD)
                     SqlString3 = "INSERT INTO almCabecera (nomDocumento,tipDocumento,numDocumento,idProveedor,fecOrigen,nomOrigen,dirOrigen," & _
                     "rucDNI_1,fecLlegada,idCliente,transLlegada,status) VALUES ('" & Me.txtnomDocumento & "','" & Me.txtTipoDocumentoEN & "' ," & _
-                    txtNumDocumentoPD & ",1,'" & Me.dtpFechaVcmto.Text & "','" & txtNombreEmpresa & "','" & txtDireccionEmpresa & "','20103855391','" & _
+                    txtNumDocumentoPD & ",1,'" & Me.dtpFechaVcmto.Text & "','" & txtNombreEmpresa & "','" & txtDireccionEmpresa & "','" & ruc_archivoPlano & "','" & _
                     Me.dtpFechaVcmto.Text & "',1,'','+')"
 
                     For i As Integer = 0 To dgvProductos.Rows.Count - 1

@@ -1,15 +1,26 @@
 Public Class frmbarraMenu
     Private Sub frmMenuPrincipal_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        txtNombreEmpresa = conexion.RazonSocialSeleccionada
+        ruc_archivoPlano = conexion.RucSeleccionado
+        txtRUCEmpresa = "RUC: " & ruc_archivoPlano
+        If conexion.BaseDatosSeleccionada <> "SIGECO" Then
+            txtDireccionEmpresa = ""
+            txtTelefonoEmpresa = ""
+        End If
+        CargarConfiguracionEmpresa()
         'Dim oFrmAccesoAdministrador As New frmAccesoAdministrador()
         'If oFrmAcceso.ShowDialog = DialogResult.OK Then
         'End If
+        Dim ambiente As String
         If bitProduccion Then
-            Me.Text = "Sistema Gestión Comercial - Facturación Electrónica (Comercial Oriente Hnos. SAC) Producción"
+            ambiente = "PRODUCCION"
             MsgBox("Conectado a Producción", MsgBoxStyle.Information, Title:="Mensaje")
         Else
-            Me.Text = "Sistema Gestión Comercial - PRUEBAS!!!"
+            ambiente = "PRUEBAS"
             MsgBox("Conectado a Pruebas", MsgBoxStyle.Information, Title:="Mensaje")
         End If
+        Me.Text = "Sistema Gestion Comercial - " & txtNombreEmpresa & _
+                  " - BD: " & conexion.BaseDatosSeleccionada & " - " & ambiente
     End Sub
     Private Sub mnuArchivoConfigurar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuArchivoConfigurar.Click
         Dim ofrmconfigurarPapel As New frmconfigurarPapel()
@@ -422,6 +433,26 @@ Public Class frmbarraMenu
         Dim ofrmVaciarInterfazSunat As New frmVaciarInterfazSunat()
         ofrmVaciarInterfazSunat.MdiParent = Me
         ofrmVaciarInterfazSunat.Show()
+    End Sub
+    Private Sub mnuConfiguracionEmpresa_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuConfiguracionEmpresa.Click
+        flag = 0
+        Dim oFrmAcceso As New frmaccesoAdministrador()
+        oFrmAcceso.ShowDialog()
+        If flag <> 1 Then Exit Sub
+
+        Dim oFrmConfiguracion As New frmconfiguracionEmpresa()
+        oFrmConfiguracion.MdiParent = Me
+        oFrmConfiguracion.Show()
+    End Sub
+    Private Sub mnuConfiguracionFacturador_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuConfiguracionFacturador.Click
+        flag = 0
+        Dim oFrmAcceso As New frmaccesoAdministrador()
+        oFrmAcceso.ShowDialog()
+        If flag <> 1 Then Exit Sub
+
+        Dim oFrmConfiguracion As New frmconfiguracionFacturador()
+        oFrmConfiguracion.MdiParent = Me
+        oFrmConfiguracion.Show()
     End Sub
     Private Sub tsbCalculator_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles tsbCalculator.Click
         Try

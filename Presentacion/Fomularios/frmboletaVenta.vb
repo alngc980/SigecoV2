@@ -35,6 +35,8 @@ Public Class frmboletaVenta
     Private Property ose As Object
 
     Private Sub frmboletaVenta_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        CargarConfiguracionFacturador()
+        Me.wbrSFS.Url = New Uri(urlServicioFacturador)
         Me.lblNombre.Text = txtNombreEmpresa
         Me.lblDireccion.Text = txtDireccionEmpresa
         Me.lblTelefono.Text = txtTelefonoEmpresa
@@ -647,7 +649,7 @@ Public Class frmboletaVenta
                 'End If
 
                 'Dim Verificar As Boolean = True
-                'Dim cRutaCDR As String = "\\" & devuelveNameComputer_sfs & pathData & "R" & ruc_archivoPlano & "-" & "03" & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".zip"
+                'Dim cRutaCDR As String = pathData & "R" & ruc_archivoPlano & "-" & "03" & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".zip"
                 'Do While Verificar
                 '    If File.Exists(cRutaCDR) Then
                 '        Verificar = False
@@ -691,7 +693,7 @@ Public Class frmboletaVenta
                             Next
                         End If
 
-                        Dim rpt As New rptComprobante
+                        Dim rpt As rptComprobante = CrearReporteComprobante()
                         rpt.SetDataSource(ds.Tables("DataTable1"))
 
                         Dim frm As New frmReporte
@@ -776,23 +778,18 @@ Public Class frmboletaVenta
         numTipoDocumento = 1
         numDocumento = Me.txtDNI.Text
 
-        If generaDocumentoTicket = True Then
-            pathData = "\data\"
-            pathRepo = "\repo\"
-        Else
-            pathData = "\SFS_v1.4_A4\sunat_archivos\sfs\data\"
-            pathRepo = "\SFS_v1.4_A4\sunat_archivos\sfs\repo\"
-        End If
+        pathData = RutaFacturador("data") & "\"
+        pathRepo = RutaFacturador("repo") & "\"
 
         Try
-            nomArchivo = "\\" & devuelveNameComputer_sfs & pathRepo & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".PDF"
-            swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".CAB", True)
+            nomArchivo = pathRepo & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".PDF"
+            swEscritor = New StreamWriter(pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".CAB", True)
             'swEscritor.Write("0101|" & CDate(dtpFecha.Text).ToString("yyyy-MM-dd") & "|" & VisualBasic.Mid(Date.Now, 12, 8) & "|-|0000|" & numTipoDocumento & "|" & numDocumento & "|" & Me.txtNombre.Text & "|PEN|" & "0.0" & "|" & Format(CDec(Me.txtSubTotal.Text) + CDec(Me.txtInteres.Text), "#####0.00") & "|" & Format(CDec(Me.txtSubTotal.Text) + CDec(Me.txtInteres.Text), "#####0.00") & "|0.00|0.00|" & Format(CDec(Me.txtTotalAnticipos.Text), "#####0.00") & "|" & Format(CDec(Me.txtTotalPagar.Text), "#####0.00") & "|2.1|2.0|")
             'swEscritor.Write("0101|" & CDate(dtpFecha.Text).ToString("yyyy-MM-dd") & "|" & VisualBasic.Mid(Date.Now, 12, 8) & "|-|0000|" & numTipoDocumento & "|" & numDocumento & "|" & Me.txtNombre.Text & "|PEN|" & "0.0" & "|" & Format(CDec(Me.txtTotalPagar.Text), "#####0.00") & "|" & Format(CDec(Me.txtTotalPagar.Text), "#####0.00") & "|0.00|0.00|" & Format(CDec(Me.txtTotalAnticipos.Text), "#####0.00") & "|" & Format(CDec(Me.txtSubTotal.Text), "#####0.00") & "|2.1|2.0|") 'AAGC20240708 comentado
             swEscritor.Write("0101|" & CDate(dtpFecha.Text).ToString("yyyy-MM-dd") & "|" & VisualBasic.Mid(Date.Now, 12, 8) & "|-|0000|" & numTipoDocumento & "|" & numDocumento & "|" & Me.txtNombre.Text & "|PEN|" & "0.0" & "|" & Format(CDec(Me.txtTotalPagar.Text), "#####0.00") & "|" & Format(CDec(Me.txtTotalPagar.Text), "#####0.00") & "|0.00|0.00|" & Format(CDec(0), "#####0.00") & "|" & Format(CDec(Me.txtTotalPagar.Text), "#####0.00") & "|2.1|2.0|") 'AAGC20240708
             swEscritor.Close()
 
-            swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".DET", True)
+            swEscritor = New StreamWriter(pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".DET", True)
             For x As Integer = 0 To Me.dgvProductos.Rows.Count - 1
                 If Me.dgvProductos.Rows(x).Cells(13).Value = 6 Then
                     swEscritor.WriteLine("NIU|" & CInt(Me.dgvProductos.Rows(x).Cells(9).Value) & "|" & Me.dgvProductos.Rows(x).Cells(1).Value & "|-|" & Me.dgvProductos.Rows(x).Cells(2).Value & " N/M " & Me.dgvProductos.Rows(x).Cells(7).Value & " N/CH " & Me.dgvProductos.Rows(x).Cells(8).Value & "|" & Format(CDec(Me.dgvProductos.Rows(x).Cells(5).Value), "#####0.00") & "|0.00|9997|0.00|" & Format(CDec(Me.dgvProductos.Rows(x).Cells(10).Value), "#####0.00") & "|EXO|VAT|20|18.00|-|0.00|0.00||||0.00|-|0.00|0.00|||0.00|-|0.00|0|||0.00|" & Format(CDec(Me.dgvProductos.Rows(x).Cells(5).Value), "#####0.00") & "|" & Format(CDec(Me.dgvProductos.Rows(x).Cells(10).Value), "#####0.00") & "|0.00|")
@@ -805,21 +802,21 @@ Public Class frmboletaVenta
             End If
             swEscritor.Close()
 
-            swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".LEY", True)
+            swEscritor = New StreamWriter(pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".LEY", True)
             swEscritor.Write("1000|" & numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtTotalPagar.Text), "#####0.00"), Len(Format(Decimal.Parse(Me.txtTotalPagar.Text), "#####0.00")) - 3)) & " Y " & obtieneDecimales(Format(Decimal.Parse(Me.txtTotalPagar.Text), "#####0.00")) & "/100 Soles|")
             swEscritor.Close()
 
-            swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".TRI", True)
+            swEscritor = New StreamWriter(pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".TRI", True)
             swEscritor.Write("9997" & "|EXO|VAT|" & Format(CDec(Me.txtTotalPagar.Text), "#####0.00") & "|0.00|")
             'If CDec(Me.txtICBPeru.Text) > 0 Then swEscritor.Write("7152" & "|ICBPER|OTH|" & Format(CDec(Me.txtICBPeru.Text), "#####0.00") & "|" & Format(CDec(Me.txtICBPeru.Text), "#####0.00") & "|")
             swEscritor.Close()
 
-            swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".ACA", True)
+            swEscritor = New StreamWriter(pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".ACA", True)
             swEscritor.Write("| | | | |PE|160101|" & Me.txtDireccion.Text & "|-| | |")
             swEscritor.Close()
 
             'If (CDec(txtTotalRecibos.Text) > 0 And Me.cbxTipoVenta.SelectedIndex = 1) Then
-            '    swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".REL", True)
+            '    swEscritor = New StreamWriter(pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".REL", True)
             '    Dim y As Byte
             '    For y = matrizRecibos.GetLowerBound(0) To matrizRecibos.GetUpperBound(0)
             '        If matrizRecibos(y, 0) <> "" Then
@@ -832,7 +829,7 @@ Public Class frmboletaVenta
             '        End If
             '    Next y
             '    swEscritor.Close()
-            '    swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".ACV", True)
+            '    swEscritor = New StreamWriter(pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".ACV", True)
             '    swEscritor.Write("false|05|1.00|PEN|" & Format(Decimal.Parse(Me.txtTotalAnticipos.Text), "#####0.00") & "|PEN|" & Format(Decimal.Parse(Me.txtTotalAnticipos.Text), "#####0.00") & "|")
             '    swEscritor.Close()
             'End If
@@ -931,7 +928,7 @@ Public Class frmboletaVenta
                     Next
                 End If
 
-                Dim rpt As New rptComprobante
+                Dim rpt As rptComprobante = CrearReporteComprobante()
                 rpt.SetDataSource(ds.Tables("DataTable1"))
 
                 Dim frm As New frmReporte

@@ -175,6 +175,24 @@
     <Compile Include="Fomularios\frmbackupBD.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Fomularios\frmconfiguracionFacturador.designer.vb">
+      <DependentUpon>frmconfiguracionFacturador.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Fomularios\frmconfiguracionFacturador.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Fomularios\frmconfiguracionEmpresa.designer.vb">
+      <DependentUpon>frmconfiguracionEmpresa.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Fomularios\frmconfiguracionEmpresa.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Fomularios\frmseleccionarEmpresa.designer.vb">
+      <DependentUpon>frmseleccionarEmpresa.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Fomularios\frmseleccionarEmpresa.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Fomularios\frmBalance.designer.vb">
       <DependentUpon>frmBalance.vb</DependentUpon>
     </Compile>
@@ -776,6 +794,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="funciones\conexion.vb" />
+    <Compile Include="funciones\configuracionReporteComprobante.vb" />
     <Compile Include="funciones\funciones.vb" />
     <Compile Include="funciones\funcionesCO.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -788,6 +807,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="My Project\ApplicationEvents.vb" />
     <Compile Include="My Project\Settings.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -910,6 +930,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Fomularios\frmbackupBD.resx">
       <DependentUpon>frmbackupBD.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fomularios\frmconfiguracionFacturador.resx">
+      <DependentUpon>frmconfiguracionFacturador.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fomularios\frmconfiguracionEmpresa.resx">
+      <DependentUpon>frmconfiguracionEmpresa.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fomularios\frmseleccionarEmpresa.resx">
+      <DependentUpon>frmseleccionarEmpresa.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Fomularios\frmBalance.resx">
       <DependentUpon>frmBalance.vb</DependentUpon>
@@ -1422,6 +1451,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\logoo.jpg" />
+    <Content Include="20103855391.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="20329450661.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Libreria\Libreria.vbproj">

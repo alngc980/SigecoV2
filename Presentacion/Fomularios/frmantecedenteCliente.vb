@@ -280,7 +280,7 @@ Public Class frmantecedenteCliente
             End If
 
             te.Text = _
-            "                                  Comercial Oriente Hnos. SAC" & enter & enter & _
+            "                                  " & txtNombreEmpresa & enter & enter & _
             "Movimientos de Cuenta Corriente" & enter & enter & _
             "Datos del Cliente:" & enter & _
             "Nombre Cliente: " & Me.lblNombre.Text & enter & _

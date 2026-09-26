@@ -1,4 +1,4 @@
-ï»¿Imports Microsoft
+Imports Microsoft
 Imports System.IO
 Public Class frmVaciarInterfazSunat
     Private Sub btnProcesar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnProcesar.Click
@@ -20,21 +20,16 @@ Public Class frmVaciarInterfazSunat
         'End If
 
         Dim pathData, pathEnvio, pathFirma, pathOridat, pathParse, pathRepo, pathRpta, pathTemp As String
-        If generaDocumentoTicket = True Then
-            pathData = "\data\" : pathEnvio = "\envio\" : pathFirma = "\firma\" : pathOridat = "\oridat\"
-            pathParse = "\parse\" : pathRepo = "\repo\" : pathRpta = "\rpta\" : pathTemp = "\temp\"
-        Else
-            pathData = "\SFS_v1.4_A4\sunat_archivos\sfs\data\" : pathEnvio = "\SFS_v1.4_A4\sunat_archivos\sfs\envio\"
-            pathFirma = "\SFS_v1.4_A4\sunat_archivos\sfs\firma\" : pathOridat = "\SFS_v1.4_A4\sunat_archivos\sfs\oridat\"
-            pathParse = "\SFS_v1.4_A4\sunat_archivos\sfs\parse\" : pathRepo = "\SFS_v1.4_A4\sunat_archivos\sfs\repo\"
-            pathRpta = "\SFS_v1.4_A4\sunat_archivos\sfs\rpta\" : pathTemp = "\SFS_v1.4_A4\sunat_archivos\sfs\temp\"
-        End If
+        pathData = RutaFacturador("data") & "\" : pathEnvio = RutaFacturador("envio") & "\"
+        pathFirma = RutaFacturador("firma") & "\" : pathOridat = RutaFacturador("oridat") & "\"
+        pathParse = RutaFacturador("parse") & "\" : pathRepo = RutaFacturador("repo") & "\"
+        pathRpta = RutaFacturador("rpta") & "\" : pathTemp = RutaFacturador("temp") & "\"
 
         Try
-            numeroArchivosCAB = My.Computer.FileSystem.GetFiles("\\" & devuelveNameComputer_sfs & pathData, FileIO.SearchOption.SearchAllSubDirectories, "*.CAB").Count
+            numeroArchivosCAB = My.Computer.FileSystem.GetFiles(pathData, FileIO.SearchOption.SearchAllSubDirectories, "*.CAB").Count
             Dim arrayArchivosCAB(numeroArchivosCAB) As String
 
-            numeroArchivosNOT = My.Computer.FileSystem.GetFiles("\\" & devuelveNameComputer_sfs & pathData, FileIO.SearchOption.SearchAllSubDirectories, "*.NOT").Count
+            numeroArchivosNOT = My.Computer.FileSystem.GetFiles(pathData, FileIO.SearchOption.SearchAllSubDirectories, "*.NOT").Count
             Dim arrayArchivosNOT(numeroArchivosNOT) As String
 
             If numeroArchivosCAB <= 0 And numeroArchivosNOT <= 0 Then
@@ -42,13 +37,13 @@ Public Class frmVaciarInterfazSunat
                 Exit Sub
             End If
 
-            For Each Archivo As String In My.Computer.FileSystem.GetFiles("\\" & devuelveNameComputer_sfs & pathData, FileIO.SearchOption.SearchAllSubDirectories, "*.CAB")
+            For Each Archivo As String In My.Computer.FileSystem.GetFiles(pathData, FileIO.SearchOption.SearchAllSubDirectories, "*.CAB")
                 arrayArchivosCAB(i) = Archivo
                 i += 1
             Next
 
             i = 0
-            For Each Archivo As String In My.Computer.FileSystem.GetFiles("\\" & devuelveNameComputer_sfs & pathData, FileIO.SearchOption.SearchAllSubDirectories, "*.NOT")
+            For Each Archivo As String In My.Computer.FileSystem.GetFiles(pathData, FileIO.SearchOption.SearchAllSubDirectories, "*.NOT")
                 arrayArchivosNOT(i) = Archivo
                 i += 1
             Next
@@ -58,10 +53,10 @@ Public Class frmVaciarInterfazSunat
             For x As Integer = 0 To numeroArchivosCAB - 1
                 Dim nameFile As String
 
-                nameFile = VisualBasic.Right(arrayArchivosCAB(x), Len(arrayArchivosCAB(x)) - ("\\" & devuelveNameComputer_sfs & pathData).ToString.Length)
+                nameFile = VisualBasic.Right(arrayArchivosCAB(x), Len(arrayArchivosCAB(x)) - (pathData).ToString.Length)
                 nameFile = VisualBasic.Left(nameFile, Len(nameFile) - 4)
 
-                If My.Computer.FileSystem.FileExists("\\" & devuelveNameComputer_sfs & pathRpta & "R" & nameFile & ".ZIP") = False Then
+                If My.Computer.FileSystem.FileExists(pathRpta & "R" & nameFile & ".ZIP") = False Then
                     archivosNoEnviadosCAB = True
                     arrayArchivosNoEnviados(ii) = nameFile
                     ii += 1
@@ -76,10 +71,10 @@ Public Class frmVaciarInterfazSunat
             For x As Integer = 0 To numeroArchivosNOT - 1
                 Dim nameFile As String
 
-                nameFile = VisualBasic.Right(arrayArchivosNOT(x), Len(arrayArchivosNOT(x)) - ("\\" & devuelveNameComputer_sfs & pathData).ToString.Length)
+                nameFile = VisualBasic.Right(arrayArchivosNOT(x), Len(arrayArchivosNOT(x)) - (pathData).ToString.Length)
                 nameFile = VisualBasic.Left(nameFile, Len(nameFile) - 4)
 
-                If My.Computer.FileSystem.FileExists("\\" & devuelveNameComputer_sfs & pathRpta & "R" & nameFile & ".ZIP") = False Then
+                If My.Computer.FileSystem.FileExists(pathRpta & "R" & nameFile & ".ZIP") = False Then
                     archivosNoEnviadosNOT = True
                     arrayArchivosNoEnviados(ii) = nameFile
                     ii += 1
@@ -95,7 +90,7 @@ Public Class frmVaciarInterfazSunat
             Next
 
             If archivosNoEnviadosCAB = True Or archivosNoEnviadosNOT = True Then
-                MsgBox("Lo sentimos, existe(n) documento(s) no enviados en el facturador SUNAT, envÃ­elos para continuar el procedimiento   !  !  !", MsgBoxStyle.Critical)
+                MsgBox("Lo sentimos, existe(n) documento(s) no enviados en el facturador SUNAT, envíelos para continuar el procedimiento   !  !  !", MsgBoxStyle.Critical)
                 For iii As Int16 = 0 To arrayArchivosNoEnviados.Length - 1
                     If arrayArchivosNoEnviados(iii) <> "" Then
                         MsgBox(arrayArchivosNoEnviados(iii))
@@ -104,51 +99,51 @@ Public Class frmVaciarInterfazSunat
                 Exit Sub
             End If
 
-            If MsgBox("EstÃ¡ seguro de vaciar los documentos del facturador SUNAT?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+            If MsgBox("Está seguro de vaciar los documentos del facturador SUNAT?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
                 If My.Computer.FileSystem.DirectoryExists("D:\Reportes_SUNAT") = False Then My.Computer.FileSystem.CreateDirectory("D:\Reportes_SUNAT")
 
                 If generaDocumentoTicket = True Then
-                    My.Computer.FileSystem.CopyDirectory("D:\SFS_v1.4\sunat_archivos\sfs\REPO", "D:\Reportes_SUNAT\Reportes " & Today.Day & "-" & Today.Month & "-" & Today.Year, True)
+                    My.Computer.FileSystem.CopyDirectory(RutaFacturador("repo"), "D:\Reportes_SUNAT\Reportes " & Today.Day & "-" & Today.Month & "-" & Today.Year, True)
                 Else
-                    My.Computer.FileSystem.CopyDirectory("D:\SFS_v1.4_A4\sunat_archivos\sfs\REPO", "D:\Reportes_SUNAT\Reportes " & Today.Day & "-" & Today.Month & "-" & Today.Year, True)
+                    My.Computer.FileSystem.CopyDirectory(RutaFacturador("repo"), "D:\Reportes_SUNAT\Reportes " & Today.Day & "-" & Today.Month & "-" & Today.Year, True)
                 End If
 
-                For Each archivo As String In My.Computer.FileSystem.GetFiles("\\" & devuelveNameComputer_sfs & pathData, FileIO.SearchOption.SearchAllSubDirectories, "*.*")
+                For Each archivo As String In My.Computer.FileSystem.GetFiles(pathData, FileIO.SearchOption.SearchAllSubDirectories, "*.*")
                     File.Delete(archivo)
                 Next
 
-                For Each archivo As String In My.Computer.FileSystem.GetFiles("\\" & devuelveNameComputer_sfs & pathEnvio, FileIO.SearchOption.SearchAllSubDirectories, "*.*")
+                For Each archivo As String In My.Computer.FileSystem.GetFiles(pathEnvio, FileIO.SearchOption.SearchAllSubDirectories, "*.*")
                     File.Delete(archivo)
                 Next
 
-                For Each archivo As String In My.Computer.FileSystem.GetFiles("\\" & devuelveNameComputer_sfs & pathFirma, FileIO.SearchOption.SearchAllSubDirectories, "*.*")
+                For Each archivo As String In My.Computer.FileSystem.GetFiles(pathFirma, FileIO.SearchOption.SearchAllSubDirectories, "*.*")
                     File.Delete(archivo)
                 Next
 
-                For Each archivo As String In My.Computer.FileSystem.GetFiles("\\" & devuelveNameComputer_sfs & pathOridat, FileIO.SearchOption.SearchAllSubDirectories, "*.XML")
+                For Each archivo As String In My.Computer.FileSystem.GetFiles(pathOridat, FileIO.SearchOption.SearchAllSubDirectories, "*.XML")
                     File.Delete(archivo)
                 Next
 
-                For Each archivo As String In My.Computer.FileSystem.GetFiles("\\" & devuelveNameComputer_sfs & pathParse, FileIO.SearchOption.SearchAllSubDirectories, "*.*")
+                For Each archivo As String In My.Computer.FileSystem.GetFiles(pathParse, FileIO.SearchOption.SearchAllSubDirectories, "*.*")
                     File.Delete(archivo)
                 Next
 
-                For Each archivo As String In My.Computer.FileSystem.GetFiles("\\" & devuelveNameComputer_sfs & pathRepo, FileIO.SearchOption.SearchAllSubDirectories, "*.*")
+                For Each archivo As String In My.Computer.FileSystem.GetFiles(pathRepo, FileIO.SearchOption.SearchAllSubDirectories, "*.*")
                     File.Delete(archivo)
                 Next
 
-                For Each archivo As String In My.Computer.FileSystem.GetFiles("\\" & devuelveNameComputer_sfs & pathRpta, FileIO.SearchOption.SearchAllSubDirectories, "*.*")
+                For Each archivo As String In My.Computer.FileSystem.GetFiles(pathRpta, FileIO.SearchOption.SearchAllSubDirectories, "*.*")
                     File.Delete(archivo)
                 Next
 
-                For Each archivo As String In My.Computer.FileSystem.GetFiles("\\" & devuelveNameComputer_sfs & pathTemp, FileIO.SearchOption.SearchAllSubDirectories, "*.*")
+                For Each archivo As String In My.Computer.FileSystem.GetFiles(pathTemp, FileIO.SearchOption.SearchAllSubDirectories, "*.*")
                     File.Delete(archivo)
                 Next
 
                 If transaccionProducto(listaSqlString) Then
                     'MsgBox("procedimiento ejecutado correctamente  !  !  !", MsgBoxStyle.Information)
                 Else
-                    MsgBox("Error, procedimiento no se realizÃ³ correctamente  !  !  !", MsgBoxStyle.Critical)
+                    MsgBox("Error, procedimiento no se realizó correctamente  !  !  !", MsgBoxStyle.Critical)
                 End If
                 btnSalir_Click(sender, e)
             End If

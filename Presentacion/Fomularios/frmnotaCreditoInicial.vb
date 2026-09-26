@@ -279,21 +279,21 @@ Public Class frmnotaCreditoInicial
 
         Try
             If generaDocumentoPLano = True Then
-                swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & "\data\" & ruc_archivoPlano & "-07-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumNotaCredito.Text & ".NOT", True)
+                swEscritor = New StreamWriter(RutaFacturador("data") & "\" & ruc_archivoPlano & "-07-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumNotaCredito.Text & ".NOT", True)
                 swEscritor.Write("0101|" & Now.ToString("yyyy-MM-dd") & "|" & VisualBasic.Mid(Date.Now, 12, 8) & "|0000|" & numTipoDocumento & "|" & numDocumento & "|" & Me.txtNombres.Text & "|PEN|" & Me.cbxTipoNotaCredito.SelectedItem & "|" & Me.txtMotivoNotaCredito.Text & "|" & tipoDocumento & "|" & VisualBasic.Left(Me.cbxTipoDocumento.Text, 1) & "001-" & Me.txtNumDocumentoVenta.Text & "|0.00|" & Format(CSng(Me.txtTotalNotaCredito.Text), "#####0.00") & "|" & Format(CSng(Me.txtTotalNotaCredito.Text), "#####0.00") & "|0.00|0.00|0.00|" & Format(CSng(Me.txtTotalNotaCredito.Text), "#####0.00") & "|2.1|2.0|")
                 swEscritor.Close()
 
-                swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & "\data\" & ruc_archivoPlano & "-07-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumNotaCredito.Text & ".DET", True)
+                swEscritor = New StreamWriter(RutaFacturador("data") & "\" & ruc_archivoPlano & "-07-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumNotaCredito.Text & ".DET", True)
                 For x As Integer = 0 To Me.dgvDetalles.Rows.Count - 1
                     swEscritor.WriteLine("NIU|" & Me.dgvDetalles.Rows(x).Cells(4).Value & "|" & Me.dgvDetalles.Rows(x).Cells(1).Value & "|-|" & Me.dgvDetalles.Rows(x).Cells(2).Value & "|" & Format(CSng(Me.dgvDetalles.Rows(x).Cells(3).Value), "#####0.00") & "|0.00|9997|0.00|" & Format(CSng(Me.dgvDetalles.Rows(x).Cells(5).Value), "#####0.00") & "|EXO|VAT|20|0.00|-|0.00|0.00||||0.00|-|0.00|0.00|||0.00|-|0.00|0|||0.00|" & Format(CSng(Me.dgvDetalles.Rows(x).Cells(3).Value), "#####0.00") & "|" & Format(CSng(Me.dgvDetalles.Rows(x).Cells(5).Value), "#####0.00") & "|0.00|")
                 Next x
                 swEscritor.Close()
 
-                swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & "\data\" & ruc_archivoPlano & "-07-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumNotaCredito.Text & ".LEY", True)
+                swEscritor = New StreamWriter(RutaFacturador("data") & "\" & ruc_archivoPlano & "-07-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumNotaCredito.Text & ".LEY", True)
                 swEscritor.Write("1000|" & numeroLetras(VisualBasic.Left(Format(Single.Parse(Me.txtTotalNotaCredito.Text), "###,##0.00"), Len(Format(Single.Parse(Me.txtTotalNotaCredito.Text), "###,##0.00")) - 3)) & " Y " & obtieneDecimales(Format(Single.Parse(Me.txtTotalNotaCredito.Text), "###,##0.00")) & "/100 Soles|")
                 swEscritor.Close()
 
-                swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & "\data\" & ruc_archivoPlano & "-07-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumNotaCredito.Text & ".TRI", True)
+                swEscritor = New StreamWriter(RutaFacturador("data") & "\" & ruc_archivoPlano & "-07-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumNotaCredito.Text & ".TRI", True)
                 swEscritor.WriteLine("9997" & "|EXO|VAT|" & Format(Single.Parse(Me.txtTotalNotaCredito.Text), "#####0.00") & "|0.00|")
                 swEscritor.Close()
 

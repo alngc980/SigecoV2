@@ -287,6 +287,8 @@ Partial Class frmbarraMenu
         Me.ToolStripSeparator55 = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuConfiguracionImportarDatosExcel = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuConfiguracionLimpiarInterfazSunat = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuConfiguracionEmpresa = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuConfiguracionFacturador = New System.Windows.Forms.ToolStripMenuItem()
         Me.sstDetalles = New System.Windows.Forms.StatusStrip()
         Me.ss = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ToolStripStatusLabel2 = New System.Windows.Forms.ToolStripStatusLabel()
@@ -1892,7 +1894,7 @@ Partial Class frmbarraMenu
         '
         'mnuConfiguracion
         '
-        Me.mnuConfiguracion.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuConfiguracionTasaCredito, Me.mnuConfiguracionTipoCambio, Me.PlazosGarantiasToolStripMenuItem, Me.ToolStripSeparator34, Me.mnuComisionPagoAtrasado, Me.mnuConfiguracionTasasVendedor, Me.ToolStripSeparator56, Me.mnuConfiguracionNumerosDocumento, Me.mnuConfiguracionBackup, Me.ToolStripSeparator55, Me.mnuConfiguracionImportarDatosExcel, Me.mnuConfiguracionLimpiarInterfazSunat})
+        Me.mnuConfiguracion.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuConfiguracionTasaCredito, Me.mnuConfiguracionTipoCambio, Me.PlazosGarantiasToolStripMenuItem, Me.ToolStripSeparator34, Me.mnuComisionPagoAtrasado, Me.mnuConfiguracionTasasVendedor, Me.ToolStripSeparator56, Me.mnuConfiguracionNumerosDocumento, Me.mnuConfiguracionBackup, Me.ToolStripSeparator55, Me.mnuConfiguracionImportarDatosExcel, Me.mnuConfiguracionLimpiarInterfazSunat, Me.mnuConfiguracionEmpresa, Me.mnuConfiguracionFacturador})
         Me.mnuConfiguracion.Name = "mnuConfiguracion"
         Me.mnuConfiguracion.Size = New System.Drawing.Size(120, 25)
         Me.mnuConfiguracion.Text = "Configuración"
@@ -1959,6 +1961,17 @@ Partial Class frmbarraMenu
         Me.mnuConfiguracionLimpiarInterfazSunat.Name = "mnuConfiguracionLimpiarInterfazSunat"
         Me.mnuConfiguracionLimpiarInterfazSunat.Size = New System.Drawing.Size(280, 26)
         Me.mnuConfiguracionLimpiarInterfazSunat.Text = "Limpiar Interfaz SUNAT"
+        '
+        'mnuConfiguracionEmpresa
+        '
+        Me.mnuConfiguracionEmpresa.Name = "mnuConfiguracionEmpresa"
+        Me.mnuConfiguracionEmpresa.Size = New System.Drawing.Size(280, 26)
+        Me.mnuConfiguracionEmpresa.Text = "Configurar Datos Empresa"
+        '        'mnuConfiguracionFacturador
+        '
+        Me.mnuConfiguracionFacturador.Name = "mnuConfiguracionFacturador"
+        Me.mnuConfiguracionFacturador.Size = New System.Drawing.Size(280, 26)
+        Me.mnuConfiguracionFacturador.Text = "Configurar Facturador SUNAT"
         '
         'sstDetalles
         '
@@ -2281,6 +2294,8 @@ Partial Class frmbarraMenu
     Friend WithEvents ToolStripSeparator55 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents mnuConfiguracionImportarDatosExcel As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuConfiguracionLimpiarInterfazSunat As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuConfiguracionEmpresa As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuConfiguracionFacturador As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuCajaAnularReciboSalida As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ComisionVisaToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents SaldosXMovimientosToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem

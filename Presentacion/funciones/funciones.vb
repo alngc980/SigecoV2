@@ -43,17 +43,61 @@ Module funciones
     Public nomArchivo As String
     Public devuelveNameComputer As String = "Servidor"
     Public devuelveNameComputer_sfs As String = My.Computer.Name.ToString.ToUpper
+    Public rutaBaseFacturador As String = "\\" & devuelveNameComputer_sfs
+    Public urlServicioFacturador As String = "http://localhost:9000/#"
     Public iniciarSaldos As Boolean = False
     '----
     Public ImpresoraActual As New Printing.PrinterSettings
     Dim cnd As New conexion
     Public CadenaConexion As String = cnd.ObtenerCadena()
 
-    Public Const bitProduccion As Boolean = 1
+    Public Const bitProduccion As Boolean = 0
 
 
     Public Connection As New SqlConnection(CadenaConexion)
     'Public Connection As New SqlConnection("Data Source=SERVER;Initial Catalog=SIGECO;User ID=sa;Password=123456")
+    Public Sub CargarConfiguracionEmpresa()
+        Try
+            Using cn As New SqlConnection(CadenaConexion)
+                cn.Open()
+                Using cmd As New SqlCommand("SELECT razonSocial, direccion, telefono, ruc FROM configuracionEmpresa WHERE idConfiguracion = 1", cn)
+                    Using dr As SqlDataReader = cmd.ExecuteReader()
+                        If dr.Read() Then
+                            txtNombreEmpresa = dr("razonSocial").ToString().Trim()
+                            txtDireccionEmpresa = dr("direccion").ToString().Trim()
+                            txtTelefonoEmpresa = "Telefono: " & dr("telefono").ToString().Trim()
+                            ruc_archivoPlano = dr("ruc").ToString().Trim()
+                            txtRUCEmpresa = "RUC: " & ruc_archivoPlano
+                        End If
+                    End Using
+                End Using
+            End Using
+        Catch ex As Exception
+            'Mantiene los valores heredados mientras el script aun no se instala.
+        End Try
+    End Sub
+    Public Sub CargarConfiguracionFacturador()
+        Try
+            Using cn As New SqlConnection(CadenaConexion)
+                cn.Open()
+                Using cmd As New SqlCommand("SELECT rutaBase, urlServicio FROM configuracionFacturador WHERE idConfiguracion = 1", cn)
+                    Using dr As SqlDataReader = cmd.ExecuteReader()
+                        If dr.Read() Then
+                            rutaBaseFacturador = dr("rutaBase").ToString().Trim().TrimEnd("\"c)
+                            urlServicioFacturador = dr("urlServicio").ToString().Trim()
+                        End If
+                    End Using
+                End Using
+            End Using
+        Catch ex As Exception
+            'Mantiene los valores heredados mientras el script aun no se instala.
+        End Try
+    End Sub
+
+    Public Function RutaFacturador(ByVal carpeta As String) As String
+        CargarConfiguracionFacturador()
+        Return Path.Combine(rutaBaseFacturador, carpeta.Trim("\"c))
+    End Function
     Public Function sumaColumnas(ByVal Data As DataGridView, ByVal col As Byte) As Double
         Dim suma As Double
         For x As Integer = 0 To Data.Rows.Count - 1

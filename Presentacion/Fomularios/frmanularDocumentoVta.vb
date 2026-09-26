@@ -523,7 +523,7 @@ Public Class frmanularDocumentoVta
                 Next
             End If
 
-            Dim rpt As New rptComprobante
+            Dim rpt As rptComprobante = CrearReporteComprobante()
             rpt.SetDataSource(ds.Tables("DataTable1"))
 
             Dim frm As New frmReporte
@@ -636,7 +636,7 @@ Public Class frmanularDocumentoVta
             Exit Sub
         End If
 
-        If My.Computer.FileSystem.FileExists("\\" & devuelveNameComputer_sfs & "\RPTA\R" & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".ZIP") = True Then
+        If My.Computer.FileSystem.FileExists(RutaFacturador("rpta") & "\R" & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".ZIP") = True Then
             MsgBox("Por favor, documento fue enviado y aceptado por la SUNAT, no se puede anular, utilice NOTA CREDITO, para este procedimiento  !  !  !", MsgBoxStyle.Exclamation)
             Me.txtNumDocumento.Focus()
             Exit Sub
@@ -699,40 +699,35 @@ Public Class frmanularDocumentoVta
     Private Sub eliminarDocumentoPlano()
         Dim pathData, pathEnvio, pathFirma, pathOridat, pathParse, pathRepo, pathRpta, pathTemp As String
 
-        If generaDocumentoTicket = True Then
-            pathData = "\data\" : pathEnvio = "\envio\" : pathFirma = "\firma\" : pathOridat = "\oridat\"
-            pathParse = "\parse\" : pathRepo = "\repo\" : pathRpta = "\rpta\R" : pathTemp = "\temp\"
-        Else
-            pathData = "\SFS_v1.4_A4\sunat_archivos\sfs\data\" : pathEnvio = "\SFS_v1.4_A4\sunat_archivos\sfs\envio\"
-            pathFirma = "\SFS_v1.4_A4\sunat_archivos\sfs\firma\" : pathOridat = "\SFS_v1.4_A4\sunat_archivos\sfs\oridat\"
-            pathParse = "\SFS_v1.4_A4\sunat_archivos\sfs\parse\" : pathRepo = "\SFS_v1.4_A4\sunat_archivos\sfs\repo\"
-            pathRpta = "\SFS_v1.4_A4\sunat_archivos\sfs\rpta\R" : pathTemp = "\SFS_v1.4_A4\sunat_archivos\sfs\temp\"
-        End If
+        pathData = RutaFacturador("data") & "\" : pathEnvio = RutaFacturador("envio") & "\"
+        pathFirma = RutaFacturador("firma") & "\" : pathOridat = RutaFacturador("oridat") & "\"
+        pathParse = RutaFacturador("parse") & "\" : pathRepo = RutaFacturador("repo") & "\"
+        pathRpta = RutaFacturador("rpta") & "\R" : pathTemp = RutaFacturador("temp") & "\"
 
         Try
-            My.Computer.FileSystem.DeleteFile("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".CAB")
-            My.Computer.FileSystem.DeleteFile("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".DET")
-            My.Computer.FileSystem.DeleteFile("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".LEY")
-            My.Computer.FileSystem.DeleteFile("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".TRI")
-            My.Computer.FileSystem.DeleteFile("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".ACA")
+            My.Computer.FileSystem.DeleteFile(pathData & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".CAB")
+            My.Computer.FileSystem.DeleteFile(pathData & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".DET")
+            My.Computer.FileSystem.DeleteFile(pathData & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".LEY")
+            My.Computer.FileSystem.DeleteFile(pathData & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".TRI")
+            My.Computer.FileSystem.DeleteFile(pathData & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".ACA")
 
-            If My.Computer.FileSystem.FileExists("\\" & devuelveNameComputer_sfs & pathEnvio & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".ZIP") = True Then _
-               My.Computer.FileSystem.DeleteFile("\\" & devuelveNameComputer_sfs & pathEnvio & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".ZIP")
+            If My.Computer.FileSystem.FileExists(pathEnvio & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".ZIP") = True Then _
+               My.Computer.FileSystem.DeleteFile(pathEnvio & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".ZIP")
 
-            If My.Computer.FileSystem.FileExists("\\" & devuelveNameComputer_sfs & pathFirma & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML") = True Then _
-               My.Computer.FileSystem.DeleteFile("\\" & devuelveNameComputer_sfs & pathFirma & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML")
+            If My.Computer.FileSystem.FileExists(pathFirma & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML") = True Then _
+               My.Computer.FileSystem.DeleteFile(pathFirma & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML")
 
-            If My.Computer.FileSystem.FileExists("\\" & devuelveNameComputer_sfs & pathOridat & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML") = True Then _
-               My.Computer.FileSystem.DeleteFile("\\" & devuelveNameComputer_sfs & pathOridat & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML")
+            If My.Computer.FileSystem.FileExists(pathOridat & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML") = True Then _
+               My.Computer.FileSystem.DeleteFile(pathOridat & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML")
 
-            If My.Computer.FileSystem.FileExists("\\" & devuelveNameComputer_sfs & pathParse & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML") = True Then _
-               My.Computer.FileSystem.DeleteFile("\\" & devuelveNameComputer_sfs & pathParse & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML")
+            If My.Computer.FileSystem.FileExists(pathParse & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML") = True Then _
+               My.Computer.FileSystem.DeleteFile(pathParse & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML")
 
-            If My.Computer.FileSystem.FileExists("\\" & devuelveNameComputer_sfs & pathRepo & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".PDF") = True Then _
-               My.Computer.FileSystem.DeleteFile("\\" & devuelveNameComputer_sfs & pathRepo & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".PDF")
+            If My.Computer.FileSystem.FileExists(pathRepo & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".PDF") = True Then _
+               My.Computer.FileSystem.DeleteFile(pathRepo & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".PDF")
 
-            If My.Computer.FileSystem.FileExists("\\" & devuelveNameComputer_sfs & pathTemp & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML") = True Then _
-               My.Computer.FileSystem.DeleteFile("\\" & devuelveNameComputer_sfs & pathTemp & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML")
+            If My.Computer.FileSystem.FileExists(pathTemp & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML") = True Then _
+               My.Computer.FileSystem.DeleteFile(pathTemp & ruc_archivoPlano & "-" & tipoDocumento & "-" & Me.txtSerieDocumento.Text & "-" & Me.txtNumDocumento.Text & ".XML")
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try

@@ -1523,13 +1523,8 @@ Public Class frmreciboPago
         End If
         numDocumento = Me.txtDNI.Text
 
-        If generaDocumentoTicket = True Then
-            pathData = "\data\"
-            pathRepo = "\repo\"
-        Else
-            pathData = "\SFS_v1.4_A4\sunat_archivos\sfs\data\"
-            pathRepo = "\SFS_v1.4_A4\sunat_archivos\sfs\repo\"
-        End If
+        pathData = RutaFacturador("data") & "\"
+        pathRepo = RutaFacturador("repo") & "\"
 
         If cbxConcepto.SelectedIndex = 3 Then
             idConcepto = "8"
@@ -1538,30 +1533,30 @@ Public Class frmreciboPago
         End If
 
         Try
-            nomArchivo = "\\" & devuelveNameComputer_sfs & pathRepo & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".PDF"
-            swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".CAB", True)
+            nomArchivo = pathRepo & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".PDF"
+            swEscritor = New StreamWriter(pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".CAB", True)
             swEscritor.Write("0101|" & CDate(dtpFecha.Text).ToString("yyyy-MM-dd") & "|" & VisualBasic.Mid(Date.Now, 12, 8) & "|-|0000|" & numTipoDocumento & "|" & numDocumento & "|" & Me.txtNombres.Text & "|PEN|" & "0.0" & "|" & Format(CDec(txtMonto.Text), "#####0.00") & "|" & Format(CDec(Me.txtMonto.Text), "#####0.00") & "|0.00|0.00|0.00|" & Format(CDec(Me.txtMonto.Text), "#####0.00") & "|2.1|2.0|")
             swEscritor.Close()
 
-            swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".DET", True)
+            swEscritor = New StreamWriter(pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".DET", True)
             swEscritor.WriteLine("NIU|1|" & idConcepto & "|-|" & cbxConcepto.Text & "|" & Format(CDec(txtMonto.Text), "#####0.00") & "|0.00|9997|0.00|" & Format(CDec(txtMonto.Text), "#####0.00") & "|EXO|VAT|20|18.00|-|0.00|0.00||||0.00|-|0.00|0.00|||0.00|-|0.00|0|||0.00|" & Format(CDec(txtMonto.Text), "#####0.00") & "|" & Format(CDec(txtMonto.Text), "#####0.00") & "|0.00|")
             swEscritor.Close()
 
-            swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".LEY", True)
+            swEscritor = New StreamWriter(pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".LEY", True)
             swEscritor.Write("1000|" & numeroLetras(VisualBasic.Left(Format(Decimal.Parse(Me.txtMonto.Text), "#####0.00"), Len(Format(Decimal.Parse(Me.txtTotalPagar.Text), "#####0.00")) - 3)) & " Y " & obtieneDecimales(Format(Decimal.Parse(Me.txtTotalPagar.Text), "#####0.00")) & "/100 Soles|")
             swEscritor.Close()
 
-            swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".TRI", True)
+            swEscritor = New StreamWriter(pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".TRI", True)
             swEscritor.Write("9997" & "|EXO|VAT|" & Format(CDec(Me.txtMonto.Text), "#####0.00") & "|0.00|")
             'If CDec(Me.txtICBPeru.Text) > 0 Then swEscritor.Write("7152" & "|ICBPER|OTH|" & Format(CDec(Me.txtICBPeru.Text), "#####0.00") & "|" & Format(CDec(Me.txtICBPeru.Text), "#####0.00") & "|")
             swEscritor.Close()
 
-            swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".ACA", True)
+            swEscritor = New StreamWriter(pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".ACA", True)
             swEscritor.Write("| | | | |PE|160101|" & Me.txtDireccion.Text & "|-| | |")
             swEscritor.Close()
 
             If cbxTipoDocumento.SelectedIndex = 1 Then
-                swEscritor = New StreamWriter("\\" & devuelveNameComputer_sfs & pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".PAG", True)
+                swEscritor = New StreamWriter(pathData & ruc_archivoPlano & "-" & tipDocumento & "-" & Me.txtSerie.Text & "-" & Me.txtNumDocumento & ".PAG", True)
 
                 swEscritor.Write("Contado" & "|-|-|")
                 swEscritor.Close()

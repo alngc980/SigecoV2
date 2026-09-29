@@ -95,10 +95,10 @@ Partial Class frmnuevoUsuario
         'cbxUsuario
         '
         Me.cbxUsuario.FormattingEnabled = True
-        Me.cbxUsuario.Items.AddRange(New Object() {"Admin", "User"})
+        Me.cbxUsuario.Items.AddRange(New Object() {"administrador", "vendedor"})
         Me.cbxUsuario.Location = New System.Drawing.Point(129, 78)
         Me.cbxUsuario.Name = "cbxUsuario"
-        Me.cbxUsuario.Size = New System.Drawing.Size(80, 21)
+        Me.cbxUsuario.Size = New System.Drawing.Size(120, 21)
         Me.cbxUsuario.TabIndex = 3
         '
         'Label4

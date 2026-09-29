@@ -664,18 +664,15 @@ Public Class frmboletaVenta
                 'End If
 
                 Try
-                    Dim ms1 As New System.IO.MemoryStream
                     Dim rep As New ReportesBD
-                    AbrirAppQr()
-                    Dim imagePath As String = Application.StartupPath + "\QR\" & txtSerieDocumento.Text & "-" & txtNumDocumento.Text & ".jpg"
+                    Dim imagePath As String = GenerarQrComprobante(txtSerieDocumento.Text, txtNumDocumento.Text)
 
                     ' Verifica si el archivo de imagen existe antes de intentar cargarlo
                     If System.IO.File.Exists(imagePath) Then
-                        PictureBox1.Image = Image.FromFile(imagePath)
-                        PictureBox1.Image.Save(ms1, PictureBox1.Image.RawFormat)
-                        Dim byt() As Byte = ms1.ToArray
-
+                        Dim byt() As Byte = System.IO.File.ReadAllBytes(imagePath)
                         Dim ds As New DataSet1
+
+                        Dim logoEmpresa() As Byte = ObtenerLogoEmpresaBytes()
                         Dim Dt As New DataTable
                         Dt = RetornaDataTable("rpt_Comprobante 'BV','" & txtSerieDocumento.Text & "','" & txtNumDocumento.Text & "'")
                         If Dt.Rows.Count > 0 Then
@@ -689,7 +686,9 @@ Public Class frmboletaVenta
                                                Dt.Rows(i)(10).ToString(), Dt.Rows(i)(11).ToString(),
                                                Dt.Rows(i)(12).ToString(), Dt.Rows(i)(13).ToString(),
                                                Dt.Rows(i)(14).ToString(), Dt.Rows(0)(15).ToString(),
-                                               "", Dt.Rows(0)(17).ToString(), Dt.Rows(0)(18).ToString())
+                                               "", Dt.Rows(0)(17).ToString(), Dt.Rows(0)(18).ToString(),
+                                               txtNombreEmpresa, ruc_archivoPlano, txtDireccionEmpresa,
+                                               txtTelefonoEmpresa, logoEmpresa)
                             Next
                         End If
 
@@ -739,7 +738,9 @@ Public Class frmboletaVenta
                                dt.Rows(0)(20).ToString(), dt.Rows(0)(21).ToString(),
                                dt.Rows(0)(22).ToString(), dt.Rows(0)(23).ToString(),
                                dt.Rows(0)(24).ToString(), dt.Rows(0)(25).ToString(),
-                               dt.Rows(0)(26).ToString())
+                               dt.Rows(0)(26).ToString(),
+                                txtNombreEmpresa, ruc_archivoPlano,
+                                txtDireccionEmpresa, txtTelefonoEmpresa)
                     Next
                 End If
 
@@ -899,18 +900,15 @@ Public Class frmboletaVenta
         'End If
 
         Try
-            Dim ms1 As New System.IO.MemoryStream
             Dim rep As New ReportesBD
-            AbrirAppQr()
-            Dim imagePath As String = Application.StartupPath + "\QR\" & txtSerieDocumento.Text & "-" & txtNumDocumento.Text & ".jpg"
+            Dim imagePath As String = GenerarQrComprobante(txtSerieDocumento.Text, txtNumDocumento.Text)
 
             ' Verifica si el archivo de imagen existe antes de intentar cargarlo
             If System.IO.File.Exists(imagePath) Then
-                PictureBox1.Image = Image.FromFile(imagePath)
-                PictureBox1.Image.Save(ms1, PictureBox1.Image.RawFormat)
-                Dim byt() As Byte = ms1.ToArray
-
+                Dim byt() As Byte = System.IO.File.ReadAllBytes(imagePath)
                 Dim ds As New DataSet1
+
+                Dim logoEmpresa() As Byte = ObtenerLogoEmpresaBytes()
                 Dim Dt As New DataTable
                 Dt = RetornaDataTable("rpt_Comprobante 'BV','" & txtSerieDocumento.Text & "','" & txtNumDocumento.Text & "'")
                 If Dt.Rows.Count > 0 Then
@@ -924,7 +922,9 @@ Public Class frmboletaVenta
                                                Dt.Rows(i)(10).ToString(), Dt.Rows(i)(11).ToString(),
                                                Dt.Rows(i)(12).ToString(), Dt.Rows(i)(13).ToString(),
                                                Dt.Rows(i)(14).ToString(), Dt.Rows(0)(15).ToString(),
-                                               "", Dt.Rows(0)(17).ToString(), Dt.Rows(0)(18).ToString())
+                                               "", Dt.Rows(0)(17).ToString(), Dt.Rows(0)(18).ToString(),
+                                               txtNombreEmpresa, ruc_archivoPlano, txtDireccionEmpresa,
+                                               txtTelefonoEmpresa, logoEmpresa)
                     Next
                 End If
 

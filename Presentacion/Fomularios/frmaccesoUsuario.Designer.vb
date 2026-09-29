@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmaccesoUsuario
     Inherits System.Windows.Forms.Form
 
@@ -81,7 +81,7 @@ Partial Class frmaccesoUsuario
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.Location = New System.Drawing.Point(17, 74)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(46, 16)
+        Me.Label2.Size = New System.Drawing.Size(45, 16)
         Me.Label2.TabIndex = 29
         Me.Label2.Text = "Clave:"
         '
@@ -91,7 +91,7 @@ Partial Class frmaccesoUsuario
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(17, 30)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(58, 16)
+        Me.Label1.Size = New System.Drawing.Size(57, 16)
         Me.Label1.TabIndex = 28
         Me.Label1.Text = "Usuario:"
         '
@@ -112,7 +112,6 @@ Partial Class frmaccesoUsuario
         Me.txtUsuario.Location = New System.Drawing.Point(156, 26)
         Me.txtUsuario.MaxLength = 12
         Me.txtUsuario.Name = "txtUsuario"
-        Me.txtUsuario.ReadOnly = True
         Me.txtUsuario.Size = New System.Drawing.Size(97, 20)
         Me.txtUsuario.TabIndex = 10
         '
@@ -138,7 +137,8 @@ Partial Class frmaccesoUsuario
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.grbDatosUsuario)
         Me.Name = "frmaccesoUsuario"
-        Me.Text = "frmaccesoUsuario"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Text = "Acceso al Sistema"
         Me.GroupBox2.ResumeLayout(False)
         Me.grbDatosUsuario.ResumeLayout(False)
         Me.grbDatosUsuario.PerformLayout()

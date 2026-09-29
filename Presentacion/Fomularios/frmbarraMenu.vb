@@ -14,7 +14,7 @@ Public Class frmbarraMenu
         Dim ambiente As String
         If bitProduccion Then
             ambiente = "PRODUCCION"
-            MsgBox("Conectado a Producción", MsgBoxStyle.Information, Title:="Mensaje")
+            MsgBox("Conectado a Producciï¿½n", MsgBoxStyle.Information, Title:="Mensaje")
         Else
             ambiente = "PRUEBAS"
             MsgBox("Conectado a Pruebas", MsgBoxStyle.Information, Title:="Mensaje")
@@ -262,12 +262,25 @@ Public Class frmbarraMenu
         ofrmeditarCobradores.MdiParent = Me
         ofrmeditarCobradores.Show()
     End Sub
+    Private Function AutorizarMantenimientoUsuarios() As Boolean
+        If UsuarioActualEsAdministrador() Then Return True
+
+        flag = 0
+        Dim oFrmAcceso As New frmaccesoAdministrador()
+        oFrmAcceso.ShowDialog()
+        Return flag = 1
+    End Function
+
     Private Sub mnuUtilitarioUsuariosNuevo_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuUtilitarioUsuariosNuevo.Click
+        If Not AutorizarMantenimientoUsuarios() Then Exit Sub
+
         Dim ofrmnuevoUsuario As New frmnuevoUsuario()
         ofrmnuevoUsuario.MdiParent = Me
         ofrmnuevoUsuario.Show()
     End Sub
     Private Sub mnuUtilitarioUsuariosEditar_Click(sender As System.Object, e As System.EventArgs) Handles mnuUtilitarioUsuariosEditar.Click
+        If Not AutorizarMantenimientoUsuarios() Then Exit Sub
+
         Dim ofrmeditarUsuarios As New frmeditarUsuarios()
         ofrmeditarUsuarios.MdiParent = Me
         ofrmeditarUsuarios.Show()
@@ -487,7 +500,7 @@ Public Class frmbarraMenu
         ofrmsaldosAlmacen.Show()
     End Sub
 
-    Private Sub ModifcarGarantíaGuiaToolStripMenuItem_Click(sender As Object, e As EventArgs)
+    Private Sub ModificarGarantiaGuiaToolStripMenuItem_Click(sender As Object, e As EventArgs)
 
     End Sub
 

@@ -1,9 +1,16 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Public Class frmaccesoAdministrador
     Private intentos As Integer = 0
 
     Private Sub frmAccesoAdministrador_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Try
+            If UsuarioActualEsAdministrador() Then
+                flag = 1
+                Me.DialogResult = Windows.Forms.DialogResult.OK
+                Me.BeginInvoke(New MethodInvoker(AddressOf Me.Close))
+                Exit Sub
+            End If
+
             flag = 0
             Me.txtUsuario.Clear()
             Me.txtPassword.Clear()
@@ -27,8 +34,9 @@ Public Class frmaccesoAdministrador
                 Exit Sub
             End If
 
-            If ValidarAdministrador(Trim(Me.txtUsuario.Text), Me.txtPassword.Text) Then
+            If ValidarCredencialesAdministrador(Trim(Me.txtUsuario.Text), Me.txtPassword.Text) Then
                 flag = 1
+                Me.DialogResult = Windows.Forms.DialogResult.OK
                 Me.Close()
             Else
                 intentos = intentos + 1
@@ -43,33 +51,17 @@ Public Class frmaccesoAdministrador
             End If
         Catch ex As Exception
             MessageBox.Show(ex.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            If Connection.State <> ConnectionState.Closed Then
-                Connection.Close()
-            End If
         End Try
     End Sub
 
-    Private Function ValidarAdministrador(ByVal usuario As String, ByVal clave As String) As Boolean
-        Dim sql As String = "SELECT COUNT(1) FROM usuariosSistema WHERE usuario = @usuario AND clave = @clave AND usuario = 'Admin'"
-
-        Using cmd As New SqlCommand(sql, Connection)
-            cmd.Parameters.AddWithValue("@usuario", usuario)
-            cmd.Parameters.AddWithValue("@clave", clave)
-
-            If Connection.State <> ConnectionState.Closed Then
-                Connection.Close()
-            End If
-            Connection.Open()
-            Return CInt(cmd.ExecuteScalar()) > 0
-        End Using
-    End Function
     Private Sub grbDatosUsuario_MouseEnter(ByVal sender As Object, ByVal e As System.EventArgs) Handles grbDatosUsuario.MouseEnter
-        Me.lblMensaje.Text = "Ingrese clave de Administrador para grabar las modificaciones."
+        Me.lblMensaje.Text = "Ingrese credenciales de Administrador para continuar."
     End Sub
+
     Private Sub grbDatosUsuario_MouseLeave(ByVal sender As Object, ByVal e As System.EventArgs) Handles grbDatosUsuario.MouseLeave
         Me.lblMensaje.Text = ""
     End Sub
+
     Private Sub btnSalir_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSalir.Click
         flag = 0
         Me.Close()

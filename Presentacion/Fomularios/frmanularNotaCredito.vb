@@ -248,9 +248,7 @@ Public Class frmanularNotaCredito
         'End Try
 
         Try
-            Dim ms1 As New System.IO.MemoryStream
             Dim rep As New ReportesBD
-            AbrirAppQr()
 
             Dim Serie, Correl As String
 
@@ -264,19 +262,19 @@ Public Class frmanularNotaCredito
                 Exit Sub
             End If
 
-            Dim imagePath As String = Application.StartupPath + "\QR\" & Serie & "-" & Correl & ".jpg"
+            Dim imagePath As String = GenerarQrComprobante(Serie, Correl)
             Dim byt() As Byte
             ' Verifica si el archivo de imagen existe antes de intentar cargarlo
             If System.IO.File.Exists(imagePath) Then
-                PictureBox1.Image = Image.FromFile(imagePath)
-                PictureBox1.Image.Save(ms1, PictureBox1.Image.RawFormat)
-                byt = ms1.ToArray
+                byt = System.IO.File.ReadAllBytes(imagePath)
             Else
-                byt = ms1.ToArray
+                byt = Nothing
                 MessageBox.Show("No se encontró el archivo de imagen: " & imagePath)
             End If
 
             Dim ds As New DataSet1
+
+            Dim logoEmpresa() As Byte = ObtenerLogoEmpresaBytes()
             Dim Dt As New DataTable
 
 
@@ -292,7 +290,9 @@ Public Class frmanularNotaCredito
                                Dt.Rows(0)(10).ToString(), Dt.Rows(0)(11).ToString(),
                                Dt.Rows(0)(12).ToString(), Dt.Rows(0)(13).ToString(),
                                Dt.Rows(0)(14).ToString(), Dt.Rows(0)(15).ToString(),
-                               Dt.Rows(0)(16).ToString(), Dt.Rows(0)(17).ToString(), Dt.Rows(0)(18).ToString())
+                               Dt.Rows(0)(16).ToString(), Dt.Rows(0)(17).ToString(), Dt.Rows(0)(18).ToString(),
+                                               txtNombreEmpresa, ruc_archivoPlano, txtDireccionEmpresa,
+                                               txtTelefonoEmpresa, logoEmpresa)
                 Next
             End If
 

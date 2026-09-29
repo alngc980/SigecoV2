@@ -5,8 +5,8 @@ Imports System.Xml
 
 Module funciones
     Public txtNombreEmpresa As String = "Comercial Oriente Hnos. SAC"
-    Public txtDireccionEmpresa As String = "Próspero N° 663 - Iquitos"
-    Public txtTelefonoEmpresa As String = "Teléfono: 065-241470"
+    Public txtDireccionEmpresa As String = "Prï¿½spero Nï¿½ 663 - Iquitos"
+    Public txtTelefonoEmpresa As String = "Telï¿½fono: 065-241470"
     Public txtRUCEmpresa As String = "RUC: 20103855391"
     Public ruc_archivoPlano As String = "20103855391"
     Public codigoProducto As Integer
@@ -28,6 +28,9 @@ Module funciones
     Public arraySeries(5) As String
     Public flagString As String
     Public flag As Integer = 0
+    Public UsuarioActualId As Integer = 0
+    Public UsuarioActualNombre As String = ""
+    Public UsuarioActualTipo As String = ""
     Public y, z As Integer
     Public tipDocumento As String
     Public tipMovimiento As String
@@ -35,7 +38,7 @@ Module funciones
     Public numeroLetra As String
     Public marcaProducto As String
     Public fecDocumento As Date
-    'variables de geración de documento plano 26-01-23
+    'variables de geraciï¿½n de documento plano 26-01-23
     Public generaDocumentoPLano As Boolean = True
     Public generaDocumentoTicket As Boolean = True
     Public tipoDocumento As String '05-02-22
@@ -55,6 +58,74 @@ Module funciones
 
 
     Public Connection As New SqlConnection(CadenaConexion)
+    Public Function NormalizarTipoUsuario(ByVal tipoUsuario As String) As String
+        Dim tipo As String = tipoUsuario.Trim().ToLower()
+
+        If tipo = "admin" OrElse tipo = "administrador" Then
+            Return "administrador"
+        End If
+
+        If tipo = "user" OrElse tipo = "usuario" OrElse tipo = "vendedor" Then
+            Return "vendedor"
+        End If
+
+        Return tipo
+    End Function
+
+    Public Function UsuarioActualEsAdministrador() As Boolean
+        Return NormalizarTipoUsuario(UsuarioActualTipo) = "administrador"
+    End Function
+
+    Public Sub CerrarSesionUsuario()
+        UsuarioActualId = 0
+        UsuarioActualNombre = ""
+        UsuarioActualTipo = ""
+    End Sub
+
+    Public Function IniciarSesionUsuario(ByVal usuario As String, ByVal clave As String) As Boolean
+        CerrarSesionUsuario()
+
+        Try
+            Using cn As New SqlConnection(CadenaConexion)
+                cn.Open()
+                Using cmd As New SqlCommand("SELECT TOP 1 idUsuario, nombreUsuario, usuario FROM usuariosSistema WHERE (nombreUsuario = @usuario OR usuario = @usuario) AND clave = @clave AND status = 1", cn)
+                    cmd.Parameters.AddWithValue("@usuario", usuario.Trim())
+                    cmd.Parameters.AddWithValue("@clave", clave)
+
+                    Using dr As SqlDataReader = cmd.ExecuteReader()
+                        If dr.Read() Then
+                            UsuarioActualId = CInt(dr("idUsuario"))
+                            UsuarioActualNombre = dr("nombreUsuario").ToString().Trim()
+                            UsuarioActualTipo = NormalizarTipoUsuario(dr("usuario").ToString())
+                            Return True
+                        End If
+                    End Using
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+        Return False
+    End Function
+
+    Public Function ValidarCredencialesAdministrador(ByVal usuario As String, ByVal clave As String) As Boolean
+        Try
+            Using cn As New SqlConnection(CadenaConexion)
+                cn.Open()
+                Using cmd As New SqlCommand("SELECT COUNT(1) FROM usuariosSistema WHERE (nombreUsuario = @usuario OR usuario = @usuario) AND clave = @clave AND status = 1 AND LOWER(LTRIM(RTRIM(usuario))) IN ('admin', 'administrador')", cn)
+                    cmd.Parameters.AddWithValue("@usuario", usuario.Trim())
+                    cmd.Parameters.AddWithValue("@clave", clave)
+                    Return CInt(cmd.ExecuteScalar()) > 0
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+        Return False
+    End Function
+
     'Public Connection As New SqlConnection("Data Source=SERVER;Initial Catalog=SIGECO;User ID=sa;Password=123456")
     Public Sub CargarConfiguracionEmpresa()
         Try
@@ -94,9 +165,44 @@ Module funciones
         End Try
     End Sub
 
+    Public Sub AsegurarCarpetasFacturador(ByVal rutaBase As String)
+        If Not Directory.Exists(rutaBase) Then
+            Directory.CreateDirectory(rutaBase)
+        End If
+
+        Dim carpetas() As String = {"data", "repo", "rpta", "envio", "firma", "oridat", "parse", "temp"}
+        For Each carpeta As String In carpetas
+            Dim rutaCarpeta As String
+            If String.Equals(New DirectoryInfo(rutaBase).Name, carpeta, StringComparison.OrdinalIgnoreCase) Then
+                rutaCarpeta = rutaBase
+            Else
+                rutaCarpeta = Path.Combine(rutaBase, carpeta)
+            End If
+
+            If Not Directory.Exists(rutaCarpeta) Then
+                Directory.CreateDirectory(rutaCarpeta)
+            End If
+        Next
+    End Sub
+
     Public Function RutaFacturador(ByVal carpeta As String) As String
         CargarConfiguracionFacturador()
-        Return Path.Combine(rutaBaseFacturador, carpeta.Trim("\"c))
+
+        Dim nombreCarpeta As String = carpeta.Trim("\"c)
+        Dim rutaBase As String = rutaBaseFacturador.Trim().TrimEnd("\"c)
+        Dim ruta As String
+
+        If String.Equals(New DirectoryInfo(rutaBase).Name, nombreCarpeta, StringComparison.OrdinalIgnoreCase) Then
+            ruta = rutaBase
+        Else
+            ruta = Path.Combine(rutaBase, nombreCarpeta)
+        End If
+
+        If Not Directory.Exists(ruta) Then
+            Directory.CreateDirectory(ruta)
+        End If
+
+        Return ruta
     End Function
     Public Function sumaColumnas(ByVal Data As DataGridView, ByVal col As Byte) As Double
         Dim suma As Double
@@ -106,7 +212,7 @@ Module funciones
         Return suma
     End Function
     Public Function buscarCodigo(ByVal codigo As String) As Byte
-        'Módulo viene de iniciar saldo el 02-02-23
+        'Mï¿½dulo viene de iniciar saldo el 02-02-23
         Dim odataset As DataSet
 
         Dim daProductos As SqlDataAdapter = New SqlDataAdapter("SELECT * FROM saldosAlmacenes where idProducto Like '" & codigo & "'", Connection)
@@ -121,7 +227,7 @@ Module funciones
         Return odataset.Tables(0).Rows.Count()
     End Function
     Public Function buscarAmortizaciones(ByVal numLetra As String, ByVal numCorrelativo As Integer) As Decimal
-        'Esta función trabaja con algunos reportes de ctas. ctes. (letras)
+        'Esta funciï¿½n trabaja con algunos reportes de ctas. ctes. (letras)
         Try
             Dim tabla As New DataTable
             Dim totalAmortizacion As Decimal
@@ -165,7 +271,7 @@ Module funciones
         If Numero = 8 Then Validar_SoloNumeros = Numero 'Validar Tecla Backspace
     End Function
     Public Function Validar_Letras(ByVal Letra As Short) As Short
-        If InStr("aAbBcCdDeEfFgGhHiIjJkKlLmMnNñÑoOpPqQrRsStTuUvVwWxXyYzZáéíóúÁÉÍÓÚ", Chr(Letra)) = 0 Then
+        If InStr("aAbBcCdDeEfFgGhHiIjJkKlLmMnNï¿½ï¿½oOpPqQrRsStTuUvVwWxXyYzZï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", Chr(Letra)) = 0 Then
             Validar_Letras = 0
         Else
             Validar_Letras = Letra
@@ -185,7 +291,7 @@ Module funciones
         If IsNumeric(txt.Text) Then
             Return True
         Else
-            MessageBox.Show("Ingrese un valor decimal válido.")
+            MessageBox.Show("Ingrese un valor decimal vï¿½lido.")
             txt.SelectAll()
             txt.Focus()
             Return False
@@ -941,11 +1047,11 @@ Module funciones
                 Next
 
                 If transaccionProducto(listSqlStrings) Then
-                    'MsgBox("Información modificada correctamente.", MsgBoxStyle.Information)
+                    'MsgBox("Informaciï¿½n modificada correctamente.", MsgBoxStyle.Information)
                     listSqlStrings.Clear()
                     oDataSet.Tables(1).Clear()
                 Else
-                    MsgBox("La Información no se procesó correctamente.", MsgBoxStyle.Critical)
+                    MsgBox("La Informaciï¿½n no se procesï¿½ correctamente.", MsgBoxStyle.Critical)
                 End If
             Next
         Catch ex As Exception
@@ -990,28 +1096,72 @@ Module funciones
         Return dt
     End Function
 
-    Public Sub AbrirAppQr()
-        ' Ruta de la aplicación de consola a ejecutar
-        Dim rutaAplicacion As String = Application.StartupPath + "\ConsoleApplication1.exe"
+    Public Function ObtenerRutaQr(ByVal serie As String, ByVal correlativo As String) As String
+        Dim carpetaQr As String = Path.Combine(Application.StartupPath, "QR")
+        Dim carpetaEmpresa As String = Path.Combine(carpetaQr, ruc_archivoPlano)
+        Return Path.Combine(carpetaEmpresa, serie.Trim() & "-" & correlativo.Trim() & ".png")
+    End Function
 
-        ' Crear un proceso y configurarlo para la aplicación de consola
-        Dim proceso As New Process()
+    Public Function GenerarQrComprobante(ByVal serie As String, ByVal correlativo As String) As String
+        Dim rutaQr As String = ObtenerRutaQr(serie, correlativo)
+        Dim datosQr As DataTable = RetornaDataTable("EXEC ListaQr")
+        Dim filaQr As DataRow = Nothing
+
+        For Each fila As DataRow In datosQr.Rows
+            If fila(2).ToString().Trim() = serie.Trim() AndAlso _
+               fila(3).ToString().Trim() = correlativo.Trim() Then
+                filaQr = fila
+                Exit For
+            End If
+        Next
+
+        If filaQr Is Nothing Then
+            Throw New InvalidOperationException("No se encontraron los datos QR del comprobante " & serie & "-" & correlativo & ".")
+        End If
+
+        Dim valoresQr(7) As String
+        valoresQr(0) = filaQr(0).ToString()
+        valoresQr(1) = filaQr(1).ToString()
+        valoresQr(2) = filaQr(2).ToString()
+        valoresQr(3) = filaQr(3).ToString()
+        valoresQr(4) = filaQr(4).ToString()
+        valoresQr(5) = Convert.ToDateTime(filaQr(5)).ToString("yyyy-MM-dd")
+        valoresQr(6) = filaQr(6).ToString()
+        valoresQr(7) = filaQr(7).ToString()
+
+        Dim contenidoQr As String = String.Join("|", valoresQr) & "|"
+        EjecutarGeneradorQr(contenidoQr, rutaQr)
+        Return rutaQr
+    End Function
+
+    Private Sub EjecutarGeneradorQr(ByVal contenidoQr As String, ByVal rutaDestino As String)
+        Dim rutaAplicacion As String = Path.Combine(Application.StartupPath, "ConsoleApplication1.exe")
+        If Not File.Exists(rutaAplicacion) Then
+            Throw New FileNotFoundException("No se encontro el generador de codigos QR.", rutaAplicacion)
+        End If
+
+        Dim contenidoBase64 As String = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(contenidoQr))
         Dim infoProceso As New ProcessStartInfo(rutaAplicacion)
-
-        ' Opcionalmente, puedes configurar más propiedades del proceso si es necesario
-        ' Por ejemplo, redireccionar la entrada/salida estándar, establecer argumentos, etc.
+        infoProceso.Arguments = Chr(34) & contenidoBase64 & Chr(34) & " " & Chr(34) & rutaDestino & Chr(34)
         infoProceso.UseShellExecute = False
-        infoProceso.RedirectStandardInput = True
         infoProceso.RedirectStandardOutput = True
+        infoProceso.RedirectStandardError = True
         infoProceso.CreateNoWindow = True
 
-        proceso.StartInfo = infoProceso
+        Using proceso As New Process()
+            proceso.StartInfo = infoProceso
+            proceso.Start()
+            Dim salidaError As String = proceso.StandardError.ReadToEnd()
+            proceso.WaitForExit()
 
-        ' Iniciar el proceso
-        proceso.Start()
+            If proceso.ExitCode <> 0 Then
+                Throw New InvalidOperationException("No se pudo generar el codigo QR. " & salidaError.Trim())
+            End If
+        End Using
 
-        ' Esperar a que el proceso termine
-        'proceso.WaitForExit()
+        If Not File.Exists(rutaDestino) Then
+            Throw New IOException("El generador finalizo sin crear el codigo QR: " & rutaDestino)
+        End If
     End Sub
 
 
@@ -1052,14 +1202,25 @@ Module funciones
             ' Acceder a nodos, atributos, etc.
             Dim nodoRaiz As XmlNode = xmlDoc.DocumentElement
 
-            ' Aquí puedes realizar las operaciones que necesites con el contenido XML
+            ' Aquï¿½ puedes realizar las operaciones que necesites con el contenido XML
             ' Por ejemplo, acceder a nodos, atributos, etc.
 
-            ' Ejemplo: Mostrar el contenido del nodo raíz
+            ' Ejemplo: Mostrar el contenido del nodo raï¿½z
             Return (nodoRaiz.OuterXml)
         Catch ex As Exception
             Return ("Error al leer el archivo XML: " & ex.Message)
         End Try
     End Function
 
+    Public Function CrearReporteComprobante() As rptComprobante
+        Return New rptComprobante()
+    End Function
+
+    Public Function ObtenerLogoEmpresaBytes() As Byte()
+        Dim rutaLogo As String = Path.Combine(Application.StartupPath, ruc_archivoPlano & ".jpg")
+        If Not File.Exists(rutaLogo) Then
+            Return Nothing
+        End If
+        Return File.ReadAllBytes(rutaLogo)
+    End Function
 End Module

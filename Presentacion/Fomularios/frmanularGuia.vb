@@ -394,7 +394,9 @@ Public Class frmanularGuia
                                dt.Rows(i)(20).ToString(), dt.Rows(i)(21).ToString(),
                                dt.Rows(i)(22).ToString(), dt.Rows(i)(23).ToString(),
                                dt.Rows(i)(24).ToString(), dt.Rows(0)(25).ToString(),
-                                           dt.Rows(0)(26).ToString())
+                                           dt.Rows(0)(26).ToString(),
+                                txtNombreEmpresa, ruc_archivoPlano,
+                                txtDireccionEmpresa, txtTelefonoEmpresa)
                     Next
                 End If
 
@@ -425,7 +427,9 @@ Public Class frmanularGuia
                                dt.Rows(i)(20).ToString(), dt.Rows(i)(21).ToString(),
                                dt.Rows(i)(22).ToString(), dt.Rows(i)(23).ToString(),
                                dt.Rows(i)(24).ToString(), dt.Rows(0)(25).ToString(),
-                                           dt.Rows(0)(26).ToString())
+                                           dt.Rows(0)(26).ToString(),
+                                txtNombreEmpresa, ruc_archivoPlano,
+                                txtDireccionEmpresa, txtTelefonoEmpresa)
                     Next
                 End If
 

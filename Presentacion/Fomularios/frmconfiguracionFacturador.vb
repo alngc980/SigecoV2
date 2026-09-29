@@ -19,8 +19,8 @@ Public Class frmconfiguracionFacturador
 
     Private Sub btnExaminar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnExaminar.Click
         Using dialogo As New FolderBrowserDialog()
-            dialogo.Description = "Seleccione la carpeta base que contiene data, repo, rpta y las demas carpetas del SFS."
-            dialogo.ShowNewFolderButton = False
+            dialogo.Description = "Seleccione o cree la carpeta donde se generaran los archivos del facturador."
+            dialogo.ShowNewFolderButton = True
             If Directory.Exists(Me.txtRutaBase.Text.Trim()) Then dialogo.SelectedPath = Me.txtRutaBase.Text.Trim()
             If dialogo.ShowDialog() = Windows.Forms.DialogResult.OK Then Me.txtRutaBase.Text = dialogo.SelectedPath
         End Using
@@ -35,17 +35,14 @@ Public Class frmconfiguracionFacturador
             Me.txtRutaBase.Focus()
             Exit Sub
         End If
-        If Not Directory.Exists(Path.Combine(ruta, "data")) Then
-            MessageBox.Show("La ruta no contiene la carpeta data del facturador.", "Validacion", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Me.txtRutaBase.Focus()
-            Exit Sub
-        End If
         If Not Uri.IsWellFormedUriString(url, UriKind.Absolute) Then
             MessageBox.Show("Ingrese una URL valida para el servicio SFS.", "Validacion", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Me.txtUrlServicio.Focus()
             Exit Sub
         End If
         Try
+            AsegurarCarpetasFacturador(ruta)
+
             Const sql As String = "IF EXISTS (SELECT 1 FROM configuracionFacturador WHERE idConfiguracion = 1) " & _
                 "UPDATE configuracionFacturador SET rutaBase=@ruta, urlServicio=@url, fechaModificacion=GETDATE() WHERE idConfiguracion=1 " & _
                 "ELSE INSERT INTO configuracionFacturador(idConfiguracion,rutaBase,urlServicio) VALUES(1,@ruta,@url)"
